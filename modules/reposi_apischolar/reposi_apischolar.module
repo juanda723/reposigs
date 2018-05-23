@@ -1,7 +1,7 @@
 <?php
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
-//use Drupal\reposi_apischolar\Controller\reposidoc_scholar;
+use Drupal\reposi_apischolar\Controller\reposidoc_scholar;
 
 function _reposi_apischolar_user_role_administrator() {
   global $user;
@@ -44,7 +44,7 @@ if (isset($reposi_apischolar_cron)) {
   $stateless=\Drupal::state()->get('date_event_scholar_1');
 if ( ($datete<=$date) || ($stateless!=$reposi_apischolar_cron) ){
   $date_now=\Drupal::time()->getRequestTime();
-  //reposidoc_scholar::docs_scholar(0, \Drupal::time()->getRequestTime());
+  reposidoc_scholar::docs_scholar(0, \Drupal::time()->getRequestTime());
   \Drupal::state()->set('date_now_scholar',$date_now);
   $date_event=$date_now+$less_month;
   \Drupal::state()->set('date_event_scholar',$date_event);
