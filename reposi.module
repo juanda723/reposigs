@@ -33,7 +33,6 @@ function reposi_help($route_name, RouteMatchInterface $route_match) {
   return reposi_help_content();
   }
 }
-
 function reposi_help_content(){
   $text = '<h3>' . t('Bibliography Reference Repository') . '</h3>' .
           '<p align="justify">' . t('This module aims to simplify the capture bibliographic
