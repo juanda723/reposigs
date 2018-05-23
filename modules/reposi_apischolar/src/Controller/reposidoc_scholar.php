@@ -18,12 +18,22 @@ use Drupal\Component\Utility\Unicode;
 class reposidoc_scholar extends reposi_apischolar_admin{
 
 	public static function pubscolar_art($uid,$p_uid,$user_gs,$p_pid_scholar){
+	$config = \Drupal::config('system.maintenance');
+	$gs_api_url = $config->get('google_scholar_api_url');
+	if (empty($gs_api_url)) {
+		drupal_set_message('You must configure the module Repository -
+			Google Scholar Search API to use all its functions.', 'warning');
+		$message = '<p>' . '<b>' . '<big>' . 'First enter the Url of Google Scholar API from the
+		configuration tab.' . '</big>'.'</b>'.'</p>';
+		$form['message'] = array('#markup' => $message);
+	    return $form;
+	} else{
 		$form = 0;
 		$search_pub_state = db_select('reposi_publication', 'p');
 		$search_pub_state->fields('p')
 		->condition('p.p_unde', $uid, '=');
 		$pub_state = $search_pub_state->execute()->fetchAssoc();
-		$search_doc = 'http://localhost/apiGS/getpublication.php?puser='.$user_gs.$p_pid_scholar;
+		$search_doc = $gs_api_url.'/getpublication.php?puser='.$user_gs.$p_pid_scholar;
 		$data= file_get_contents($search_doc);
 		$scholar_publication  = Json::decode($data);
 		if (empty($data)){
@@ -156,8 +166,31 @@ class reposidoc_scholar extends reposi_apischolar_admin{
 				$max = 0;
 			}
 			$table = $authorss;
+			
+			$search_user = db_select('reposi_user', 'ru');
+			$search_user->fields('ru')
+			->condition('ru.uid', $pub_state['p_uid'], '=');
+			$userr_id = $search_user->execute()->fetchAssoc();
+			
+			$table[$max][0]=$userr_id['u_first_name'];
+			if(empty($userr_id['u_second_name'])){
+			$table[$max][1]=' ';
+			}else{
+			$table[$max][1]=$userr_id['u_second_name'];
+			}
+			if(empty($userr_id['u_first_lastname'])){
+			$table[$max][2]=' ';
+			}else{
+			$table[$max][2]=$userr_id['u_first_lastname'];
+			}
+			if(empty($userr_id['u_second_lastname'])){
+			$table[$max][3]=' ';
+			}else{
+			$table[$max][3]=$userr_id['u_second_lastname'];
+			}
+			$max=$max+1;
 			for ($a=0; $a<$max; $a++) {
-				$names=count($authorss[$a]);
+				$names=count($table[$a]);
 				if ($names==2) {
 					$aut_fn=$table[$a][0];
 					$aut_sn='';
@@ -167,12 +200,12 @@ class reposidoc_scholar extends reposi_apischolar_admin{
 					$aut_fn=$table[$a][0];
 					$aut_sn='';
 					$aut_fl=$table[$a][1];
-					$aut_sl=$table[$a][2];;
+					$aut_sl=$table[$a][2];
 				}else {
 					$aut_fn=$table[$a][0];
 					$aut_sn=$table[$a][1];
 					$aut_fl=$table[$a][2];
-					$aut_sl=$table[$a][3];;
+					$aut_sl=$table[$a][3];
 				}
 
 				$info_author = array('a_first_name'      => ucfirst($aut_fn),
@@ -216,15 +249,26 @@ class reposidoc_scholar extends reposi_apischolar_admin{
 		reposidoc_scholar::delete_unde($uid);
 	}
 	return $form;
+	}
 }
 
 public static function pubscolar_book($uid,$p_uid,$user_gs,$p_pid_scholar){
+	$config = \Drupal::config('system.maintenance');
+	$gs_api_url = $config->get('google_scholar_api_url');
+	if (empty($gs_api_url)) {
+		drupal_set_message('You must configure the module Repository -
+			Google Scholar Search API to use all its functions.', 'warning');
+		$message = '<p>' . '<b>' . '<big>' . 'First enter the Url of Google Scholar API from the
+		configuration tab.' . '</big>'.'</b>'.'</p>';
+		$form['message'] = array('#markup' => $message);
+	    return $form;
+	} else{
 	$form= 0;
 	$search_pub_state = db_select('reposi_publication', 'p');
 	$search_pub_state->fields('p')
 	->condition('p.p_unde', $uid, '=');
 	$pub_state = $search_pub_state->execute()->fetchAssoc();
-	$search_doc = 'http://localhost/apiGS/getpublication.php?puser='.$user_gs.$p_pid_scholar;
+	$search_doc = $gs_api_url.'/getpublication.php?puser='.$user_gs.$p_pid_scholar;
 	$data= file_get_contents($search_doc);
 	$scholar_publication  = Json::decode($data);
 	if (empty($data)){
@@ -336,8 +380,30 @@ public static function pubscolar_book($uid,$p_uid,$user_gs,$p_pid_scholar){
 			$max = 0;
 		}
 		$table = $authorss;
-		for ($a=0; $a<$max; $a++) {
-			$names=count($authorss[$a]);
+			$search_user = db_select('reposi_user', 'ru');
+			$search_user->fields('ru')
+			->condition('ru.uid', $pub_state['p_uid'], '=');
+			$userr_id = $search_user->execute()->fetchAssoc();
+			
+			$table[$max][0]=$userr_id['u_first_name'];
+			if(empty($userr_id['u_second_name'])){
+			$table[$max][1]=' ';
+			}else{
+			$table[$max][1]=$userr_id['u_second_name'];
+			}
+			if(empty($userr_id['u_first_lastname'])){
+			$table[$max][2]=' ';
+			}else{
+			$table[$max][2]=$userr_id['u_first_lastname'];
+			}
+			if(empty($userr_id['u_second_lastname'])){
+			$table[$max][3]=' ';
+			}else{
+			$table[$max][3]=$userr_id['u_second_lastname'];
+			}
+			$max=$max+1;
+			for ($a=0; $a<$max; $a++) {
+				$names=count($table[$a]);
 			if ($names==2) {
 				$aut_fn=$table[$a][0];
 				$aut_sn='';
@@ -347,12 +413,12 @@ public static function pubscolar_book($uid,$p_uid,$user_gs,$p_pid_scholar){
 				$aut_fn=$table[$a][0];
 				$aut_sn='';
 				$aut_fl=$table[$a][1];
-				$aut_sl=$table[$a][2];;
+				$aut_sl=$table[$a][2];
 			}else {
 				$aut_fn=$table[$a][0];
 				$aut_sn=$table[$a][1];
 				$aut_fl=$table[$a][2];
-				$aut_sl=$table[$a][3];;
+				$aut_sl=$table[$a][3];
 			}
 
 			$info_author = array('a_first_name'      => ucfirst($aut_fn),
@@ -396,16 +462,27 @@ public static function pubscolar_book($uid,$p_uid,$user_gs,$p_pid_scholar){
 	drupal_set_message('Data Import successfull');
 }
 return $form;
+	}
 }
 
 public static function pubscolar_chap($uid,$p_uid,$user_gs,$p_pid_scholar){
+	$config = \Drupal::config('system.maintenance');
+	$gs_api_url = $config->get('google_scholar_api_url');
+	if (empty($gs_api_url)) {
+		drupal_set_message('You must configure the module Repository -
+			Google Scholar Search API to use all its functions.', 'warning');
+		$message = '<p>' . '<b>' . '<big>' . 'First enter the Url of Google Scholar API from the
+		configuration tab.' . '</big>'.'</b>'.'</p>';
+		$form['message'] = array('#markup' => $message);
+	    return $form;
+	} else{
 	$form = 0;
 	$search_pub_state = db_select('reposi_publication', 'p');
 	$search_pub_state->fields('p')
 	->condition('p.p_unde', $uid, '=');
 	$pub_state = $search_pub_state->execute()->fetchAssoc();
 
-	$search_doc = 'http://localhost/apiGS/getpublication.php?puser='.$user_gs.$p_pid_scholar;
+	$search_doc = $gs_api_url.'/getpublication.php?puser='.$user_gs.$p_pid_scholar;
 	$data= file_get_contents($search_doc);
 	$scholar_publication  = Json::decode($data);
 	if (empty($data)){
@@ -559,8 +636,30 @@ public static function pubscolar_chap($uid,$p_uid,$user_gs,$p_pid_scholar){
 				$max = 0;
 			}
 			$table = $authorss;
+			$search_user = db_select('reposi_user', 'ru');
+			$search_user->fields('ru')
+			->condition('ru.uid', $pub_state['p_uid'], '=');
+			$userr_id = $search_user->execute()->fetchAssoc();
+			
+			$table[$max][0]=$userr_id['u_first_name'];
+			if(empty($userr_id['u_second_name'])){
+			$table[$max][1]=' ';
+			}else{
+			$table[$max][1]=$userr_id['u_second_name'];
+			}
+			if(empty($userr_id['u_first_lastname'])){
+			$table[$max][2]=' ';
+			}else{
+			$table[$max][2]=$userr_id['u_first_lastname'];
+			}
+			if(empty($userr_id['u_second_lastname'])){
+			$table[$max][3]=' ';
+			}else{
+			$table[$max][3]=$userr_id['u_second_lastname'];
+			}
+			$max=$max+1;
 			for ($a=0; $a<$max; $a++) {
-				$names=count($authorss[$a]);
+				$names=count($table[$a]);
 				if ($names==2) {
 					$aut_fn=$table[$a][0];
 					$aut_sn='';
@@ -570,12 +669,12 @@ public static function pubscolar_chap($uid,$p_uid,$user_gs,$p_pid_scholar){
 					$aut_fn=$table[$a][0];
 					$aut_sn='';
 					$aut_fl=$table[$a][1];
-					$aut_sl=$table[$a][2];;
+					$aut_sl=$table[$a][2];
 				}else {
 					$aut_fn=$table[$a][0];
 					$aut_sn=$table[$a][1];
 					$aut_fl=$table[$a][2];
-					$aut_sl=$table[$a][3];;
+					$aut_sl=$table[$a][3];
 				}
 
 				$info_author = array('a_first_name'      => ucfirst($aut_fn),
@@ -620,16 +719,27 @@ public static function pubscolar_chap($uid,$p_uid,$user_gs,$p_pid_scholar){
 	}
 }
 return $form;
+	}
 }
 
 
 public static function pubscolar_con($uid,$p_uid,$user_gs,$p_pid_scholar){
+	$config = \Drupal::config('system.maintenance');
+	$gs_api_url = $config->get('google_scholar_api_url');
+	if (empty($gs_api_url)) {
+		drupal_set_message('You must configure the module Repository -
+			Google Scholar Search API to use all its functions.', 'warning');
+		$message = '<p>' . '<b>' . '<big>' . 'First enter the Url of Google Scholar API from the
+		configuration tab.' . '</big>'.'</b>'.'</p>';
+		$form['message'] = array('#markup' => $message);
+	    return $form;
+	} else{
 	$form = 0;
 	$search_pub_state = db_select('reposi_publication', 'p');
 	$search_pub_state->fields('p')
 	->condition('p.p_unde', $uid, '=');
 	$pub_state = $search_pub_state->execute()->fetchAssoc();
-	$search_doc = 'http://localhost/apiGS/getpublication.php?puser='.$user_gs.$p_pid_scholar;
+	$search_doc = $gs_api_url.'/getpublication.php?puser='.$user_gs.$p_pid_scholar;
 	$data= file_get_contents($search_doc);
 	$scholar_publication  = Json::decode($data);
 	if (empty($data)){
@@ -789,8 +899,30 @@ public static function pubscolar_con($uid,$p_uid,$user_gs,$p_pid_scholar){
 				$max = 0;
 			}
 			$table = $authorss;
+			$search_user = db_select('reposi_user', 'ru');
+			$search_user->fields('ru')
+			->condition('ru.uid', $pub_state['p_uid'], '=');
+			$userr_id = $search_user->execute()->fetchAssoc();
+			
+			$table[$max][0]=$userr_id['u_first_name'];
+			if(empty($userr_id['u_second_name'])){
+			$table[$max][1]=' ';
+			}else{
+			$table[$max][1]=$userr_id['u_second_name'];
+			}
+			if(empty($userr_id['u_first_lastname'])){
+			$table[$max][2]=' ';
+			}else{
+			$table[$max][2]=$userr_id['u_first_lastname'];
+			}
+			if(empty($userr_id['u_second_lastname'])){
+			$table[$max][3]=' ';
+			}else{
+			$table[$max][3]=$userr_id['u_second_lastname'];
+			}
+			$max=$max+1;
 			for ($a=0; $a<$max; $a++) {
-				$names=count($authorss[$a]);
+				$names=count($table[$a]);
 				if ($names==2) {
 					$aut_fn=$table[$a][0];
 					$aut_sn='';
@@ -800,12 +932,12 @@ public static function pubscolar_con($uid,$p_uid,$user_gs,$p_pid_scholar){
 					$aut_fn=$table[$a][0];
 					$aut_sn='';
 					$aut_fl=$table[$a][1];
-					$aut_sl=$table[$a][2];;
+					$aut_sl=$table[$a][2];
 				}else {
 					$aut_fn=$table[$a][0];
 					$aut_sn=$table[$a][1];
 					$aut_fl=$table[$a][2];
-					$aut_sl=$table[$a][3];;
+					$aut_sl=$table[$a][3];
 				}
 
 				$info_author = array('a_first_name'      => ucfirst($aut_fn),
@@ -850,15 +982,26 @@ public static function pubscolar_con($uid,$p_uid,$user_gs,$p_pid_scholar){
 	}
 }
 return $form;
+	}
 }
 
 public static function pubscolar_pat($uid,$p_uid,$user_gs,$p_pid_scholar){
+	$config = \Drupal::config('system.maintenance');
+	$gs_api_url = $config->get('google_scholar_api_url');
+	if (empty($gs_api_url)) {
+		drupal_set_message('You must configure the module Repository -
+			Google Scholar Search API to use all its functions.', 'warning');
+		$message = '<p>' . '<b>' . '<big>' . 'First enter the Url of Google Scholar API from the
+		configuration tab.' . '</big>'.'</b>'.'</p>';
+		$form['message'] = array('#markup' => $message);
+	    return $form;
+	} else{
 	$form = 0;
 	$search_pub_state = db_select('reposi_publication', 'p');
 	$search_pub_state->fields('p')
 	->condition('p.p_unde', $uid, '=');
 	$pub_state = $search_pub_state->execute()->fetchAssoc();
-	$search_doc = 'http://localhost/apiGS/getpublication.php?puser='.$user_gs.$p_pid_scholar;
+	$search_doc = $gs_api_url.'/getpublication.php?puser='.$user_gs.$p_pid_scholar;
 	$data= file_get_contents($search_doc);
 	$scholar_publication  = Json::decode($data);
 	if (empty($data)){
@@ -981,8 +1124,30 @@ public static function pubscolar_pat($uid,$p_uid,$user_gs,$p_pid_scholar){
 				$max = 0;
 			}
 			$table = $authorss;
+			$search_user = db_select('reposi_user', 'ru');
+			$search_user->fields('ru')
+			->condition('ru.uid', $pub_state['p_uid'], '=');
+			$userr_id = $search_user->execute()->fetchAssoc();
+			
+			$table[$max][0]=$userr_id['u_first_name'];
+			if(empty($userr_id['u_second_name'])){
+			$table[$max][1]=' ';
+			}else{
+			$table[$max][1]=$userr_id['u_second_name'];
+			}
+			if(empty($userr_id['u_first_lastname'])){
+			$table[$max][2]=' ';
+			}else{
+			$table[$max][2]=$userr_id['u_first_lastname'];
+			}
+			if(empty($userr_id['u_second_lastname'])){
+			$table[$max][3]=' ';
+			}else{
+			$table[$max][3]=$userr_id['u_second_lastname'];
+			}
+			$max=$max+1;
 			for ($a=0; $a<$max; $a++) {
-				$names=count($authorss[$a]);
+				$names=count($table[$a]);
 				if ($names==2) {
 					$aut_fn=$table[$a][0];
 					$aut_sn='';
@@ -992,7 +1157,7 @@ public static function pubscolar_pat($uid,$p_uid,$user_gs,$p_pid_scholar){
 					$aut_fn=$table[$a][0];
 					$aut_sn='';
 					$aut_fl=$table[$a][1];
-					$aut_sl=$table[$a][2];;
+					$aut_sl=$table[$a][2];
 				}else {
 					$aut_fn=$table[$a][0];
 					$aut_sn=$table[$a][1];
@@ -1042,17 +1207,28 @@ public static function pubscolar_pat($uid,$p_uid,$user_gs,$p_pid_scholar){
 	}
 }
 return $form;
+	}
 }
 
 
 
 public static function pubscolar_the($uid,$p_uid,$user_gs,$p_pid_scholar){
+	$config = \Drupal::config('system.maintenance');
+	$gs_api_url = $config->get('google_scholar_api_url');
+	if (empty($gs_api_url)) {
+		drupal_set_message('You must configure the module Repository -
+			Google Scholar Search API to use all its functions.', 'warning');
+		$message = '<p>' . '<b>' . '<big>' . 'First enter the Url of Google Scholar API from the
+		configuration tab.' . '</big>'.'</b>'.'</p>';
+		$form['message'] = array('#markup' => $message);
+	    return $form;
+	} else{
 	$form = 0;
 	$search_pub_state = db_select('reposi_publication', 'p');
 	$search_pub_state->fields('p')
 	->condition('p.p_unde', $uid, '=');
 	$pub_state = $search_pub_state->execute()->fetchAssoc();
-	$search_doc = 'http://localhost/apiGS/getpublication.php?puser='.$user_gs.$p_pid_scholar;
+	$search_doc = $gs_api_url.'/getpublication.php?puser='.$user_gs.$p_pid_scholar;
 	$data= file_get_contents($search_doc);
 	$scholar_publication  = Json::decode($data);
 	if (empty($data)){
@@ -1175,8 +1351,30 @@ public static function pubscolar_the($uid,$p_uid,$user_gs,$p_pid_scholar){
 				$max = 0;
 			}
 			$table = $authorss;
+			$search_user = db_select('reposi_user', 'ru');
+			$search_user->fields('ru')
+			->condition('ru.uid', $pub_state['p_uid'], '=');
+			$userr_id = $search_user->execute()->fetchAssoc();
+			
+			$table[$max][0]=$userr_id['u_first_name'];
+			if(empty($userr_id['u_second_name'])){
+			$table[$max][1]=' ';
+			}else{
+			$table[$max][1]=$userr_id['u_second_name'];
+			}
+			if(empty($userr_id['u_first_lastname'])){
+			$table[$max][2]=' ';
+			}else{
+			$table[$max][2]=$userr_id['u_first_lastname'];
+			}
+			if(empty($userr_id['u_second_lastname'])){
+			$table[$max][3]=' ';
+			}else{
+			$table[$max][3]=$userr_id['u_second_lastname'];
+			}
+			$max=$max+1;
 			for ($a=0; $a<$max; $a++) {
-				$names=count($authorss[$a]);
+				$names=count($table[$a]);
 				if ($names==2) {
 					$aut_fn=$table[$a][0];
 					$aut_sn='';
@@ -1186,12 +1384,12 @@ public static function pubscolar_the($uid,$p_uid,$user_gs,$p_pid_scholar){
 					$aut_fn=$table[$a][0];
 					$aut_sn='';
 					$aut_fl=$table[$a][1];
-					$aut_sl=$table[$a][2];;
+					$aut_sl=$table[$a][2];
 				}else {
 					$aut_fn=$table[$a][0];
 					$aut_sn=$table[$a][1];
 					$aut_fl=$table[$a][2];
-					$aut_sl=$table[$a][3];;
+					$aut_sl=$table[$a][3];
 				}
 
 				$info_author = array('a_first_name'      => ucfirst($aut_fn),
@@ -1235,16 +1433,27 @@ public static function pubscolar_the($uid,$p_uid,$user_gs,$p_pid_scholar){
 		drupal_set_message('Data Import successfull');
 	}}
 	return $form;
+	}
 }
 
 ///////////////////////
 public static function pubscolar_sof($uid,$p_uid,$user_gs,$p_pid_scholar){
+	$config = \Drupal::config('system.maintenance');
+	$gs_api_url = $config->get('google_scholar_api_url');
+	if (empty($gs_api_url)) {
+		drupal_set_message('You must configure the module Repository -
+			Google Scholar Search API to use all its functions.', 'warning');
+		$message = '<p>' . '<b>' . '<big>' . 'First enter the Url of Google Scholar API from the
+		configuration tab.' . '</big>'.'</b>'.'</p>';
+		$form['message'] = array('#markup' => $message);
+	    return $form;
+	} else{
 	$form = 0;
 	$search_pub_state = db_select('reposi_publication', 'p');
 	$search_pub_state->fields('p')
 	->condition('p.p_unde', $uid, '=');
 	$pub_state = $search_pub_state->execute()->fetchAssoc();
-	$search_doc = 'http://localhost/apiGS/getpublication.php?puser='.$user_gs.$p_pid_scholar;
+	$search_doc = $gs_api_url.'/getpublication.php?puser='.$user_gs.$p_pid_scholar;
 	$data= file_get_contents($search_doc);
 	$scholar_publication  = Json::decode($data);
 	if (empty($data)){
@@ -1366,8 +1575,31 @@ public static function pubscolar_sof($uid,$p_uid,$user_gs,$p_pid_scholar){
 				$max = 0;
 			}
 			$table = $authorss;
+			$search_user = db_select('reposi_user', 'ru');
+			$search_user->fields('ru')
+			->condition('ru.uid', $pub_state['p_uid'], '=');
+			$userr_id = $search_user->execute()->fetchAssoc();
+			
+			$table[$max][0]=$userr_id['u_first_name'];
+			if(empty($userr_id['u_second_name'])){
+			$table[$max][1]=' ';
+			}else{
+			$table[$max][1]=$userr_id['u_second_name'];
+			}
+			if(empty($userr_id['u_first_lastname'])){
+			$table[$max][2]=' ';
+			}else{
+			$table[$max][2]=$userr_id['u_first_lastname'];
+			}
+			if(empty($userr_id['u_second_lastname'])){
+			$table[$max][3]=' ';
+			}else{
+			$table[$max][3]=$userr_id['u_second_lastname'];
+			}
+			$max=$max+1;
+
 			for ($a=0; $a<$max; $a++) {
-				$names=count($authorss[$a]);
+				$names=count($table[$a]);
 				if ($names==2) {
 					$aut_fn=$table[$a][0];
 					$aut_sn='';
@@ -1377,12 +1609,12 @@ public static function pubscolar_sof($uid,$p_uid,$user_gs,$p_pid_scholar){
 					$aut_fn=$table[$a][0];
 					$aut_sn='';
 					$aut_fl=$table[$a][1];
-					$aut_sl=$table[$a][2];;
+					$aut_sl=$table[$a][2];
 				}else {
 					$aut_fn=$table[$a][0];
 					$aut_sn=$table[$a][1];
 					$aut_fl=$table[$a][2];
-					$aut_sl=$table[$a][3];;
+					$aut_sl=$table[$a][3];
 				}
 
 				$info_author = array('a_first_name'      => ucfirst($aut_fn),
@@ -1427,6 +1659,7 @@ public static function pubscolar_sof($uid,$p_uid,$user_gs,$p_pid_scholar){
 	}
 }
 return $form;
+	}
 }
 
 public static function delete_unde($uid){
@@ -1449,23 +1682,29 @@ public static function docs_scholar(){
 	$gs_api_url = $config->get('google_scholar_api_url');
 	if (isset($query_size)) {
 		if ($query_size == 0){
-			$query_size_scholar = '010';
-		} elseif ($query_size == 1){
 			$query_size_scholar = '020';
-		} elseif ($query_size == 2){
+		} elseif ($query_size == 1){
 			$query_size_scholar = '100';
-		} elseif ($query_size == 3){
+		} elseif ($query_size == 2){
 			$query_size_scholar = '200';
-		} elseif ($query_size == 4){
+		} elseif ($query_size == 3){
 			$query_size_scholar = '300';
-		} elseif ($query_size == 5){
+		} elseif ($query_size == 4){
 			$query_size_scholar = '400';
-		} elseif ($query_size == 6){
+		} elseif ($query_size == 5){
 			$query_size_scholar = '500';
-		}
+		} 
 	} else {
 		$query_size_scholar = '100';
 	}
+	if (empty($gs_api_url)) {
+		drupal_set_message('You must configure the module Repository -
+			Google Scholar Search API to use all its functions.', 'warning');
+		$message = '<p>' . '<b>' . '<big>' . 'First enter the Url of Google Scholar API from the
+		configuration tab.' . '</big>'.'</b>'.'</p>';
+		$form['message'] = array('#markup' => $message);
+	    return $form;
+	} else{
 	$search_author_state = db_select('reposi_state', 's');
 	$search_author_state->fields('s', array('s_uid'))
 	->condition('s.s_type', 'Active', '=');
@@ -1487,7 +1726,7 @@ public static function docs_scholar(){
 	}
 	global $count;
 	for($i=1; $i<count($scholar_user_id); $i++){
-		if(!empty($scholar_user_id[$i])) {
+		if(!empty($scholar_user_id[$i]) && !empty($gs_api_url)) {
 			$search_doc[$i] = $gs_api_url.'/getallpublication.php?user='.$scholar_user_id[$i].$query_size_scholar;
 			$data[$i]= file_get_contents($search_doc[$i]);
 			$decoded[$i] = array('scholar_user_id' => $scholar_user_id[$i], 'data'=>Json::decode($data[$i]));
@@ -1613,14 +1852,22 @@ public static function docs_scholar(){
 	}
 
 	return $form;
+	}
 }
 
 function reposi_author_scholar(){
 
 
-	/*****************************************
-	Info dinámica de un autor por nombre
-	*****************************************/
+	$config = \Drupal::config('system.maintenance');
+	$gs_api_url = $config->get('google_scholar_api_url');
+	if (empty($gs_api_url)) {
+		drupal_set_message('You must configure the module Repository -
+			Google Scholar Search API to use all its functions.', 'warning');
+		$message = '<p>' . '<b>' . '<big>' . 'First enter the Url of Google Scholar API from the
+		configuration tab.' . '</big>'.'</b>'.'</p>';
+		$form['message'] = array('#markup' => $message);
+	    return $form;
+	} else{
 	$search_author_state = db_select('reposi_state', 's');
 	$search_author_state->fields('s', array('s_uid'))
 	->condition('s.s_type', 'Active', '=');
@@ -1656,12 +1903,12 @@ function reposi_author_scholar(){
 			$search_name_2 = Reposi_info_publication::reposi_string($authors_name['u_second_name']);
 			if ((empty($search_name_2)) && (!empty($search_name_1))) {
 				$author_name = $search_name_1. ' '. $search_lastname_1 . ' ' . $search_lastname_2;
-				$search_author_scholar='http://localhost/apiGS/getuser.php?fname='. $search_name_1 .
+				$search_author_scholar=$gs_api_url.'/getuser.php?fname='. $search_name_1 .
 				'&sname=' . '' . '&flast=' . $search_lastname_1 . '&slast=' . $search_lastname_2;
 			}
 			elseif ((!empty($search_name_2)) && (!empty($search_name_1))) {
 				$author_name = $search_name_1 . ' ' . $search_name_2. ' '. $search_lastname_1 . ' ' . $search_lastname_2;
-				$search_author_scholar='http://localhost/apiGS/getuser.php?fname='. $search_name_1 .
+				$search_author_scholar=$gs_api_url.'/getuser.php?fname='. $search_name_1 .
 				'&sname=' . $search_name_2  . '&flast=' . $search_lastname_1 . '&slast=' . $search_lastname_2;
 			}
 			if (!empty($search_author_scholar)) {
@@ -1702,6 +1949,7 @@ function reposi_author_scholar(){
 			}
 		}
 		return $form;
+	}
 
 	}
 

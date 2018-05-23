@@ -40,7 +40,7 @@ public function buildForm(array $form, FormStateInterface $form_state) {
   	    '#default_value' => $config->get('google_scholar_api_url', ""),
   	    '#size' => 60,
   	    '#maxlength' => 500,
-  	    '#required' => TRUE,
+  	//    '#required' => TRUE,
   	    '#description' => t('Configure the URL for the API.'),
   	);
   	$form['reposi_apischolar_size'] = array(
@@ -51,7 +51,7 @@ public function buildForm(array $form, FormStateInterface $form_state) {
   	$form['reposi_apischolar_size']['query_scholar_size'] = array(
 	    '#title' => t('Size to query'),
       	    '#type' => 'select',
-      	    '#options' => array(10, 20, 100, 200, 300, 400 , 500),
+      	    '#options' => array(20, 100, 200, 300, 400 , 500),
       	    '#default_value' => $config->get('query_scholar_size', 0),
       	    '#required' => TRUE,
   	);
