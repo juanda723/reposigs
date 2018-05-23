@@ -986,6 +986,7 @@ class Reposi_publi_list {
     $or_title='ASC';
     $search_publi = db_select('reposi_publication', 'p');
     $search_publi->fields('p')
+    ->condition('p.p_type', 'Undefined', '!=')
     ->orderBy('p.p_check', 'DESC')
     ->orderBy('p.p_year', $or_year)
     ->orderBy('p.p_title', $or_title);
@@ -1231,6 +1232,7 @@ class Reposi_publi_list {
     $or_title='ASC';
     $search_publi = db_select('reposi_publication', 'p');
     $search_publi->fields('p')
+    ->condition('p.p_type', 'Undefined', '!=')
     ->orderBy('p.p_check', 'DESC')
     ->orderBy('p.p_year', $or_year)
     ->orderBy('p.p_title', $or_title);
@@ -1476,6 +1478,7 @@ class Reposi_publi_list {
     $or_title='ASC';
     $search_publi = db_select('reposi_publication', 'p');
     $search_publi->fields('p')
+    ->condition('p.p_type', 'Undefined', '!=')
     ->orderBy('p.p_check', 'DESC')
     ->orderBy('p.p_title', $or_title)
     ->orderBy('p.p_year', $or_year);
@@ -1722,6 +1725,7 @@ class Reposi_publi_list {
     $or_title='DESC';
     $search_publi = db_select('reposi_publication', 'p');
     $search_publi->fields('p')
+    ->condition('p.p_type', 'Undefined', '!=')
     ->orderBy('p.p_check', 'DESC')
     ->orderBy('p.p_title', $or_title)
     ->orderBy('p.p_year', $or_year);
