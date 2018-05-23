@@ -1,0 +1,105 @@
+reposi.reposi_apischolar.docs_scholar:
+  path: 'reposi/docs_scholar'
+  defaults:
+    _controller: 'Drupal\reposi_apischolar\Controller\reposidoc_scholar::docs_scholar'
+    _title: 'Import metadata from documents'
+  requirements:
+    _permission: 'administrator'
+
+reposi.reposi_apischolar.scholar_assoc:
+  path: '/reposi/author_scholar/associate/{node}/{nod}'
+  defaults:
+    _form: '\Drupal\reposi_apischolar\Form\reposi_author_scholar_assoc'
+    _title: 'Associate author'
+  requirements:
+    _permission: 'administrator'
+
+reposi.reposi_apischolar.author_scholar:
+  path: 'reposi/author_scholar'
+  defaults:
+    _controller: 'Drupal\reposi_apischolar\Controller\reposidoc_scholar::reposi_author_scholar'
+    _title: 'Find ID author on Google Scholar'
+  requirements:
+    _permission: 'administrator'
+
+reposi.reposi_apischolar.scholar_admin:
+  path: 'admin/config/content/apischolar'
+  defaults:
+    _form: '\Drupal\reposi_apischolar\Form\reposi_apischolar_admin'
+    _title: 'Configuration to API Google Scholar'
+  requirements:
+    _permission: 'administrator'
+
+reposi.gspub:
+  path: 'reposi/listgs'
+  defaults:
+    _controller: '\Drupal\reposi_apischolar\Controller\reposi_pubgs::reposi_listgs'
+    _title: 'Undefined Publications Google Scholar List'
+  requirements:
+    _permission: 'administrator'
+
+reposi.gspubya:
+  path: 'reposi/listgs/year_asc'
+  defaults:
+    _controller: '\Drupal\reposi_apischolar\Controller\reposi_pubgs::reposi_listgs_yearasc'
+    _title: 'Undefined Publications Google Scholar List'
+  requirements:
+    _permission: 'administrator'
+
+reposi.gspubta:
+  path: 'reposi/listgs/title_asc'
+  defaults:
+    _controller: '\Drupal\reposi_apischolar\Controller\reposi_pubgs::reposi_listgs_titleasc'
+    _title: 'Undefined Publications Google Scholar List'
+  requirements:
+    _permission: 'administrator'
+
+reposi.gspubtd:
+  path: 'reposi/listgs/title_desc'
+  defaults:
+    _controller: '\Drupal\reposi_apischolar\Controller\reposi_pubgs::reposi_listgs_titledesc'
+    _title: 'Undefined Publications Google Scholar List'
+  requirements:
+    _permission: 'administrator'
+
+reposi.define_typePublicationGS:
+  path: 'reposi/undefined/{node}'
+  defaults:
+    _form: '\Drupal\reposi_apischolar\Form\reposi_gstype'
+    _title: 'Define type Publication For use API Google Scholar'
+  requirements:
+    _permission: 'administrator'
+
+reposi.testfunt:
+  path: 'reposi/testgs'
+  defaults:
+    _controller: '\Drupal\reposi_apischolar\Controller\reposi_pubgs::reposi_list_sourceGs'
+    _title: 'Scholar Test'
+  requirements:
+    _permission: 'administrator'
+
+reposi.googlelistasc:
+  path: 'reposi/googlelistasc'
+  defaults:
+    _controller: '\Drupal\reposi_apischolar\Controller\reposi_pubgs::reposi_list_sourceGs'
+    _title: 'List Google Scholar'
+  requirements:
+    _permission: 'administrator'
+
+reposi.googlelistdesc:
+  path: 'reposi/googlelistdesc'
+  defaults:
+    _controller: '\Drupal\reposi_apischolar\Controller\reposi_pubgs::reposi_list_sourceGsdes'
+    _title: 'List Google Scholar'
+  requirements:
+    _permission: 'administrator'
+
+
+
+reposi.deletegs:
+  path: 'reposi/delete/undefined/{node}'
+  defaults:
+    _form: '\Drupal\reposi_apischolar\Form\reposi_deleteunde'
+    _title: 'Delete Publication  Google Scholar'
+  requirements:
+    _permission: 'administrator'

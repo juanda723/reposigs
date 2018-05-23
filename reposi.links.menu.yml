@@ -1,0 +1,52 @@
+reposi:
+  title: 'Repository'
+  route_name: reposi
+  menu_name: tools
+
+reposi.admuser:
+  title: 'Add Author'
+  route_name: reposi.admuser
+  menu_name: tools
+  parent: reposi
+
+reposi.author:
+  title: 'Authors list'
+  route_name: reposi.author
+  menu_name: tools
+  parent: reposi
+
+reposi.listus:
+  title: 'User list'
+  route_name: reposi.listus
+  menu_name: tools
+  parent: reposi
+
+reposi.listusactive:
+  title: 'User active list'
+  route_name: reposi.listusactive
+  menu_name: tools
+  parent: reposi.listus
+
+reposi.listusinactive:
+  title: 'User inactive list'
+  route_name: reposi.listusinactive
+  menu_name: tools
+  parent: reposi.listus
+
+reposi.listpub:
+  title: 'Publication list'
+  route_name: reposi.Reposi_public_list
+  menu_name: tools
+  parent: reposi
+
+reposi.listpubtype:
+  title: 'Publication list by publication’s type'
+  route_name: reposi.Reposi_PubListComp
+  menu_name: tools
+  parent: reposi.listpub
+
+reposi.keyword:
+  title: 'Keyword list'
+  route_name: reposi.Reposi_list_keyword
+  menu_name: tools
+  parent: reposi
