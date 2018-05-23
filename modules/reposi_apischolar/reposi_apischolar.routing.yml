@@ -70,14 +70,6 @@ reposi.define_typePublicationGS:
   requirements:
     _permission: 'administrator'
 
-reposi.testfunt:
-  path: 'reposi/testgs'
-  defaults:
-    _controller: '\Drupal\reposi_apischolar\Controller\reposi_pubgs::reposi_list_sourceGs'
-    _title: 'Scholar Test'
-  requirements:
-    _permission: 'administrator'
-
 reposi.googlelistasc:
   path: 'reposi/googlelistasc'
   defaults:
