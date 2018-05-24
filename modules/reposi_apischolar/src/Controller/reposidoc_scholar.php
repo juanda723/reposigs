@@ -17,9 +17,17 @@ use Drupal\Component\Utility\Unicode;
 
 class reposidoc_scholar extends reposi_apischolar_admin{
 
+	public static function redirect_gs($pub_id, $gs_user){
+	$link = "<script>window.open('https://scholar.google.es/citations?user=$gs_user#d=gs_md_cita-d&p=&u=%2Fcitations%3Fview_op%3Dview_citation%26hl%3Des%26user%3D$gs_user%26citation_for_view%3D$gs_user%3A$pub_id%26tzom%3D300', 'width=710,height=555,left=160,top=170')</script>";
+	$form['message'] = array('#markup' => $link);
+	echo $link;
+	return $form;
+	}
+
 	public static function pubscolar_art($uid,$p_uid,$user_gs,$p_pid_scholar){
 	$config = \Drupal::config('system.maintenance');
 	$gs_api_url = $config->get('google_scholar_api_url');
+          reposidoc_scholar::redirect_gs('WF5omc3nYNoC', 'jfjhfjhfjfjh');
 	if (empty($gs_api_url)) {
 		drupal_set_message('You must configure the module Repository -
 			Google Scholar Search API to use all its functions.', 'warning');
@@ -40,6 +48,7 @@ class reposidoc_scholar extends reposi_apischolar_admin{
 			$form = 1;
 			drupal_set_message('Error getting data. please make sure your api is working correctly.',"error");
 		}else{
+
 			$authors = explode(", ",$scholar_publication['authors']);
 			$authors = implode(",",$authors);
 			$authors = explode(",",$authors);
@@ -1725,6 +1734,7 @@ public static function docs_scholar(){
 		$reposi_user_id[] = $id_scholar['uid'];
 	}
 	global $count;
+	$before_count=0;
 	for($i=1; $i<count($scholar_user_id); $i++){
 		if(!empty($scholar_user_id[$i]) && !empty($gs_api_url)) {
 			$search_doc[$i] = $gs_api_url.'/getallpublication.php?user='.$scholar_user_id[$i].$query_size_scholar;
@@ -1800,7 +1810,6 @@ public static function docs_scholar(){
 					if (!in_array($scholar_id[$i], $db_id)) {
 
 						$publications_count = 1+$count++;
-
 						db_insert('reposi_undefined_publication')->fields(array(
 							'up_title'	=> $scholar_doc_title[$i],
 							'up_year'	=> $scholar_doc_year[$i],
@@ -1837,6 +1846,17 @@ public static function docs_scholar(){
 				}
 			}
 		}
+	if(isset($publications_count)){
+ 		if($publications_count>$before_count){
+			?>
+			<script>
+			var user = '<?php echo $scholar_user_id[$i];?>';
+			window.open("https://scholar.google.es/citations?user="+user);
+			</script>
+			<?php
+		}
+		$before_count=$publications_count;
+	}
 	}
 
 	$form['total'] = array(
@@ -1888,15 +1908,8 @@ function reposi_author_scholar(){
 		if ($authorscount<1) {drupal_set_message('AUTHOR NAME: '.$authorscount);
 		}
 		if (($authors_name['u_id_scholar']==NULL || $authors_name['u_id_scholar']=='') && $authorscount>1) {
-			$all_authors_scholar_info = '';
-			$authors_eid_catch = array();
 			$author_lastname = array();
-			$author_affilname = array();
 			$author_name = array();
-			$author_lname = array();
-			$aut_affil_name = array();
-			$author_aff_place = array();
-			$aut_affil_country = array();
 			$search_lastname_1 = Reposi_info_publication::reposi_string($authors_name['u_first_lastname']);
 			$search_lastname_2 = Reposi_info_publication::reposi_string($authors_name['u_second_lastname']);
 			$search_name_1 = Reposi_info_publication::reposi_string($authors_name['u_first_name']);
@@ -1911,6 +1924,12 @@ function reposi_author_scholar(){
 				$search_author_scholar=$gs_api_url.'/getuser.php?fname='. $search_name_1 .
 				'&sname=' . $search_name_2  . '&flast=' . $search_lastname_1 . '&slast=' . $search_lastname_2;
 			}
+?>
+<script>
+	var fullname = '<?php echo $search_name_1;?>'+'+'+'<?php echo $search_name_2;?>'+'+'+'<?php echo $search_lastname_1;?>'+'+'+'<?php echo $search_lastname_2;?>';
+	window.open("https://scholar.google.com/citations?hl=en&view_op=search_authors&mauthors="+fullname, "_blank");
+</script>
+<?php
 			if (!empty($search_author_scholar)) {
 
 
