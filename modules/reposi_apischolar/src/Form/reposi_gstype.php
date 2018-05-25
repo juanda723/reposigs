@@ -129,6 +129,21 @@ class reposi_gstype extends FormBase {
       '#value' => t('Delete'),
       '#submit' => array([$this, 'delete']),
     );
+
+    $uid=\Drupal::routeMatch()->getParameter('node');
+    //$uid
+    $serch_p = db_select('reposi_publication', 'p');
+    $serch_p->fields('p')
+    ->condition('p.p_unde', $uid, '=');
+    $search_pub = $serch_p->execute()->fetchAssoc();
+    $p_pid_scholar=$search_pub['p_pid_scholar'];
+    $p_uid=$search_pub['p_uid'];
+    $serch_u = db_select('reposi_user', 'u');
+    $serch_u->fields('u')
+    ->condition('u.uid', $p_uid, '=');
+    $search_use = $serch_u->execute()->fetchAssoc();
+    $user_gs=$search_use['u_id_scholar'];
+    reposidoc_scholar::redirect_gs($p_pid_scholar, $user_gs);
     return $form;
   }
 

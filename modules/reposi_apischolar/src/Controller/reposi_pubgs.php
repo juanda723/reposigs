@@ -28,7 +28,8 @@ class reposi_pubgs extends reposi_apischolar_admin {
       $search_publi = db_select('reposi_publication', 'p');
       $search_publi->fields('p')
       ->orderBy('p.p_year', $or_year)
-      ->orderBy('p.p_title', $or_title);
+      ->orderBy('p.p_title', $or_title)
+      ->condition('p.p_type', 'Undefined', '=');
       $pager=$search_publi->extend('Drupal\Core\Database\Query\PagerSelectExtender')->limit(20);
       $list_pub = $pager->execute();
       $publications = ' ';
@@ -103,7 +104,8 @@ class reposi_pubgs extends reposi_apischolar_admin {
       $search_publi = db_select('reposi_publication', 'p');
       $search_publi->fields('p')
       ->orderBy('p.p_year', $or_year)
-      ->orderBy('p.p_title', $or_title);
+      ->orderBy('p.p_title', $or_title)
+      ->condition('p.p_type', 'Undefined', '=');
       $pager=$search_publi->extend('Drupal\Core\Database\Query\PagerSelectExtender')->limit(20);
       $list_pub = $pager->execute();
       $publications = ' ';
@@ -178,7 +180,8 @@ class reposi_pubgs extends reposi_apischolar_admin {
       $search_publi = db_select('reposi_publication', 'p');
       $search_publi->fields('p')
       ->orderBy('p.p_title', $or_title)
-      ->orderBy('p.p_year', $or_year);
+      ->orderBy('p.p_year', $or_year)
+      ->condition('p.p_type', 'Undefined', '=');
       $pager=$search_publi->extend('Drupal\Core\Database\Query\PagerSelectExtender')->limit(20);
       $list_pub = $pager->execute();
       $publications = ' ';
@@ -253,7 +256,8 @@ class reposi_pubgs extends reposi_apischolar_admin {
       $search_publi = db_select('reposi_publication', 'p');
       $search_publi->fields('p')
       ->orderBy('p.p_title', $or_title)
-      ->orderBy('p.p_year', $or_year);
+      ->orderBy('p.p_year', $or_year)
+      ->condition('p.p_type', 'Undefined', '=');
       $pager=$search_publi->extend('Drupal\Core\Database\Query\PagerSelectExtender')->limit(20);
       $list_pub = $pager->execute();
       $publications = ' ';

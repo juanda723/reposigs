@@ -147,6 +147,7 @@ class reposidoc_scholar extends reposi_apischolar_admin{
 				'p_year'  => $new_art_year,
 				'p_check' => 0,
 				'p_abid'  => $art_id,
+				'p_pid_scholar'=> $p_pid_scholar,
 			))->execute();
 
 			if (!empty($art_vol) || !empty($art_issue) || !empty($art_spage) ||
@@ -166,12 +167,12 @@ class reposidoc_scholar extends reposi_apischolar_admin{
 				$max = 0;
 			}
 			$table = $authorss;
-			
+
 			$search_user = db_select('reposi_user', 'ru');
 			$search_user->fields('ru')
 			->condition('ru.uid', $pub_state['p_uid'], '=');
 			$userr_id = $search_user->execute()->fetchAssoc();
-			
+
 			$table[$max][0]=$userr_id['u_first_name'];
 			if(empty($userr_id['u_second_name'])){
 			$table[$max][1]=' ';
@@ -364,6 +365,7 @@ public static function pubscolar_book($uid,$p_uid,$user_gs,$p_pid_scholar){
 			'p_year'  => $new_book_year,
 			'p_check' => 0,
 			'p_abid'  => $book_id,
+			'p_pid_scholar'=> $p_pid_scholar,
 		))->execute();
 
 		if (!empty($book_vol) || !empty($book_issue) || !empty($book_url)) {
@@ -384,7 +386,7 @@ public static function pubscolar_book($uid,$p_uid,$user_gs,$p_pid_scholar){
 			$search_user->fields('ru')
 			->condition('ru.uid', $pub_state['p_uid'], '=');
 			$userr_id = $search_user->execute()->fetchAssoc();
-			
+
 			$table[$max][0]=$userr_id['u_first_name'];
 			if(empty($userr_id['u_second_name'])){
 			$table[$max][1]=' ';
@@ -617,6 +619,7 @@ public static function pubscolar_chap($uid,$p_uid,$user_gs,$p_pid_scholar){
 				'p_year'  => $new_chap_year,
 				'p_check' => 0,
 				'p_abid'  => $chap_id,
+				'p_pid_scholar'=> $p_pid_scholar,
 			))->execute();
 
 			if (!empty($chap_vol) || !empty($chap_issue) || !empty($chap_start_page) ||
@@ -640,7 +643,7 @@ public static function pubscolar_chap($uid,$p_uid,$user_gs,$p_pid_scholar){
 			$search_user->fields('ru')
 			->condition('ru.uid', $pub_state['p_uid'], '=');
 			$userr_id = $search_user->execute()->fetchAssoc();
-			
+
 			$table[$max][0]=$userr_id['u_first_name'];
 			if(empty($userr_id['u_second_name'])){
 			$table[$max][1]=' ';
@@ -893,6 +896,7 @@ public static function pubscolar_con($uid,$p_uid,$user_gs,$p_pid_scholar){
 				'p_year'  => $new_con_year,
 				'p_check' => 0,
 				'p_cpid'  => $conference_id,
+				'p_pid_scholar'=> $p_pid_scholar,
 			))->execute();
 			$max = count($authorss);
 			if(is_null($max)) {
@@ -903,7 +907,7 @@ public static function pubscolar_con($uid,$p_uid,$user_gs,$p_pid_scholar){
 			$search_user->fields('ru')
 			->condition('ru.uid', $pub_state['p_uid'], '=');
 			$userr_id = $search_user->execute()->fetchAssoc();
-			
+
 			$table[$max][0]=$userr_id['u_first_name'];
 			if(empty($userr_id['u_second_name'])){
 			$table[$max][1]=' ';
@@ -1116,6 +1120,7 @@ public static function pubscolar_pat($uid,$p_uid,$user_gs,$p_pid_scholar){
 				'p_year'  => $new_pat_year,
 				'p_check' => 0,
 				'p_cpid'  => $patent_id,
+				'p_pid_scholar'=> $p_pid_scholar,
 			))->execute();
 
 
@@ -1128,7 +1133,7 @@ public static function pubscolar_pat($uid,$p_uid,$user_gs,$p_pid_scholar){
 			$search_user->fields('ru')
 			->condition('ru.uid', $pub_state['p_uid'], '=');
 			$userr_id = $search_user->execute()->fetchAssoc();
-			
+
 			$table[$max][0]=$userr_id['u_first_name'];
 			if(empty($userr_id['u_second_name'])){
 			$table[$max][1]=' ';
@@ -1343,6 +1348,7 @@ public static function pubscolar_the($uid,$p_uid,$user_gs,$p_pid_scholar){
 				'p_year'  => $new_the_year,
 				'p_check' => 0,
 				'p_tsid'  => $thesis_id,
+				'p_pid_scholar'=> $p_pid_scholar,
 			))->execute();
 
 
@@ -1355,7 +1361,7 @@ public static function pubscolar_the($uid,$p_uid,$user_gs,$p_pid_scholar){
 			$search_user->fields('ru')
 			->condition('ru.uid', $pub_state['p_uid'], '=');
 			$userr_id = $search_user->execute()->fetchAssoc();
-			
+
 			$table[$max][0]=$userr_id['u_first_name'];
 			if(empty($userr_id['u_second_name'])){
 			$table[$max][1]=' ';
@@ -1567,6 +1573,7 @@ public static function pubscolar_sof($uid,$p_uid,$user_gs,$p_pid_scholar){
 				'p_year'  => $new_sw_year,
 				'p_check' => 0,
 				'p_tsid'  => $sw_id,
+				'p_pid_scholar'=> $p_pid_scholar,
 			))->execute();
 
 
@@ -1579,7 +1586,7 @@ public static function pubscolar_sof($uid,$p_uid,$user_gs,$p_pid_scholar){
 			$search_user->fields('ru')
 			->condition('ru.uid', $pub_state['p_uid'], '=');
 			$userr_id = $search_user->execute()->fetchAssoc();
-			
+
 			$table[$max][0]=$userr_id['u_first_name'];
 			if(empty($userr_id['u_second_name'])){
 			$table[$max][1]=' ';
@@ -1693,7 +1700,7 @@ public static function docs_scholar(){
 			$query_size_scholar = '400';
 		} elseif ($query_size == 5){
 			$query_size_scholar = '500';
-		} 
+		}
 	} else {
 		$query_size_scholar = '100';
 	}
