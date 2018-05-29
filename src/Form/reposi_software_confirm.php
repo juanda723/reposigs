@@ -130,6 +130,7 @@ class reposi_software_confirm extends ConfirmFormBase{
         ->condition('ap_tsid', $sw_id)
         ->execute();
       foreach ($new_aut2 as $new_aut) {
+        if(!empty($new_aut['first_name']) && !empty($new_aut['f_lastname'])){
         $search_aut = db_select('reposi_author', 'a');
         $search_aut->fields('a')
                    ->condition('a.a_first_name', $new_aut['first_name'], '=')
@@ -177,6 +178,7 @@ class reposi_software_confirm extends ConfirmFormBase{
           }
         }
       }
+    }
     } 
 
            drupal_set_message(t('The software was updated.'));

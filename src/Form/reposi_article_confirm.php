@@ -281,6 +281,7 @@ class reposi_article_confirm extends ConfirmFormBase{
         ->condition('ap_abid', $art_id)
         ->execute();
       foreach ($art_author as $new_aut) {
+        if(!empty($new_aut['first_name']) && !empty($new_aut['f_lastname'])){
         $search_aut = db_select('reposi_author', 'a');
         $search_aut->fields('a')
                    ->condition('a.a_first_name', $new_aut['first_name'], '=')
@@ -328,6 +329,7 @@ class reposi_article_confirm extends ConfirmFormBase{
           }
         }
       }
+    }
     }
            drupal_set_message(t('The publication was updated.'));
            $form_state->setRedirect('reposi.Reposi_articleinformation', ['node' => $art_id]);
