@@ -1547,7 +1547,7 @@ public static function pubscolar_sof($uid,$p_uid,$user_gs,$p_pid_scholar){
 			$serch_rp = db_select('reposi_thesis_sw', 'rp');
 			$serch_rp->fields('rp')
 			->condition('rp.ts_type', 'Software', '=')
-			->condition('rp.ts_title', $p_title, '=');
+			->condition('rp.ts_title', $sw_title, '=');
 			$search_pubc = $serch_rp->execute()->fetchAssoc();
 			if (!empty($search_pubc)) {
 				drupal_set_message('Error, the Software already exists. To import you must delete the existing Conferen','error');
