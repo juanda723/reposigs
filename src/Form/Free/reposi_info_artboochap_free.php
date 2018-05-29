@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\reposi\Form;
+namespace Drupal\reposi\Form\Free;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormState;

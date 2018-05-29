@@ -1,5 +1,5 @@
 <?php
-namespace Drupal\reposi\Form;
+namespace Drupal\reposi\Form\Confirm;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -23,7 +23,7 @@ class reposi_thesis_confirm extends ConfirmFormBase{
      */
     public function getQuestion() {
 
-       return t('Thesis update confirmation'); 
+       return t('Thesis update confirmation');
     }
 
     /**
@@ -37,7 +37,7 @@ class reposi_thesis_confirm extends ConfirmFormBase{
      * {@inheritdoc}
      */
     public function getDescription() {
-	$description =t('Do you want update this information?'); 
+	$description =t('Do you want update this information?');
 	return $description;
     }
 
@@ -155,7 +155,7 @@ class reposi_thesis_confirm extends ConfirmFormBase{
       'd_month' => $new_month,
       'd_year'  => $new_year,
     ))->condition('d_tsid', $the_id)
-    ->execute(); 
+    ->execute();
   for ($q = 0; $q <= count($the_keywords) ; $q++) {
     if (!empty($the_keywords[$q]['key'])) {
       $new_keywords2[] = $the_keywords[$q]['key'];
@@ -198,10 +198,10 @@ class reposi_thesis_confirm extends ConfirmFormBase{
                 'pk_keyword_id' => $serch_keyw[$cont_keywords],
                 'pk_tsid'       => $the_id,
               ))->execute();
-            } 
+            }
           }
           $cont_keywords++;
-        }  
+        }
       }
     }
     if (!empty($new_aut2)) {
@@ -258,7 +258,7 @@ class reposi_thesis_confirm extends ConfirmFormBase{
         }
       }
     }
-    } 
+    }
            drupal_set_message(t('The publication was updated.'));
            $form_state->setRedirect('reposi.Reposi_thesinformation', ['node' => $the_id]);
 }

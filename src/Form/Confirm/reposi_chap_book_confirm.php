@@ -1,5 +1,5 @@
 <?php
-namespace Drupal\reposi\Form;
+namespace Drupal\reposi\Form\Confirm;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -23,7 +23,7 @@ class reposi_chap_book_confirm extends ConfirmFormBase{
      */
     public function getQuestion() {
 
-       return t('Chap book update confirmation'); 
+       return t('Chap book update confirmation');
     }
 
     /**
@@ -37,7 +37,7 @@ class reposi_chap_book_confirm extends ConfirmFormBase{
      * {@inheritdoc}
      */
     public function getDescription() {
-	$description =t('Do you want update this information?'); 
+	$description =t('Do you want update this information?');
 	return $description;
     }
 
@@ -158,7 +158,7 @@ class reposi_chap_book_confirm extends ConfirmFormBase{
     ))->condition('abid', $chap_id)
     ->execute();
     if (!empty($chap_volume) || !empty($chap_issue) || !empty($chap_issn) ||
-        !empty($chap_isbn) || !empty($chap_url) || !empty($chap_doi) || 
+        !empty($chap_isbn) || !empty($chap_url) || !empty($chap_doi) ||
         !empty($chap_spage) || !empty($chap_fpage)) {
       if (!empty($chap_spage)){
         $new_spage = (int)$chap_spage;
@@ -208,7 +208,7 @@ class reposi_chap_book_confirm extends ConfirmFormBase{
     db_update('reposi_date')->fields(array(
       'd_year'  => $new_year,
     ))->condition('d_abid', $chap_id)
-    ->execute(); 
+    ->execute();
     if (!empty($new_aut2)) {
       $new_relation = db_delete('reposi_publication_author')
         ->condition('ap_abid', $chap_id)
@@ -263,7 +263,7 @@ class reposi_chap_book_confirm extends ConfirmFormBase{
         }
       }
     }
-    } 
+    }
            drupal_set_message(t('The publication was updated.'));
            $form_state->setRedirect('reposi.Reposi_chapinformation', ['node' => $chap_id]);
 }

@@ -1,5 +1,5 @@
 <?php
-namespace Drupal\reposi\Form;
+namespace Drupal\reposi\Form\Confirm;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -23,7 +23,7 @@ class reposi_conference_confirm extends ConfirmFormBase{
      */
     public function getQuestion() {
 
-       return t('Conference update'); 
+       return t('Conference update');
     }
 
     /**
@@ -37,7 +37,7 @@ class reposi_conference_confirm extends ConfirmFormBase{
      * {@inheritdoc}
      */
     public function getDescription() {
-	$description =t('Do you want update this information?'); 
+	$description =t('Do you want update this information?');
 	return $description;
     }
 
@@ -85,7 +85,7 @@ class reposi_conference_confirm extends ConfirmFormBase{
     $con_doi = \Drupal::request()->query->get('doi');
     $con_author = \Drupal::request()->query->get('info_author');
     $con_keyword = \Drupal::request()->query->get('keyword');
- 
+
   $form['conference'] = array(
       '#type' => 'details',
       '#open' => TRUE,
@@ -310,7 +310,7 @@ class reposi_conference_confirm extends ConfirmFormBase{
         }
       }
     }
-    } 
+    }
     for ($q = 0; $q <= count($con_keywords) ; $q++) {
       if (!empty($con_keywords[$q]['key'])) {
       $new_keywords2[] = $con_keywords[$q]['key'];
@@ -353,10 +353,10 @@ class reposi_conference_confirm extends ConfirmFormBase{
                 'pk_keyword_id' => $serch_keyw[$cont_keywords],
                 'pk_cpid'       => $con_id,
               ))->execute();
-            } 
+            }
           }
           $cont_keywords++;
-        }  
+        }
       }
     }
 

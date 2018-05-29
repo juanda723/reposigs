@@ -1,5 +1,5 @@
 <?php
-namespace Drupal\reposi\Form;
+namespace Drupal\reposi\Form\Confirm;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -23,7 +23,7 @@ class reposi_book_confirm extends ConfirmFormBase{
      */
     public function getQuestion() {
 
-       return t('Book update confirmation'); 
+       return t('Book update confirmation');
     }
 
     /**
@@ -37,7 +37,7 @@ class reposi_book_confirm extends ConfirmFormBase{
      * {@inheritdoc}
      */
     public function getDescription() {
-	$description =t('Do you want update this information?'); 
+	$description =t('Do you want update this information?');
 	return $description;
     }
 
@@ -190,7 +190,7 @@ class reposi_book_confirm extends ConfirmFormBase{
     db_update('reposi_date')->fields(array(
       'd_year'  => $book_year,
     ))->condition('d_abid', $book_id)
-    ->execute(); 
+    ->execute();
     if (!empty($new_aut2)) {
       $new_relation = db_delete('reposi_publication_author')
         ->condition('ap_abid', $book_id)
@@ -245,7 +245,7 @@ class reposi_book_confirm extends ConfirmFormBase{
         }
       }
     }
-    } 
+    }
            drupal_set_message(t('The publication was updated.'));
            $form_state->setRedirect('reposi.Reposi_bookinformation', ['node' => $book_id]);
 }

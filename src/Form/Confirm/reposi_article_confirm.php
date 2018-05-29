@@ -1,5 +1,5 @@
 <?php
-namespace Drupal\reposi\Form;
+namespace Drupal\reposi\Form\Confirm;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -23,7 +23,7 @@ class reposi_article_confirm extends ConfirmFormBase{
      */
     public function getQuestion() {
 
-       return t('Article update confirmation'); 
+       return t('Article update confirmation');
     }
 
     /**
@@ -37,7 +37,7 @@ class reposi_article_confirm extends ConfirmFormBase{
      * {@inheritdoc}
      */
     public function getDescription() {
-	$description =t('Do you want update this information?'); 
+	$description =t('Do you want update this information?');
 	return $description;
     }
 
@@ -130,7 +130,7 @@ class reposi_article_confirm extends ConfirmFormBase{
       '#open' => TRUE,
       '#title' => t('DOI'),
     );
-   $description = '<li>'. '<i>'. t('Volume: ') . '</i>' . $art_vol. '</li>' . 
+   $description = '<li>'. '<i>'. t('Volume: ') . '</i>' . $art_vol. '</li>' .
             '<li>'. '<i>'. t('Issue: ') . '</i>' . $art_issue . '</li>' .
             '<li>'. '<i>'. t('Start page: ') . '</i>' . $art_spage . '</li>' .
             '<li>'. '<i>'. t('Final page: ') . '</i>' . $art_fpage . '</li>' .
@@ -225,7 +225,7 @@ class reposi_article_confirm extends ConfirmFormBase{
       'd_month' => $new_month,
       'd_year'  => $art_year,
     ))->condition('d_abid', $art_id)
-    ->execute(); 
+    ->execute();
 
 
   for ($q = 0; $q <= count($art_keyword) ; $q++) {
@@ -270,12 +270,12 @@ class reposi_article_confirm extends ConfirmFormBase{
                 'pk_keyword_id' => $serch_keyw[$cont_keywords],
                 'pk_abid'       => $art_id,
               ))->execute();
-            } 
+            }
           }
           $cont_keywords++;
-        }  
+        }
       }
-    }       
+    }
     if (!empty($art_author)) {
       $new_relation = db_delete('reposi_publication_author')
         ->condition('ap_abid', $art_id)

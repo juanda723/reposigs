@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\reposi\Form;
+namespace Drupal\reposi\Form\Info;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormState;
@@ -14,7 +14,7 @@ use Drupal\Component\Utility\UrlHelper;
 /**
  * Implements an example form.
  */
-class Reposi_thesis extends FormBase {
+class Reposi_thesis_form extends FormBase {
 
   public function getFormId() {
     return 'add_thesis_form';

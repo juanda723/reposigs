@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\reposi\Form;
+namespace Drupal\reposi\Form\Info;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormState;
@@ -9,20 +9,27 @@ use Drupal\Core\Database\Query;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\reposi\Controller\Reposi_info_publication;
+use Drupal\Component\Utility\UrlHelper;
 
 /**
  * Implements an example form.
  */
-class Reposi_thesis_form extends FormBase {
+class Reposi_article_form extends FormBase {
 
   public function getFormId() {
-    return 'add_thesis_form';
+    return 'AddArticle_form';
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
 
-  $markup = '<p>' . '<i>' . t('You must complete the required fields before the 
-            add authors or keywords.') . '</i>' . '</p>';
+/*ISSET: Determina si una variable está definida y no es NULL.
+$form_state['storage']: Los datos colocados en el contenedor de almacenamiento de la colección $ form_state se almacenarán automáticamente en caché y se volverán a cargar cuando se envíe el formulario, permitiendo que su código acumule datos de paso a paso y lo procese en la etapa final sin ningún código adicional
+ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABLE ESTÁ DEBIDAMENTE DECLARADA CON ANTERIORIDAD
+      $form_state['storage']['author'] = isset($form_state['storage']['author'])?
+                                         $form_state['storage']['author']:1;*/
+
+  $markup = '<p>' . '<i>' . t('You must complete the required fields before the
+            add producers.') . '</i>' . '</p>';
   $form['body'] = array('#markup' => $markup);
   $form['title'] = array(
     '#title' => t('Title'),
@@ -30,6 +37,11 @@ class Reposi_thesis_form extends FormBase {
     '#required' => TRUE,
     '#maxlength' => 511,
   );
+  $form['abstract'] = array(
+    '#title' => t('Abstract'),
+    '#type' => 'textarea',
+  );
+
   //*****************************************************************************************
   //*************************************PUBLICATION DATE************************************
   //*****************************************************************************************
@@ -136,9 +148,9 @@ class Reposi_thesis_form extends FormBase {
       ),
     );
 
-  //*****************************************************************************************//
-  //*********************************KEYWORD KEYWORD KEYWORD*********************************//
-  //*****************************************************************************************//
+  //*****************************************************************************************
+  //*********************************KEYWORD KEYWORD KEYWORD*********************************
+  //*****************************************************************************************
 
   $form['keyword'] = array(
       '#type' => 'details',
@@ -190,44 +202,66 @@ class Reposi_thesis_form extends FormBase {
     );
 
 
-  //*****************************************************************************************//
-  //********************************JOURNAL/BOOK JOURNAL/BOOK *******************************//
-  //*****************************************************************************************//
+  //*****************************************************************************************
+  //********************************JOURNAL/BOOK JOURNAL/BOOK *******************************
+  //*****************************************************************************************
 
-  $form['institu'] = array(
-    '#title' => t('Academic institution'),
+  $form['journal'] = array(
+    '#title' => t('Journal/Book'),
+      '#type' => 'details',
+      '#open' => TRUE,
+  );
+  $form['journal']['jou_name'] = array(
+    '#title' => t('Journal/Book'),
     '#type' => 'textfield',
   );
-  $form['degree'] = array(
-    '#title' => t('Type degree'),
-    '#type' => 'select',
-    '#options' => array(t('University Degree'), 
-                        t('Specialization’s Degree'), 
-                        t('Master’s Degree'), 
-                        t('PhD thesis')),
-    '#required' => TRUE,
+  $form['journal']['jou_volume'] = array(
+    '#title' => t('Volume'),
+    '#type' => 'textfield',
   );
-  $form['discipline'] = array(
-    '#title' => t('Discipline'),
+  $form['journal']['jou_issue'] = array(
+    '#title' => t('Number (Issue)'),
+    '#type' => 'textfield',
+  );
+  $form['journal']['jou_start_page'] = array(
+    '#title' => t('Start page'),
+    '#type' => 'textfield',
+    '#maxlength' => 10,
+  );
+  $form['journal']['jou_final_page'] = array(
+    '#title' => t('Final page'),
+    '#type' => 'textfield',
+    '#maxlength' => 10,
+  );
+  $form['journal']['jou_issn'] = array(
+    '#title' => t('ISSN'),
     '#type' => 'textfield',
   );
   $form['url'] = array(
     '#title' => t('URL'),
+    '#description' => t('Example: https://www.example.com'),
     '#type' => 'textfield',
     '#maxlength' => 511,
   );
-
+  $form['doi'] = array(
+    '#title' => t('DOI'),
+    '#type' => 'textfield',
+  );
+  $form['save'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+  );
   /******************************************************************/
   /******************************************************************/
   /******************************************************************/
 
 //--------------------------------------------------------------------------------------------------------
-   
+
 //--------------------------------------------------------------------------------------------------------
    return $form;
 
   }
- 
+
   public function addfieldsubmit(array &$form, FormStateInterface &$form_state) {
     $max = $form_state->get('fields_count') + 1;
     $form_state->set('fields_count',$max);
@@ -254,38 +288,50 @@ class Reposi_thesis_form extends FormBase {
 
   //------------------------------------------------------------------------------------------------
 
- /* $name_validate = $form_state->getValue('title');
-  $search_sw = db_select('reposi_thesis_sw', 'sw');
-  $search_sw->fields('sw')
-          ->condition('sw.ts_type', 'Thesis', '=')
-          ->condition('sw.ts_title', $name_validate, '=');
-  $info_sw = $search_sw->execute();
-  $new_name=Reposi_info_publication::reposi_string($name_validate);
-  foreach ($info_sw as $titles) {
-    $new_titles=Reposi_info_publication::reposi_string($titles->ts_title);
-    if (strcasecmp($new_name, $new_titles) == 0) {
-      $form_state->setErrorByName('publi_title', t('This Thesis exists on Data Base.'));
+  $title_validate = $form_state->getValue('title');
+  $search_art = db_select('reposi_article_book', 'ab');
+  $search_art->fields('ab')
+          ->condition('ab.ab_type', 'Article', '=')
+          ->condition('ab.ab_title', $title_validate, '=');
+  $info_art = $search_art->execute();
+  $new_title=Reposi_info_publication::reposi_string($title_validate);
+  foreach ($info_art as $titles) {
+    $new_titles=Reposi_info_publication::reposi_string($titles->ab_title);
+    if (strcasecmp($new_title, $new_titles) == 0) {
+      $form_state->setErrorByName('publi_title', t('This Article exists on Data Base.'));
     }
   }
 
   // DAY, month year ARTICLE VALIDATION
 
   $day_validate = $form_state->getValue('day');
-  if(!empty($day_validate) && (!is_numeric($day_validate) || 
+  if(!empty($day_validate) && (!is_numeric($day_validate) ||
       $day_validate > '31' || $day_validate < '1')) {
     $form_state->setErrorByName('day', t('It is not an allowable value for day.'));
-  } 
-  
+  }
+
   $month_validate =  $form_state->getValue('month');
-  if(!empty($month_validate) && (!is_numeric($month_validate) || 
+  if(!empty($month_validate) && (!is_numeric($month_validate) ||
       $month_validate > '12' || $month_validate < '1')) {
     $form_state->setErrorByName('month', t('It is not an allowable value for month.'));
-  } 
+  }
 
   $year_validate = $form_state->getValue('year');
-  if(!is_numeric($year_validate) || $year_validate > '9999' || 
+  if(!is_numeric($year_validate) || $year_validate > '9999' ||
       $year_validate < '1000') {
     $form_state->setErrorByName('year', t('It is not an allowable value for year.'));
+  }
+
+  $startp_validate = $form_state->getValue('jou_start_page');
+  if(!empty($startp_validate) && (!is_numeric($startp_validate) ||
+      $startp_validate < '0')){
+    $form_state->setErrorByName('jou_start_page', t('Start page is a numerical field.'));
+  }
+
+  $finalp_validate = $form_state->getValue('jou_final_page');
+  if(!empty($finalp_validate) && (!is_numeric($finalp_validate) ||
+      $finalp_validate < '0')){
+    $form_state->setErrorByName('jou_final_page', t('Final page is a numerical field.'));
   }
 
   $table = $form_state->getValue('table');
@@ -295,76 +341,100 @@ class Reposi_thesis_form extends FormBase {
   $key = $form_state->getValue('keywordtable');
   $keyword=$key[0]['key'];
   if (empty($first_name_validate) || empty($first_lastname_validate)){
-    $form_state->setErrorByName('first_name', t('One author is required as minimum 
+    $form_state->setErrorByName('first_name', t('One author is required as minimum
     (first name and last name).'));
   }
 
   if (empty($keyword)){
         drupal_set_message(t('One keyword is required as minimum.'), 'warning');
-  }*/
+  }
+  $url=$form_state->getValue('url');
+  if(!empty($url) && !UrlHelper::isValid($url, TRUE))
+  {
+   $form_state->setErrorByName('uri', t('The URL is not valid.'));
+  }
+
   }
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-/*
-  $the_title = $form_state->getValue('title');
-  $the_day = $form_state->getValue('day');
-  $the_mon = $form_state->getValue('month');
-  $the_year = $form_state->getValue('year');
-  $the_institu = $form_state->getValue('institu');
-  $the_degree = $form_state->getValue('degree');
-  $the_disc = $form_state->getValue('discipline');
-  $the_url = $form_state->getValue('url');
-  if ($the_degree == 0) {
-    $degree = 'University Degree';
-  } elseif ($the_degree == 1) {
-    $degree = 'Specialization’s Degree';
-  } elseif ($the_degree == 2) {
-    $degree = 'Master’s Degree';
-  } elseif ($the_degree == 3) {
-    $degree = 'Doctorate';
-  }
-  db_insert('reposi_thesis_sw')->fields(array(
-      'ts_type'        => 'Thesis',
-      'ts_title'       => $the_title,
-      'ts_institu_ver' => $the_institu,
-      'ts_degree'      => $degree,
-      'ts_discip_place'=> $the_disc,
-      'ts_url'         => $the_url,
+
+
+  $adm_aca_type = $form_state->getValue('name');
+  $author1_validate = $form_state->getValue('table');
+  $art_title = $form_state->getValue('title');
+  $art_abstract = $form_state->getValue('abstract');
+  $art_day = $form_state->getValue('day');
+  $art_month = $form_state->getValue('month');
+  $art_year = $form_state->getValue('year');
+  $art_name = $form_state->getValue('jou_name');
+  $art_vol = $form_state->getValue('jou_volume');
+  $art_issue = $form_state->getValue('jou_issue');
+  $art_spage = $form_state->getValue('jou_start_page');
+  $art_fpage = $form_state->getValue('jou_final_page');
+  $art_issn = $form_state->getValue('jou_issn');
+  $art_url = $form_state->getValue('url');
+  $art_doi = $form_state->getValue('doi');
+  db_insert('reposi_article_book')->fields(array(
+      'ab_type'              => 'Article',
+      'ab_title'             => $art_title,
+      'ab_abstract'          => $art_abstract,
+      'ab_journal_editorial' => $art_name,
   ))->execute();
-  $search_the = db_select('reposi_thesis_sw', 'th');
-  $search_the->fields('th')
-          ->condition('th.ts_type', 'Thesis', '=')
-          ->condition('th.ts_title', $the_title, '=');
-  $the_id = $search_the->execute()->fetchField();
-  $thesis_id = (int)$the_id;
-  if (!empty($the_day)) {
-    $thesis_day = (int)$the_day;
+  $search_art = db_select('reposi_article_book', 'ab');
+  $search_art->fields('ab')
+          ->condition('ab.ab_type', 'Article', '=')
+          ->condition('ab.ab_title', $art_title, '=');
+  $art_id = $search_art->execute()->fetchField();
+  $new_art_year = (int)$art_year;
+  if (!empty($art_day)) {
+    $new_art_day = (int)$art_day;
   } else {
-    $thesis_day = NULL;
+    $new_art_day = NULL;
   }
-  if (!empty($the_mon)) {
-    $thesis_mon = (int)$the_mon;
+  if (!empty($art_month)) {
+    $new_art_month = (int)$art_month;
   } else {
-    $thesis_mon = NULL;
+    $new_art_month = NULL;
   }
-  $thesis_year = (int)$the_year;
   db_insert('reposi_date')->fields(array(
-      'd_day'   => $thesis_day,
-      'd_month' => $thesis_mon,
-      'd_year'  => $thesis_year,
-      'd_tsid'  => $thesis_id,
+      'd_day'  => $new_art_day,
+      'd_month'=> $new_art_month,
+      'd_year' => $new_art_year,
+      'd_abid' => $art_id,
   ))->execute();
   db_insert('reposi_publication')->fields(array(
-      'p_type'  => 'Thesis',
-      'p_title' => $the_title,
-      'p_year'  => $thesis_year,
+      'p_type'  => 'Article',
+      'p_source'=> 'Manual',
+      'p_title' => $art_title,
+      'p_year'  => $new_art_year,
       'p_check' => 1,
-      'p_tsid'  => $thesis_id,
+      'p_abid'  => $art_id,
   ))->execute();
-
-
+  if (!empty($art_spage)) {
+    $art_start_page = (int)$art_spage;
+  } else {
+    $art_start_page = NULL;
+  }
+  if (!empty($art_fpage)) {
+    $art_final_page = (int)$art_fpage;
+  } else {
+    $art_final_page = NULL;
+  }
+  if (!empty($art_vol) || !empty($art_issue) || !empty($art_spage) ||
+      !empty($art_fpage) || !empty($art_issn) || !empty($art_url) || !empty($art_doi)) {
+    db_insert('reposi_article_book_detail')->fields(array(
+      'abd_volume'     => $art_vol,
+      'abd_issue'      => $art_issue,
+      'abd_start_page' => $art_start_page,
+      'abd_final_page' => $art_final_page,
+      'abd_issn'       => $art_issn,
+      'abd_url'        => $art_url,
+      'abd_doi'        => $art_doi,
+      'abd_abid'       => $art_id,
+    ))->execute();
+  }
 //-------------------------------------------------------------------------------------------------------------------------
   $max = $form_state->get('fields_count');
   if(is_null($max)) {
@@ -377,13 +447,13 @@ class Reposi_thesis_form extends FormBase {
   $first_lastname_validate=$table[$a]['f_lastname'];
   $aut_fn=$table[$a]['first_name'];
   $aut_sn=$table[$a]['second_name'];
-  $aut_fl=$table[$a]['f_lastname']; 
+  $aut_fl=$table[$a]['f_lastname'];
   $aut_sl=$table[$a]['s_lastname'];
- 
-   !empty($aut_fn)?strtolower($aut_fn):'';
-   !empty($aut_sn)?strtolower($aut_sn):'';
-   !empty($aut_fl)?strtolower($aut_fl):'';
-   !empty($aut_sl)?strtolower($aut_sl):'';
+
+   !empty($aut_fn)?$aut_fn:'';
+   !empty($aut_sn)?$aut_sn:'';
+   !empty($aut_fl)?$aut_fl:'';
+   !empty($aut_sl)?$aut_sl:'';
 
     $info_author = array('a_first_name'      => ucfirst($aut_fn),
                          'a_second_name'     => ucfirst($aut_sn),
@@ -411,18 +481,18 @@ class Reposi_thesis_form extends FormBase {
         $aut_publi_id = (int)$serch2_aut[$a];
         db_insert('reposi_publication_author')->fields(array(
           'ap_author_id' => $aut_publi_id,
-          'ap_tsid'      => $thesis_id,
+          'ap_abid'      => $art_id,
         ))->execute();
       } else {
         $aut_publi_id2 = (int)$serch_aut[$a];
         db_insert('reposi_publication_author')->fields(array(
             'ap_author_id' => $aut_publi_id2,
-            'ap_tsid'      => $thesis_id,
+            'ap_abid'      => $art_id,
         ))->execute();
       }
     } else {
       if(isset($table[$a]['first_name']) || isset($table[$a]['f_lastname'])){
-        drupal_set_message(t('The authors without first name or first 
+        drupal_set_message(t('The authors without first name or first
         last name will not be save.'), 'warning');
       }
     }
@@ -433,8 +503,8 @@ class Reposi_thesis_form extends FormBase {
       $form_state->set('fields_keyword_count', $max);
     }
 
- 
-  for ($q = 0; $q <= $maxkeyword ; $q++) { 
+
+  for ($q = 0; $q <= $maxkeyword ; $q++) {
   $keyword = $form_state->getValue('keywordtable');
     if (!empty($keyword[$q]['key'])) {
       $keywords[] = $keyword[$q]['key'];
@@ -460,21 +530,23 @@ class Reposi_thesis_form extends FormBase {
         $serch2_keyw_id = (int)$serch2_keyw[$cont_keywords];
         db_insert('reposi_publication_keyword')->fields(array(
         'pk_keyword_id' => $serch2_keyw_id,
-        'pk_tsid'       => $thesis_id,
+        'pk_abid'       => $art_id,
       ))->execute();
       } else {
         $serch_keyw_id = (int)$serch_keyw[$cont_keywords];
         db_insert('reposi_publication_keyword')->fields(array(
           'pk_keyword_id' => $serch_keyw_id,
-          'pk_tsid'       => $thesis_id,
+          'pk_abid'       => $art_id,
         ))->execute();
       }
       $cont_keywords++;
-    } 
-  }   
+    }
+  }
 
-  drupal_set_message(t('Thesis: ') . $the_title . t(' was update.')); 
-*/
+  drupal_set_message(t('Article: ') . $art_title . t(' was save.'));
+
+
+
 //-------------------------------------------------------------------------------------------------------------------------
   }
 // Llave que cierra la clase:--->

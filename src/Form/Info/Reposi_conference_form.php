@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\reposi\Form;
+namespace Drupal\reposi\Form\Info;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormState;
@@ -14,10 +14,10 @@ use Drupal\Component\Utility\UrlHelper;
 /**
  * Implements an example form.
  */
-class Reposi_article_form extends FormBase {
+class Reposi_conference_form extends FormBase {
 
   public function getFormId() {
-    return 'AddArticle_form';
+    return 'add_conference_form';
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
@@ -28,11 +28,17 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
       $form_state['storage']['author'] = isset($form_state['storage']['author'])?
                                          $form_state['storage']['author']:1;*/
 
-  $markup = '<p>' . '<i>' . t('You must complete the required fields before the
-            add producers.') . '</i>' . '</p>';
+  $_reposi_start_form=TRUE;
+  $markup = '<p>' . '<i>' . t('You must complete the required fields before the add authors or keywords.') . '</i>' . '</p>';
   $form['body'] = array('#markup' => $markup);
   $form['title'] = array(
-    '#title' => t('Title'),
+    '#title' => t('Title presentation/publication'),
+    '#type' => 'textfield',
+    '#required' => TRUE,
+    '#maxlength' => 511,
+  );
+  $form['confer'] = array(
+    '#title' => t('Conference'),
     '#type' => 'textfield',
     '#required' => TRUE,
     '#maxlength' => 511,
@@ -41,6 +47,7 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
     '#title' => t('Abstract'),
     '#type' => 'textarea',
   );
+
 
   //*****************************************************************************************
   //*************************************PUBLICATION DATE************************************
@@ -206,37 +213,78 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
   //********************************JOURNAL/BOOK JOURNAL/BOOK *******************************
   //*****************************************************************************************
 
-  $form['journal'] = array(
-    '#title' => t('Journal/Book'),
-      '#type' => 'details',
-      '#open' => TRUE,
+  $form['start_date'] = array(
+    '#title' => t('Start date'),
+    '#type' => 'details',
+    '#open' => TRUE,
   );
-  $form['journal']['jou_name'] = array(
-    '#title' => t('Journal/Book'),
+  $form['start_date']['start_day'] = array(
+    '#title' => t('Day'),
     '#type' => 'textfield',
+    '#size' => 5,
+    '#description' => t('1-31'),
   );
-  $form['journal']['jou_volume'] = array(
-    '#title' => t('Volume'),
+  $form['start_date']['start_month'] = array(
+    '#title' => t('Month'),
     '#type' => 'textfield',
+    '#size' => 5,
+    '#description' => t('1-12'),
   );
-  $form['journal']['jou_issue'] = array(
-    '#title' => t('Number (Issue)'),
+  $form['start_date']['start_year'] = array(
+    '#title' => t('Year'),
     '#type' => 'textfield',
+    '#size' => 5,
+    '#required' => TRUE,
+    '#description' => t('Four numbers'),
   );
-  $form['journal']['jou_start_page'] = array(
+  $form['end_date'] = array(
+    '#title' => t('Ending date'),
+    '#type' => 'details',
+    '#open' => TRUE,
+  );
+  $form['end_date']['end_day'] = array(
+    '#title' => t('Day'),
+    '#type' => 'textfield',
+    '#size' => 5,
+    '#description' => t('1-31'),
+  );
+  $form['end_date']['end_month'] = array(
+    '#title' => t('Month'),
+    '#type' => 'textfield',
+    '#size' => 5,
+    '#description' => t('1-12'),
+  );
+  $form['end_date']['end_year'] = array(
+    '#title' => t('Year'),
+    '#type' => 'textfield',
+    '#size' => 5,
+    '#required' => TRUE,
+    '#description' => t('Four numbers'),
+  );
+
+  $form['start_page'] = array(
     '#title' => t('Start page'),
     '#type' => 'textfield',
     '#maxlength' => 10,
   );
-  $form['journal']['jou_final_page'] = array(
+  $form['final_page'] = array(
     '#title' => t('Final page'),
     '#type' => 'textfield',
     '#maxlength' => 10,
   );
-  $form['journal']['jou_issn'] = array(
-    '#title' => t('ISSN'),
+  $form['num_event'] = array(
+    '#title' => t('Event number'),
     '#type' => 'textfield',
   );
+  $form['sponsor'] = array(
+    '#title' => t('Sponsor(s): (Each separate by comma)'),
+    '#type' => 'textfield',
+  );
+  $form['place'] = array(
+    '#title' => t('Event place'),
+    '#type' => 'textfield',
+  );
+
   $form['url'] = array(
     '#title' => t('URL'),
     '#description' => t('Example: https://www.example.com'),
@@ -289,70 +337,95 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
   //------------------------------------------------------------------------------------------------
 
   $title_validate = $form_state->getValue('title');
-  $search_art = db_select('reposi_article_book', 'ab');
-  $search_art->fields('ab')
-          ->condition('ab.ab_type', 'Article', '=')
-          ->condition('ab.ab_title', $title_validate, '=');
-  $info_art = $search_art->execute();
+  $search_pat = db_select('reposi_confer_patent', 'cp');
+  $search_pat->fields('cp')
+          ->condition('cp.cp_type', 'Conference', '=')
+          ->condition('cp.cp_publication', $title_validate, '=');
+  $info_pat = $search_pat->execute();
   $new_title=Reposi_info_publication::reposi_string($title_validate);
-  foreach ($info_art as $titles) {
-    $new_titles=Reposi_info_publication::reposi_string($titles->ab_title);
+  foreach ($info_pat as $titles) {
+    $new_titles=Reposi_info_publication::reposi_string($titles->cp_publication);
     if (strcasecmp($new_title, $new_titles) == 0) {
-      $form_state->setErrorByName('publi_title', t('This Article exists on Data Base.'));
+      $form_state->setErrorByName('name_conference', t('This Conference Proceeding exists on Data Base.'));
     }
   }
 
   // DAY, month year ARTICLE VALIDATION
 
   $day_validate = $form_state->getValue('day');
+  $start_day_validate = $form_state->getValue('start_day');
+  $end_day_validate = $form_state->getValue('end_day');
   if(!empty($day_validate) && (!is_numeric($day_validate) ||
       $day_validate > '31' || $day_validate < '1')) {
-    $form_state->setErrorByName('day', t('It is not an allowable value for day.'));
+    $form_state->setErrorByName('day_conference', t('It is not an allowable value for day.'));
+  }
+  if(!empty($start_day_validate) && (!is_numeric($start_day_validate) ||
+      $start_day_validate > '31' || $start_day_validate < '1')) {
+    $form_state->setErrorByName('start_day', t('It is not an allowable value for start day.'));
+  }
+  if(!empty($end_day_validate) && (!is_numeric($end_day_validate) ||
+      $end_day_validate > '31' || $end_day_validate < '1')) {
+    $form_state->setErrorByName('end_day', t('It is not an allowable value for end day.'));
   }
 
   $month_validate =  $form_state->getValue('month');
+  $start_month_validate = $form_state->getValue('start_month');
+  $end_month_validate = $form_state->getValue('end_month');
   if(!empty($month_validate) && (!is_numeric($month_validate) ||
       $month_validate > '12' || $month_validate < '1')) {
     $form_state->setErrorByName('month', t('It is not an allowable value for month.'));
   }
+  if(!empty($start_month_validate) && (!is_numeric($start_month_validate) ||
+      $start_month_validate > '12' || $start_month_validate < '1')) {
+    $form_state->setErrorByName('start_month', t('It is not an allowable value for start month.'));
+  }
+  if(!empty($end_month_validate) && (!is_numeric($end_month_validate) ||
+      $end_month_validate > '12' || $end_month_validate < '1')) {
+    $form_state->setErrorByName('end_month', t('It is not an allowable value for end month.'));
+  }
 
   $year_validate = $form_state->getValue('year');
+  $start_year_validate = $form_state->getValue('start_year');
+  $end_year_validate = $form_state->getValue('end_year');
   if(!is_numeric($year_validate) || $year_validate > '9999' ||
       $year_validate < '1000') {
     $form_state->setErrorByName('year', t('It is not an allowable value for year.'));
   }
-
-  $startp_validate = $form_state->getValue('jou_start_page');
-  if(!empty($startp_validate) && (!is_numeric($startp_validate) ||
-      $startp_validate < '0')){
-    $form_state->setErrorByName('jou_start_page', t('Start page is a numerical field.'));
+  if(!empty($start_year_validate) && (!is_numeric($start_year_validate) || $start_year_validate > '9999' ||
+      $start_year_validate < '1000')) {
+    $form_state->setErrorByName('year', t('It is not an allowable value for start year.'));
+  }
+  if(!empty($end_year_validate) && (!is_numeric($end_year_validate) || $end_year_validate > '9999' ||
+      $end_year_validate < '1000')) {
+    $form_state->setErrorByName('year', t('It is not an allowable value for end year.'));
   }
 
-  $finalp_validate = $form_state->getValue('jou_final_page');
+
+  $startp_validate = $form_state->getValue('start_page');
+  if(!empty($startp_validate) && (!is_numeric($startp_validate) ||
+      $startp_validate < '0')){
+    $form_state->setErrorByName('con_start_page', t('Start page is a numerical field.'));
+  }
+
+  $finalp_validate = $form_state->getValue('final_page');
   if(!empty($finalp_validate) && (!is_numeric($finalp_validate) ||
       $finalp_validate < '0')){
-    $form_state->setErrorByName('jou_final_page', t('Final page is a numerical field.'));
+    $form_state->setErrorByName('con_final_page', t('Final page is a numerical field.'));
   }
 
   $table = $form_state->getValue('table');
   $first_name_validate=$table[0]['first_name'];
   $first_lastname_validate=$table[0]['f_lastname'];
-
-  $key = $form_state->getValue('keywordtable');
-  $keyword=$key[0]['key'];
   if (empty($first_name_validate) || empty($first_lastname_validate)){
     $form_state->setErrorByName('first_name', t('One author is required as minimum
     (first name and last name).'));
   }
-
-  if (empty($keyword)){
-        drupal_set_message(t('One keyword is required as minimum.'), 'warning');
-  }
-  $url=$form_state->getValue('url');
-  if(!empty($url) && !UrlHelper::isValid($url, TRUE))
-  {
-   $form_state->setErrorByName('uri', t('The URL is not valid.'));
-  }
+  //Url validate re use Drupal\Component\Utility\UrlHelper;
+    $url=$form_state->getValue('url');
+    if(!empty($url) && !UrlHelper::isValid($url, TRUE))
+    {
+     $form_state->setErrorByName('uri', t('The URL is not valid.'));
+    }
 
   }
   /**
@@ -360,81 +433,133 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
-
-  $adm_aca_type = $form_state->getValue('name');
-  $author1_validate = $form_state->getValue('table');
-  $art_title = $form_state->getValue('title');
-  $art_abstract = $form_state->getValue('abstract');
-  $art_day = $form_state->getValue('day');
-  $art_month = $form_state->getValue('month');
-  $art_year = $form_state->getValue('year');
-  $art_name = $form_state->getValue('jou_name');
-  $art_vol = $form_state->getValue('jou_volume');
-  $art_issue = $form_state->getValue('jou_issue');
-  $art_spage = $form_state->getValue('jou_start_page');
-  $art_fpage = $form_state->getValue('jou_final_page');
-  $art_issn = $form_state->getValue('jou_issn');
-  $art_url = $form_state->getValue('url');
-  $art_doi = $form_state->getValue('doi');
-  db_insert('reposi_article_book')->fields(array(
-      'ab_type'              => 'Article',
-      'ab_title'             => $art_title,
-      'ab_abstract'          => $art_abstract,
-      'ab_journal_editorial' => $art_name,
+  $con_confer = $form_state->getValue('confer');
+  $con_des = $form_state->getValue('description');
+  $con_num_ev = $form_state->getValue('num_event');
+  $con_sponsor = $form_state->getValue('sponsor');
+  $con_place = $form_state->getValue('place');
+  $con_sday = $form_state->getValue('start_day');
+  $con_smon = $form_state->getValue('start_month');
+  $con_syear = $form_state->getValue('start_year');
+  $con_eday = $form_state->getValue('end_day');
+  $con_emon = $form_state->getValue('end_month');
+  $con_eyear = $form_state->getValue('end_year');
+  $title = $form_state->getValue('title');
+  $publi_day = $form_state->getValue('day');
+  $publi_mon = $form_state->getValue('month');
+  $publi_year = $form_state->getValue('year');
+  $start_page = $form_state->getValue('start_page');
+  $final_page = $form_state->getValue('final_page');
+  $con_url = $form_state->getValue('url');
+  $con_doi = $form_state->getValue('doi');
+  if (!empty($start_page)) {
+    $start_page_int = (int)$start_page;
+  } else {
+    $start_page_int = NULL;
+  }
+  if (!empty($final_page)) {
+    $final_page_int = (int)$final_page;
+  } else {
+    $final_page_int = NULL;
+  }
+  db_insert('reposi_confer_patent')->fields(array(
+      'cp_type'       => 'Conference',
+      'cp_title'      => $con_confer,
+      'cp_abstract'   => $con_des,
+      'cp_number'     => $con_num_ev,
+      'cp_spon_owner' => $con_sponsor,
+      'cp_place_type' => $con_place,
+      'cp_publication'=> $title,
+      'cp_start_page' => $start_page_int,
+      'cp_final_page' => $final_page_int,
+      'cp_url'        => $con_url,
+      'cp_doi'        => $con_doi,
   ))->execute();
-  $search_art = db_select('reposi_article_book', 'ab');
-  $search_art->fields('ab')
-          ->condition('ab.ab_type', 'Article', '=')
-          ->condition('ab.ab_title', $art_title, '=');
-  $art_id = $search_art->execute()->fetchField();
-  $new_art_year = (int)$art_year;
-  if (!empty($art_day)) {
-    $new_art_day = (int)$art_day;
+  $search_con = db_select('reposi_confer_patent', 'cp');
+  $search_con->fields('cp')
+          ->condition('cp.cp_type', 'Conference', '=')
+          ->condition('cp.cp_publication', $title, '=');
+  $con_id = $search_con->execute()->fetchField();
+  $conference_id = (int)$con_id;
+  if (!empty($publi_day)) {
+    $day = (int)$publi_day;
   } else {
-    $new_art_day = NULL;
+    $day = NULL;
   }
-  if (!empty($art_month)) {
-    $new_art_month = (int)$art_month;
+  if (!empty($publi_mon)) {
+    $month = (int)$publi_mon;
   } else {
-    $new_art_month = NULL;
+    $month = NULL;
   }
+  $year = (int)$publi_year;
   db_insert('reposi_date')->fields(array(
-      'd_day'  => $new_art_day,
-      'd_month'=> $new_art_month,
-      'd_year' => $new_art_year,
-      'd_abid' => $art_id,
+      'd_day'   => $day,
+      'd_month' => $month,
+      'd_year'  => $year,
+      'd_cpid'  => $conference_id,
   ))->execute();
   db_insert('reposi_publication')->fields(array(
-      'p_type'  => 'Article',
+      'p_type'  => 'Conference',
       'p_source'=> 'Manual',
-      'p_title' => $art_title,
-      'p_year'  => $new_art_year,
+      'p_title' => $title,
+      'p_year'  => $year,
       'p_check' => 1,
-      'p_abid'  => $art_id,
+      'p_cpid'  => $conference_id,
   ))->execute();
-  if (!empty($art_spage)) {
-    $art_start_page = (int)$art_spage;
-  } else {
-    $art_start_page = NULL;
-  }
-  if (!empty($art_fpage)) {
-    $art_final_page = (int)$art_fpage;
-  } else {
-    $art_final_page = NULL;
-  }
-  if (!empty($art_vol) || !empty($art_issue) || !empty($art_spage) ||
-      !empty($art_fpage) || !empty($art_issn) || !empty($art_url) || !empty($art_doi)) {
-    db_insert('reposi_article_book_detail')->fields(array(
-      'abd_volume'     => $art_vol,
-      'abd_issue'      => $art_issue,
-      'abd_start_page' => $art_start_page,
-      'abd_final_page' => $art_final_page,
-      'abd_issn'       => $art_issn,
-      'abd_url'        => $art_url,
-      'abd_doi'        => $art_doi,
-      'abd_abid'       => $art_id,
+  if (!empty($con_syear)) {
+    if (!empty($con_sday)) {
+      $start_day = (int)$con_sday;
+    } else {
+      $start_day = NULL;
+    }
+    if (!empty($con_smon)) {
+      $start_mon = (int)$con_smon;
+    } else {
+      $start_mon = NULL;
+    }
+    if (!empty($con_syear)) {
+      $start_year = (int)$con_syear;
+    } else {
+      $start_year = NULL;
+    }
+    db_insert('reposi_date')->fields(array(
+      'd_day'   => $start_day,
+      'd_month' => $start_mon,
+      'd_year'  => $start_year,
+      'd_cpid'  => $conference_id,
     ))->execute();
   }
+  if (!empty($con_eyear)) {
+    if (!empty($con_eday)) {
+      $end_day = (int)$con_eday;
+    } else {
+      $end_day = NULL;
+    }
+    if (!empty($con_emon)) {
+      $end_mon = (int)$con_emon;
+    } else {
+      $end_mon = NULL;
+    }
+    if (!empty($con_eyear)) {
+      $end_year = (int)$con_eyear;
+    } else {
+      $end_year = NULL;
+    }
+    db_insert('reposi_date')->fields(array(
+      'd_day'   => $end_day,
+      'd_month' => $end_mon,
+      'd_year'  => $end_year,
+      'd_cpid'  => $conference_id,
+    ))->execute();
+  }
+
+
+
+
+
+
+//***************************************************************************************************************//
+
 //-------------------------------------------------------------------------------------------------------------------------
   $max = $form_state->get('fields_count');
   if(is_null($max)) {
@@ -481,13 +606,13 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
         $aut_publi_id = (int)$serch2_aut[$a];
         db_insert('reposi_publication_author')->fields(array(
           'ap_author_id' => $aut_publi_id,
-          'ap_abid'      => $art_id,
+          'ap_cpid'      => $conference_id,
         ))->execute();
       } else {
         $aut_publi_id2 = (int)$serch_aut[$a];
         db_insert('reposi_publication_author')->fields(array(
             'ap_author_id' => $aut_publi_id2,
-            'ap_abid'      => $art_id,
+            'ap_cpid'      => $conference_id,
         ))->execute();
       }
     } else {
@@ -530,20 +655,20 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
         $serch2_keyw_id = (int)$serch2_keyw[$cont_keywords];
         db_insert('reposi_publication_keyword')->fields(array(
         'pk_keyword_id' => $serch2_keyw_id,
-        'pk_abid'       => $art_id,
+        'pk_cpid'       => $conference_id,
       ))->execute();
       } else {
         $serch_keyw_id = (int)$serch_keyw[$cont_keywords];
         db_insert('reposi_publication_keyword')->fields(array(
           'pk_keyword_id' => $serch_keyw_id,
-          'pk_abid'       => $art_id,
+          'pk_cpid'       => $conference_id,
         ))->execute();
       }
       $cont_keywords++;
     }
   }
 
-  drupal_set_message(t('Article: ') . $art_title . t(' was save.'));
+  drupal_set_message(t('Conference: ') . $title . t(' was save.'));
 
 
 

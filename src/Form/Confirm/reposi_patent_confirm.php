@@ -1,12 +1,12 @@
 <?php
-namespace Drupal\reposi\Form;
+namespace Drupal\reposi\Form\Confirm;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Component\Utility\Xss;
 use Drupal\reposi\Controller\Reposi_info_publication;
 
-class reposi_software_confirm extends ConfirmFormBase{
+class reposi_patent_confirm extends ConfirmFormBase{
 
     protected $id;
 
@@ -15,7 +15,7 @@ class reposi_software_confirm extends ConfirmFormBase{
      */
     public function getFormId()
     {
-        return 'reposi_software_confirm_form';
+        return 'reposi_patent_confirm_form';
     }
 
     /**
@@ -23,7 +23,7 @@ class reposi_software_confirm extends ConfirmFormBase{
      */
     public function getQuestion() {
 
-       return t('Software update confirmation'); 
+       return t('Patent update confirmation');
     }
 
     /**
@@ -37,7 +37,7 @@ class reposi_software_confirm extends ConfirmFormBase{
      * {@inheritdoc}
      */
     public function getDescription() {
-	$description =t('Do you want update this information?'); 
+	$description =t('Do you want update this information?');
 	return $description;
     }
 
@@ -64,23 +64,34 @@ class reposi_software_confirm extends ConfirmFormBase{
      */
     public function buildForm(array $form, FormStateInterface $form_state, $id = NULL) {
 
-    $sw_tsid = \Drupal::request()->query->get('tsid');
-    $sw_year = \Drupal::request()->query->get('year');
-    $sw_url = \Drupal::request()->query->get('url');
-    $sw_version = \Drupal::request()->query->get('version');
-    $sw_place = \Drupal::request()->query->get('place');
-    $sw_author = \Drupal::request()->query->get('info_author');
- 
+    $pat_cpid = \Drupal::request()->query->get('cpid');
+    $pat_day = \Drupal::request()->query->get('day');
+    $pat_month = \Drupal::request()->query->get('month');
+    $pat_year = \Drupal::request()->query->get('year');
+    $pat_url = \Drupal::request()->query->get('url');
+    $pat_abstract = \Drupal::request()->query->get('abstract');
+    $pat_owner = \Drupal::request()->query->get('owner');
+    $pat_type = \Drupal::request()->query->get('type');
+    $pat_num = \Drupal::request()->query->get('num');
+    $pat_author = \Drupal::request()->query->get('info_author');
+
+   $form['abstract'] = array(
+      '#type' => 'details',
+      '#open' => TRUE,
+      '#title' => t('Abstract'),
+    );
    $form['author'] = array(
       '#type' => 'details',
       '#open' => TRUE,
       '#title' => t('Author(s)'),
     );
-  for ($a=0; $a<count($sw_author); $a++) {
-  if(!empty($sw_author[$a]['first_name']))
+   $form['abstract']['body'] = array('#markup' => $pat_abstract);
+
+  for ($a=0; $a<count($pat_author); $a++) {
+  if(!empty($pat_author[$a]['first_name']))
   {
-  $form['author'][$a] = array('#markup' => '<li>'. $sw_author[$a]['first_name']. ' '. $sw_author[$a]['second_name']
-                            . ' '.$sw_author[$a]['f_lastname'].' '. $sw_author[$a]['s_lastname'] . '</li>');
+  $form['author'][$a] = array('#markup' => '<li>'. $pat_author[$a]['first_name']. ' '. $pat_author[$a]['second_name']
+                            . ' '.$pat_author[$a]['f_lastname'].' '. $pat_author[$a]['s_lastname'] . '</li>');
   }
   }
    $form['date'] = array(
@@ -94,10 +105,11 @@ class reposi_software_confirm extends ConfirmFormBase{
       '#title' => t('Details'),
     );
 
-   $form['date']['body']  = array('#markup' => t('Year: ') .$sw_year);
-   $form['deta']['version'] = array('#markup' => '<li>' . '<i>' . t('Version: ') . '</i>' .$sw_version. '</li>');
-   $form['deta']['place']  = array('#markup' => '<li>' . '<i>' . t('Place of production: ') . '</i>' .$sw_place. '</li>');
-   $form['deta']['url']   = array('#markup' => '<li>' . '<i>' . t('URL: ') . '</i>' .$sw_url. '</li>');
+   $form['date']['body']  = array('#markup' => Reposi_info_publication::reposi_formt_date($pat_day, $pat_month, $pat_year));
+   $form['deta']['owner'] = array('#markup' => '<li>' . '<i>' . t('Owner: ') . '</i>' .$pat_owner. '</li>');
+   $form['deta']['type']  = array('#markup' => '<li>' . '<i>' . t('Type patent: ') . '</i>' .$pat_type. '</li>');
+   $form['deta']['num']   = array('#markup' => '<li>' . '<i>' . t('Number: ') . '</i>' .$pat_num. '</li>');
+   $form['deta']['url']   = array('#markup' => '<li>' . '<i>' . t('URL: ') . '</i>' .$pat_url. '</li>');
    $form['pager'] = ['#type' => 'pager'];
         $this->id = $id;
         return parent::buildForm($form, $form_state);
@@ -108,26 +120,44 @@ class reposi_software_confirm extends ConfirmFormBase{
      */
     public function submitForm(array &$form, FormStateInterface $form_state) {
 
-    $sw_id = \Drupal::request()->query->get('tsid');
-    $sw_year = \Drupal::request()->query->get('year');
-    $sw_url = \Drupal::request()->query->get('url');
-    $sw_version = \Drupal::request()->query->get('version');
-    $sw_place = \Drupal::request()->query->get('place');
+    $pat_id = \Drupal::request()->query->get('cpid');
+    $pat_day = \Drupal::request()->query->get('day');
+    $pat_month = \Drupal::request()->query->get('month');
+    $pat_year = \Drupal::request()->query->get('year');
+    $pat_url = \Drupal::request()->query->get('url');
+    $pat_abstract = \Drupal::request()->query->get('abstract');
+    $pat_owner = \Drupal::request()->query->get('owner');
+    $pat_type = \Drupal::request()->query->get('type');
+    $pat_num = \Drupal::request()->query->get('num');
     $new_aut2 = \Drupal::request()->query->get('info_author');
-    db_update('reposi_thesis_sw')->fields(array(
-      'ts_institu_ver'  => $sw_version,
-      'ts_discip_place' => $sw_place,
-      'ts_url'          => $sw_url,
-    ))->condition('tsid', $sw_id)
+    db_update('reposi_confer_patent')->fields(array(
+      'cp_abstract'   => $pat_abstract,
+      'cp_number'     => $pat_num,
+      'cp_spon_owner' => $pat_owner,
+      'cp_place_type' => $pat_type,
+      'cp_url'        => $pat_url,
+    ))->condition('cpid', $pat_id)
     ->execute();
-    $new_year = (int)$sw_year;
+    if (!empty($pat_day)){
+      $new_pat_day = (int)$pat_day;
+    } else {
+      $new_pat_day = NULL;
+    }
+    if (!empty($pat_month)){
+      $new_pat_month = (int)$pat_month;
+    } else {
+      $new_pat_month = NULL;
+    }
+    $new_pat_year = (int)$pat_year;
     db_update('reposi_date')->fields(array(
-      'd_year'  => $new_year,
-    ))->condition('d_tsid', $sw_id)
-    ->execute(); 
+      'd_day'   => $new_pat_day,
+      'd_month' => $new_pat_month,
+      'd_year'  => $new_pat_year,
+    ))->condition('d_cpid', $pat_id)
+    ->execute();
     if (!empty($new_aut2)) {
       $new_relation = db_delete('reposi_publication_author')
-        ->condition('ap_tsid', $sw_id)
+        ->condition('ap_cpid', $pat_id)
         ->execute();
       foreach ($new_aut2 as $new_aut) {
         if(!empty($new_aut['first_name']) && !empty($new_aut['f_lastname'])){
@@ -162,26 +192,26 @@ class reposi_software_confirm extends ConfirmFormBase{
           $id_aut2 = $serch_a->execute()->fetchField();
           db_insert('reposi_publication_author')->fields(array(
             'ap_author_id' => $id_aut2,
-            'ap_tsid'       => $sw_id,
+            'ap_cpid'      => $pat_id,
           ))->execute();
         } else {
           $search_p_a = db_select('reposi_publication_author', 'pa');
           $search_p_a->fields('pa')
                      ->condition('pa.ap_author_id', $id_new_aut, '=')
-                     ->condition('pa.ap_tsid', $sw_id, '=');
+                     ->condition('pa.ap_cpid', $pat_id, '=');
           $p_a = $search_p_a->execute()->fetchField();
           if (empty($p_a)) {
             db_insert('reposi_publication_author')->fields(array(
               'ap_author_id' => $id_new_aut,
-              'ap_tsid'       => $sw_id,
+              'ap_cpid'      => $pat_id,
             ))->execute();
           }
         }
       }
     }
-    } 
+    }
 
-           drupal_set_message(t('The software was updated.'));
-           $form_state->setRedirect('reposi.Reposi_sofinformation', ['node' => $sw_id]);
+           drupal_set_message(t('The patent was updated.'));
+           $form_state->setRedirect('reposi.Reposi_patinformation', ['node' => $pat_id]);
 }
 }
