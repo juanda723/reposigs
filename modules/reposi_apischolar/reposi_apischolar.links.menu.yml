@@ -20,7 +20,7 @@ reposi.reposi_apischolar.listgs:
   title: 'List Undefined Google Scholar'
   route_name: reposi.gspub
   menu_name: tools
-  parent: reposi.listpub
+  parent: reposi
 
 reposi.reposi_apischolar.listpubgs:
   title: 'Publication list import Google Scholar'
