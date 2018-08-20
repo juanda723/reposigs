@@ -15,6 +15,12 @@ reposi.author:
   menu_name: tools
   parent: reposi
 
+reposi.authoruser:
+  title: 'Authors user list'
+  route_name: reposi.authoruser
+  menu_name: tools
+  parent: reposi
+
 reposi.listus:
   title: 'User list'
   route_name: reposi.listus

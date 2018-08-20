@@ -106,12 +106,12 @@ class Reposi_user_admin_form extends FormBase {
     '#type' => 'submit',
     '#value' => t('Save'),
   );
-  
+
 
   return $form;
   }
 
-  public function validateForm(array &$form, FormStateInterface $form_state) 
+  public function validateForm(array &$form, FormStateInterface $form_state)
   {
   $adm_fname = $form_state->getValue('adm_user_fname');
   $adm_sname = $form_state->getValue('adm_user_sname');
@@ -134,13 +134,13 @@ class Reposi_user_admin_form extends FormBase {
         ->fields('n', array('u_first_name', 'u_first_lastname', 'u_second_lastname'));
   $repet_user = $query->execute()->fetchField();
   $repet_u = strtolower($repet_user);
-  $adm_fn = strtolower($adm_fname);  
+  $adm_fn = strtolower($adm_fname);
   if ($repet_u == $adm_fn) {
     drupal_set_message(t('The user to index exists in the database.'), 'error');
-  } 
-  else 
+  }
+  else
   {
-	if (!valid_email_address($adm_email1)) 
+	if (!valid_email_address($adm_email1))
         {
         drupal_set_message(t('Email 1 is not a valid e-mail address.'),'error');
         }
@@ -148,7 +148,7 @@ class Reposi_user_admin_form extends FormBase {
 	{
      		if (!empty($adm_email2) && !valid_email_address($adm_email2))
 		{
-   
+
     			drupal_set_message(t('Email 2 is not a valid e-mail address.'),'error');
     		}
 			else
@@ -197,8 +197,14 @@ class Reposi_user_admin_form extends FormBase {
           'u_optional_email_2' => $new_email3,
           'u_id_homonymous'    => $adm_homo,
           'u_id_scopus'        => $adm_scopus,
-	  'u_id_scholar'       => $adm_scholar,
+	        'u_id_scholar'       => $adm_scholar,
       ))->execute();
+
+      $serch_uu = db_select('reposi_user', 'uu');
+      $serch_uu->fields('uu')
+      ->orderBy('uid', 'DESC');
+    $serch_publi = $serch_uu->execute()->fetchField();
+
       $serch_a = db_select('reposi_author', 'a');
       $serch_a->fields('a')
               ->condition('a.a_first_name', $new_fname, '=')
@@ -209,27 +215,28 @@ class Reposi_user_admin_form extends FormBase {
       if (empty($serch_aut)) {
         db_insert('reposi_author')->fields(array(
           'a_id_scopus'        => $adm_scopus,
-	  'a_id_scholar'       => $adm_scholar,
+	        'a_id_scholar'       => $adm_scholar,
           'a_first_name'       => $new_fname,
           'a_second_name'      => $new_sname,
           'a_first_lastname'   => $new_flastname,
           'a_second_lastname'  => $new_slastname,
+          'a_user_id'          => $serch_publi,
         ))->execute();
-      } 
+      }
       $search_user = "SELECT * FROM {reposi_user} WHERE u_email = :u_email";
       $uid_get = db_query($search_user, array(':u_email' => $adm_email1))->fetchField();
 
       if (!empty($uid_get)){
-        
+
         db_insert('reposi_state')
-        ->fields(array(    
+        ->fields(array(
             's_type'    => 'Active',
             's_uid'     => $uid_get,
         ))
         ->execute();
 
         db_insert('reposi_academic')
-        ->fields(array(   
+        ->fields(array(
             'academic_type' => $adm_aca_type,
             'academic_uid'  => $uid_get,
         ))
@@ -241,7 +248,7 @@ class Reposi_user_admin_form extends FormBase {
     }
   }
   }}
-  
+
 
 
   function reposi_user_admin_form_alter(&$form, FormStateInterface $form_state, $form_id) {
@@ -263,14 +270,14 @@ class Reposi_user_admin_form extends FormBase {
    * {@inheritdoc}
    */
    public function submitForm(array &$form, FormStateInterface $form_state) {
-    
+
   /*  $email1=$this->email1;
     $email2=$this->email2;
     $email3=$this->email3;
 */
     $adm_email1 = $form_state->getValue('adm_user_email1');
     $adm_email2 = $form_state->getValue('adm_user_email2');
-    $adm_email3 = $form_state->getValue('adm_user_email3');    
+    $adm_email3 = $form_state->getValue('adm_user_email3');
 
   if (!valid_email_address($adm_email1)) {
      drupal_set_message(t('Email 1 is not a valid e-mail address.'),'error');
@@ -286,7 +293,6 @@ class Reposi_user_admin_form extends FormBase {
     }
   }
 
- } 
+ }
 
 }
-

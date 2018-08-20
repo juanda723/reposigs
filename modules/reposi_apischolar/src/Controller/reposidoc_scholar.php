@@ -27,7 +27,7 @@ class reposidoc_scholar extends reposi_apischolar_admin{
 	public static function pubscolar_art($uid,$p_uid,$user_gs,$p_pid_scholar){
 		$config = \Drupal::config('system.maintenance');
 		$gs_api_url = $config->get('google_scholar_api_url');
-		reposidoc_scholar::redirect_gs('WF5omc3nYNoC', 'jfjhfjhfjfjh');
+
 		if (empty($gs_api_url)) {
 			drupal_set_message('You must configure the module Repository -
 			Google Scholar Search API to use all its functions.', 'warning');
@@ -227,19 +227,19 @@ class reposidoc_scholar extends reposi_apischolar_admin{
 				if(($aut_fn!='') && ($aut_fl!='')){
 					$serch_a = db_select('reposi_author', 'a');
 					$serch_a->fields('a')
-					->condition('a.a_first_name', $aut_fn, '=')
-					->condition('a.a_second_name', $aut_sn, '=')
-					->condition('a.a_first_lastname', $aut_fl, '=')
-					->condition('a.a_second_lastname', $aut_sl, '=');
+					->condition('a.a_first_name', $info_author['a_first_name'], '=')
+					->condition('a.a_second_name', $info_author['a_second_name'], '=')
+					->condition('a.a_first_lastname', $info_author['a_first_lastname'], '=')
+					->condition('a.a_second_lastname', $info_author['a_second_lastname'], '=');
 					$serch_aut[$a] = $serch_a->execute()->fetchField();
 					if (empty($serch_aut[$a])) {
 						db_insert('reposi_author')->fields($info_author)->execute();
 						$serch2_a = db_select('reposi_author', 'a');
 						$serch2_a ->fields('a')
-						->condition('a.a_first_name', $aut_fn, '=')
-						->condition('a.a_second_name', $aut_sn, '=')
-						->condition('a.a_first_lastname', $aut_fl, '=')
-						->condition('a.a_second_lastname', $aut_sl, '=');
+						->condition('a.a_first_name', $info_author['a_first_name'], '=')
+						->condition('a.a_second_name', $info_author['a_second_name'], '=')
+						->condition('a.a_first_lastname', $info_author['a_first_lastname'], '=')
+						->condition('a.a_second_lastname', $info_author['a_second_lastname'], '=');
 						$serch2_aut[$a] = $serch2_a->execute()->fetchField();
 						$aut_publi_id = (int)$serch2_aut[$a];
 						db_insert('reposi_publication_author')->fields(array(
@@ -247,11 +247,19 @@ class reposidoc_scholar extends reposi_apischolar_admin{
 							'ap_abid'      => $art_id,
 						))->execute();
 					} else {
-						$aut_publi_id2 = (int)$serch_aut[$a];
-						db_insert('reposi_publication_author')->fields(array(
-							'ap_author_id' => $aut_publi_id2,
-							'ap_abid'      => $art_id,
-						))->execute();
+						$search_rpa = db_select('reposi_publication_author', 'rpa');
+						$search_rpa->fields('rpa')
+						->condition('rpa.ap_author_id', (int)$serch_aut[$a], '=')
+						->condition('rpa.ap_abid', $art_id, '=');
+						$search_rrp[$a] = $search_rpa->execute()->fetchField();
+
+						if (empty($search_rrp[$a])) {
+							$aut_publi_id2 = (int)$serch_aut[$a];
+							db_insert('reposi_publication_author')->fields(array(
+								'ap_author_id' => $aut_publi_id2,
+								'ap_abid'      => $art_id,
+							))->execute();
+						}
 					}
 				}
 			}
@@ -441,19 +449,19 @@ public static function pubscolar_book($uid,$p_uid,$user_gs,$p_pid_scholar){
 			if(($aut_fn!='') && ($aut_fl!='')){
 				$serch_a = db_select('reposi_author', 'a');
 				$serch_a->fields('a')
-				->condition('a.a_first_name', $aut_fn, '=')
-				->condition('a.a_second_name', $aut_sn, '=')
-				->condition('a.a_first_lastname', $aut_fl, '=')
-				->condition('a.a_second_lastname', $aut_sl, '=');
+				->condition('a.a_first_name', $info_author['a_first_name'], '=')
+				->condition('a.a_second_name', $info_author['a_second_name'], '=')
+				->condition('a.a_first_lastname', $info_author['a_first_lastname'], '=')
+				->condition('a.a_second_lastname', $info_author['a_second_lastname'], '=');
 				$serch_aut[$a] = $serch_a->execute()->fetchField();
 				if (empty($serch_aut[$a])) {
 					db_insert('reposi_author')->fields($info_author)->execute();
 					$serch2_a = db_select('reposi_author', 'a');
 					$serch2_a ->fields('a')
-					->condition('a.a_first_name', $aut_fn, '=')
-					->condition('a.a_second_name', $aut_sn, '=')
-					->condition('a.a_first_lastname', $aut_fl, '=')
-					->condition('a.a_second_lastname', $aut_sl, '=');
+					->condition('a.a_first_name', $info_author['a_first_name'], '=')
+					->condition('a.a_second_name', $info_author['a_second_name'], '=')
+					->condition('a.a_first_lastname', $info_author['a_first_lastname'], '=')
+					->condition('a.a_second_lastname', $info_author['a_second_lastname'], '=');
 					$serch2_aut[$a] = $serch2_a->execute()->fetchField();
 					$aut_publi_id = (int)$serch2_aut[$a];
 					db_insert('reposi_publication_author')->fields(array(
@@ -461,11 +469,19 @@ public static function pubscolar_book($uid,$p_uid,$user_gs,$p_pid_scholar){
 						'ap_abid'      => $book_id,
 					))->execute();
 				} else {
-					$aut_publi_id2 = (int)$serch_aut[$a];
-					db_insert('reposi_publication_author')->fields(array(
-						'ap_author_id' => $aut_publi_id2,
-						'ap_abid'      => $book_id,
-					))->execute();
+					$search_rpa = db_select('reposi_publication_author', 'rpa');
+					$search_rpa->fields('rpa')
+					->condition('rpa.ap_author_id', (int)$serch_aut[$a], '=')
+					->condition('rpa.ap_abid', $book_id, '=');
+					$search_rrp[$a] = $search_rpa->execute()->fetchField();
+
+					if (empty($search_rrp[$a])) {
+						$aut_publi_id2 = (int)$serch_aut[$a];
+						db_insert('reposi_publication_author')->fields(array(
+							'ap_author_id' => $aut_publi_id2,
+							'ap_abid'      => $book_id,
+						))->execute();
+					}
 				}
 			}
 		}
@@ -698,19 +714,19 @@ public static function pubscolar_chap($uid,$p_uid,$user_gs,$p_pid_scholar){
 				if(($aut_fn!='') && ($aut_fl!='')){
 					$serch_a = db_select('reposi_author', 'a');
 					$serch_a->fields('a')
-					->condition('a.a_first_name', $aut_fn, '=')
-					->condition('a.a_second_name', $aut_sn, '=')
-					->condition('a.a_first_lastname', $aut_fl, '=')
-					->condition('a.a_second_lastname', $aut_sl, '=');
+					->condition('a.a_first_name', $info_author['a_first_name'], '=')
+					->condition('a.a_second_name', $info_author['a_second_name'], '=')
+					->condition('a.a_first_lastname', $info_author['a_first_lastname'], '=')
+					->condition('a.a_second_lastname', $info_author['a_second_lastname'], '=');
 					$serch_aut[$a] = $serch_a->execute()->fetchField();
 					if (empty($serch_aut[$a])) {
 						db_insert('reposi_author')->fields($info_author)->execute();
 						$serch2_a = db_select('reposi_author', 'a');
 						$serch2_a ->fields('a')
-						->condition('a.a_first_name', $aut_fn, '=')
-						->condition('a.a_second_name', $aut_sn, '=')
-						->condition('a.a_first_lastname', $aut_fl, '=')
-						->condition('a.a_second_lastname', $aut_sl, '=');
+						->condition('a.a_first_name', $info_author['a_first_name'], '=')
+						->condition('a.a_second_name', $info_author['a_second_name'], '=')
+						->condition('a.a_first_lastname', $info_author['a_first_lastname'], '=')
+						->condition('a.a_second_lastname', $info_author['a_second_lastname'], '=');
 						$serch2_aut[$a] = $serch2_a->execute()->fetchField();
 						$aut_publi_id = (int)$serch2_aut[$a];
 						db_insert('reposi_publication_author')->fields(array(
@@ -718,22 +734,28 @@ public static function pubscolar_chap($uid,$p_uid,$user_gs,$p_pid_scholar){
 							'ap_abid'      => $chap_id,
 						))->execute();
 					} else {
-						$aut_publi_id2 = (int)$serch_aut[$a];
-						db_insert('reposi_publication_author')->fields(array(
-							'ap_author_id' => $aut_publi_id2,
-							'ap_abid'      => $chap_id,
-						))->execute();
+						$search_rpa = db_select('reposi_publication_author', 'rpa');
+						$search_rpa->fields('rpa')
+						->condition('rpa.ap_author_id', (int)$serch_aut[$a], '=')
+						->condition('rpa.ap_abid', $chap_id, '=');
+						$search_rrp[$a] = $search_rpa->execute()->fetchField();
+						if (empty($search_rrp[$a])) {
+							$aut_publi_id2 = (int)$serch_aut[$a];
+							db_insert('reposi_publication_author')->fields(array(
+								'ap_author_id' => $aut_publi_id2,
+								'ap_abid'      => $chap_id,
+							))->execute();
+						}
 					}
 				}
 			}
-			reposidoc_scholar::delete_unde($uid);
 			drupal_set_message('Data Import successfull');
+			reposidoc_scholar::delete_unde($uid);
 		}
+		return $form;
 	}
-	return $form;
 }
 }
-
 
 public static function pubscolar_con($uid,$p_uid,$user_gs,$p_pid_scholar){
 	$config = \Drupal::config('system.maintenance');
@@ -962,19 +984,19 @@ public static function pubscolar_con($uid,$p_uid,$user_gs,$p_pid_scholar){
 				if(($aut_fn!='') && ($aut_fl!='')){
 					$serch_a = db_select('reposi_author', 'a');
 					$serch_a->fields('a')
-					->condition('a.a_first_name', $aut_fn, '=')
-					->condition('a.a_second_name', $aut_sn, '=')
-					->condition('a.a_first_lastname', $aut_fl, '=')
-					->condition('a.a_second_lastname', $aut_sl, '=');
+					->condition('a.a_first_name', $info_author['a_first_name'], '=')
+					->condition('a.a_second_name', $info_author['a_second_name'], '=')
+					->condition('a.a_first_lastname', $info_author['a_first_lastname'], '=')
+					->condition('a.a_second_lastname', $info_author['a_second_lastname'], '=');
 					$serch_aut[$a] = $serch_a->execute()->fetchField();
 					if (empty($serch_aut[$a])) {
 						db_insert('reposi_author')->fields($info_author)->execute();
 						$serch2_a = db_select('reposi_author', 'a');
 						$serch2_a ->fields('a')
-						->condition('a.a_first_name', $aut_fn, '=')
-						->condition('a.a_second_name', $aut_sn, '=')
-						->condition('a.a_first_lastname', $aut_fl, '=')
-						->condition('a.a_second_lastname', $aut_sl, '=');
+						->condition('a.a_first_name', $info_author['a_first_name'], '=')
+						->condition('a.a_second_name', $info_author['a_second_name'], '=')
+						->condition('a.a_first_lastname', $info_author['a_first_lastname'], '=')
+						->condition('a.a_second_lastname', $info_author['a_second_lastname'], '=');
 						$serch2_aut[$a] = $serch2_a->execute()->fetchField();
 						$aut_publi_id = (int)$serch2_aut[$a];
 						db_insert('reposi_publication_author')->fields(array(
@@ -982,19 +1004,26 @@ public static function pubscolar_con($uid,$p_uid,$user_gs,$p_pid_scholar){
 							'ap_cpid'      => $conference_id,
 						))->execute();
 					} else {
-						$aut_publi_id2 = (int)$serch_aut[$a];
-						db_insert('reposi_publication_author')->fields(array(
-							'ap_author_id' => $aut_publi_id2,
-							'ap_cpid'      => $conference_id,
-						))->execute();
+						$search_rpa = db_select('reposi_publication_author', 'rpa');
+						$search_rpa->fields('rpa')
+						->condition('rpa.ap_author_id', (int)$serch_aut[$a], '=')
+						->condition('rpa.ap_cpid', $conference_id, '=');
+						$search_rrp[$a] = $search_rpa->execute()->fetchField();
+						if (empty($search_rrp[$a])) {
+							$aut_publi_id2 = (int)$serch_aut[$a];
+							db_insert('reposi_publication_author')->fields(array(
+								'ap_author_id' => $aut_publi_id2,
+								'ap_cpid'      => $conference_id,
+							))->execute();
+						}
 					}
 				}
 			}
-			reposidoc_scholar::delete_unde($uid);
 			drupal_set_message('Data Import successfull');
+			reposidoc_scholar::delete_unde($uid);
 		}
+		return $form;
 	}
-	return $form;
 }
 }
 
@@ -1188,19 +1217,19 @@ public static function pubscolar_pat($uid,$p_uid,$user_gs,$p_pid_scholar){
 				if(($aut_fn!='') && ($aut_fl!='')){
 					$serch_a = db_select('reposi_author', 'a');
 					$serch_a->fields('a')
-					->condition('a.a_first_name', $aut_fn, '=')
-					->condition('a.a_second_name', $aut_sn, '=')
-					->condition('a.a_first_lastname', $aut_fl, '=')
-					->condition('a.a_second_lastname', $aut_sl, '=');
+					->condition('a.a_first_name', $info_author['a_first_name'], '=')
+					->condition('a.a_second_name', $info_author['a_second_name'], '=')
+					->condition('a.a_first_lastname', $info_author['a_first_lastname'], '=')
+					->condition('a.a_second_lastname', $info_author['a_second_lastname'], '=');
 					$serch_aut[$a] = $serch_a->execute()->fetchField();
 					if (empty($serch_aut[$a])) {
 						db_insert('reposi_author')->fields($info_author)->execute();
 						$serch2_a = db_select('reposi_author', 'a');
 						$serch2_a ->fields('a')
-						->condition('a.a_first_name', $aut_fn, '=')
-						->condition('a.a_second_name', $aut_sn, '=')
-						->condition('a.a_first_lastname', $aut_fl, '=')
-						->condition('a.a_second_lastname', $aut_sl, '=');
+						->condition('a.a_first_name', $info_author['a_first_name'], '=')
+						->condition('a.a_second_name', $info_author['a_second_name'], '=')
+						->condition('a.a_first_lastname', $info_author['a_first_lastname'], '=')
+						->condition('a.a_second_lastname', $info_author['a_second_lastname'], '=');
 						$serch2_aut[$a] = $serch2_a->execute()->fetchField();
 						$aut_publi_id = (int)$serch2_aut[$a];
 						db_insert('reposi_publication_author')->fields(array(
@@ -1208,22 +1237,28 @@ public static function pubscolar_pat($uid,$p_uid,$user_gs,$p_pid_scholar){
 							'ap_cpid'      => $patent_id,
 						))->execute();
 					} else {
-						$aut_publi_id2 = (int)$serch_aut[$a];
-						db_insert('reposi_publication_author')->fields(array(
-							'ap_author_id' => $aut_publi_id2,
-							'ap_cpid'      => $patent_id,
-						))->execute();
+						$search_rpa = db_select('reposi_publication_author', 'rpa');
+						$search_rpa->fields('rpa')
+						->condition('rpa.ap_author_id', (int)$serch_aut[$a], '=')
+						->condition('rpa.ap_cpid', $patent_id, '=');
+						$search_rrp[$a] = $search_rpa->execute()->fetchField();
+						if (empty($search_rrp[$a])) {
+							$aut_publi_id2 = (int)$serch_aut[$a];
+							db_insert('reposi_publication_author')->fields(array(
+								'ap_author_id' => $aut_publi_id2,
+								'ap_cpid'      => $patent_id,
+							))->execute();
+						}
 					}
 				}
 			}
-			reposidoc_scholar::delete_unde($uid);
 			drupal_set_message('Data Import successfull');
+			reposidoc_scholar::delete_unde($uid);
 		}
+		return $form;
 	}
-	return $form;
 }
 }
-
 
 
 public static function pubscolar_the($uid,$p_uid,$user_gs,$p_pid_scholar){
@@ -1416,19 +1451,19 @@ public static function pubscolar_the($uid,$p_uid,$user_gs,$p_pid_scholar){
 				if(($aut_fn!='') && ($aut_fl!='')){
 					$serch_a = db_select('reposi_author', 'a');
 					$serch_a->fields('a')
-					->condition('a.a_first_name', $aut_fn, '=')
-					->condition('a.a_second_name', $aut_sn, '=')
-					->condition('a.a_first_lastname', $aut_fl, '=')
-					->condition('a.a_second_lastname', $aut_sl, '=');
+					->condition('a.a_first_name', $info_author['a_first_name'], '=')
+					->condition('a.a_second_name', $info_author['a_second_name'], '=')
+					->condition('a.a_first_lastname', $info_author['a_first_lastname'], '=')
+					->condition('a.a_second_lastname', $info_author['a_second_lastname'], '=');
 					$serch_aut[$a] = $serch_a->execute()->fetchField();
 					if (empty($serch_aut[$a])) {
 						db_insert('reposi_author')->fields($info_author)->execute();
 						$serch2_a = db_select('reposi_author', 'a');
 						$serch2_a ->fields('a')
-						->condition('a.a_first_name', $aut_fn, '=')
-						->condition('a.a_second_name', $aut_sn, '=')
-						->condition('a.a_first_lastname', $aut_fl, '=')
-						->condition('a.a_second_lastname', $aut_sl, '=');
+						->condition('a.a_first_name', $info_author['a_first_name'], '=')
+						->condition('a.a_second_name', $info_author['a_second_name'], '=')
+						->condition('a.a_first_lastname', $info_author['a_first_lastname'], '=')
+						->condition('a.a_second_lastname', $info_author['a_second_lastname'], '=');
 						$serch2_aut[$a] = $serch2_a->execute()->fetchField();
 						$aut_publi_id = (int)$serch2_aut[$a];
 						db_insert('reposi_publication_author')->fields(array(
@@ -1436,19 +1471,27 @@ public static function pubscolar_the($uid,$p_uid,$user_gs,$p_pid_scholar){
 							'ap_tsid'      => $thesis_id,
 						))->execute();
 					} else {
-						$aut_publi_id2 = (int)$serch_aut[$a];
-						db_insert('reposi_publication_author')->fields(array(
-							'ap_author_id' => $aut_publi_id2,
-							'ap_tsid'      => $thesis_id,
-						))->execute();
+						$search_rpa = db_select('reposi_publication_author', 'rpa');
+						$search_rpa->fields('rpa')
+						->condition('rpa.ap_author_id', (int)$serch_aut[$a], '=')
+						->condition('rpa.ap_tsid', $thesis_id, '=');
+						$search_rrp[$a] = $search_rpa->execute()->fetchField();
+						if (empty($search_rrp[$a])) {
+							$aut_publi_id2 = (int)$serch_aut[$a];
+							db_insert('reposi_publication_author')->fields(array(
+								'ap_author_id' => $aut_publi_id2,
+								'ap_tsid'      => $thesis_id,
+							))->execute();
+						}
 					}
 				}
 			}
-			reposidoc_scholar::delete_unde($uid);
 			drupal_set_message('Data Import successfull');
-		}}
+			reposidoc_scholar::delete_unde($uid);
+		}
 		return $form;
 	}
+}
 }
 
 ///////////////////////
@@ -1642,19 +1685,19 @@ public static function pubscolar_sof($uid,$p_uid,$user_gs,$p_pid_scholar){
 				if(($aut_fn!='') && ($aut_fl!='')){
 					$serch_a = db_select('reposi_author', 'a');
 					$serch_a->fields('a')
-					->condition('a.a_first_name', $aut_fn, '=')
-					->condition('a.a_second_name', $aut_sn, '=')
-					->condition('a.a_first_lastname', $aut_fl, '=')
-					->condition('a.a_second_lastname', $aut_sl, '=');
+					->condition('a.a_first_name', $info_author['a_first_name'], '=')
+					->condition('a.a_second_name', $info_author['a_second_name'], '=')
+					->condition('a.a_first_lastname', $info_author['a_first_lastname'], '=')
+					->condition('a.a_second_lastname', $info_author['a_second_lastname'], '=');
 					$serch_aut[$a] = $serch_a->execute()->fetchField();
 					if (empty($serch_aut[$a])) {
 						db_insert('reposi_author')->fields($info_author)->execute();
 						$serch2_a = db_select('reposi_author', 'a');
 						$serch2_a ->fields('a')
-						->condition('a.a_first_name', $aut_fn, '=')
-						->condition('a.a_second_name', $aut_sn, '=')
-						->condition('a.a_first_lastname', $aut_fl, '=')
-						->condition('a.a_second_lastname', $aut_sl, '=');
+						->condition('a.a_first_name', $info_author['a_first_name'], '=')
+						->condition('a.a_second_name', $info_author['a_second_name'], '=')
+						->condition('a.a_first_lastname', $info_author['a_first_lastname'], '=')
+						->condition('a.a_second_lastname', $info_author['a_second_lastname'], '=');
 						$serch2_aut[$a] = $serch2_a->execute()->fetchField();
 						$aut_publi_id = (int)$serch2_aut[$a];
 						db_insert('reposi_publication_author')->fields(array(
@@ -1662,19 +1705,26 @@ public static function pubscolar_sof($uid,$p_uid,$user_gs,$p_pid_scholar){
 							'ap_tsid'      => $sw_id,
 						))->execute();
 					} else {
-						$aut_publi_id2 = (int)$serch_aut[$a];
-						db_insert('reposi_publication_author')->fields(array(
-							'ap_author_id' => $aut_publi_id2,
-							'ap_tsid'      => $sw_id,
-						))->execute();
+						$search_rpa = db_select('reposi_publication_author', 'rpa');
+						$search_rpa->fields('rpa')
+						->condition('rpa.ap_author_id', (int)$serch_aut[$a], '=')
+						->condition('rpa.ap_tsid', $sw_id, '=');
+						$search_rrp[$a] = $search_rpa->execute()->fetchField();
+						if (empty($search_rrp[$a])) {
+							$aut_publi_id2 = (int)$serch_aut[$a];
+							db_insert('reposi_publication_author')->fields(array(
+								'ap_author_id' => $aut_publi_id2,
+								'ap_tsid'      => $sw_id,
+							))->execute();
+						}
 					}
 				}
 			}
-			reposidoc_scholar::delete_unde($uid);
 			drupal_set_message('Data Import successfull');
+			reposidoc_scholar::delete_unde($uid);
 		}
+		return $form;
 	}
-	return $form;
 }
 }
 

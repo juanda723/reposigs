@@ -47,6 +47,21 @@ reposi.authordesc:
     _permission: 'access content'
 
 
+reposi.authoruser:
+  path: 'reposi/authoruser'
+  defaults:
+    _controller: '\Drupal\reposi\Controller\ReposiController::ListAuthorUser'
+    _title: 'Authors list'
+  requirements:
+    _permission: 'access content'
+
+reposi.authoruserdesc:
+  path: 'reposi/authoruser/desc'
+  defaults:
+    _controller: '\Drupal\reposi\Controller\ReposiController::ListAuthorUserdesc'
+    _title: 'Authors list'
+  requirements:
+    _permission: 'access content'
 ##################3andrea##########################################
 
 node.add_reposi:

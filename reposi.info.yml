@@ -1,4 +1,4 @@
-name: R.B. Repository
+name: R.B. Repository D8
 description: Repository to management of bibliographic references
 type: module
 core: 8.x
@@ -10,4 +10,4 @@ dependencies:
   - drupal:help
 version: '8.x-1.5'
 project: 'repository'
-datestamp: 1462893680
+datestamp: 1531581620

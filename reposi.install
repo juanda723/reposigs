@@ -433,6 +433,11 @@ function reposi_schema() {
           'not null' => FALSE,
           'description' => 'Author second last name',
         ),
+        'a_user_id' => array(
+          'type' => 'int',
+          'not null' => FALSE,
+          'description' => '',
+        ),
       ),
     'primary key' => array('aid'),);
 

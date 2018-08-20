@@ -214,6 +214,96 @@ $results =$pager->execute()->fetchAll();
 );
 }*/
 //La siguiente muestra la lista de autores almacenados en el repositorio y los redirecciona para mostrar su información.
+
+  function ListAuthorUser() {
+    global $base_url;
+    $search_aut = db_select('reposi_author', 'a');
+    $search_aut->fields('a')
+    ->condition('a.a_user_id', 'NULL', '!=')
+    ->orderBy('a_first_lastname', 'ASC');
+    $pager = $search_aut->extend('Drupal\Core\Database\Query\PagerSelectExtender')->limit(30);
+    $authors = $pager->execute();
+    $flag_aut=0;
+    foreach ($authors as $keyw) {
+      $flag_aut++;
+      if ($flag_aut == 1) {
+        $url = Url::fromRoute('reposi.author_aid', ['node' => $keyw->aid]);
+        $internal_link = \Drupal::l(t($keyw->a_first_lastname . ' ' . $keyw->a_second_lastname .
+        ' ' . $keyw->a_first_name . ' ' . $keyw->a_second_name.' '), $url);
+        $author = '<li>'.$internal_link.'</li>';
+        /*$author = '<li>'. l($keyw->a_first_lastname . ' ' . $keyw->a_second_lastname .
+        ' ' . $keyw->a_first_name . ' ' . $keyw->a_second_name . ' ',
+        $base_url . '/reposi/author/' . $keyw->aid) . '</li>';*/
+      } else {
+        $url = Url::fromRoute('reposi.author_aid', ['node' => $keyw->aid]);
+        $internal_link = \Drupal::l(t($keyw->a_first_lastname . ' ' . $keyw->a_second_lastname .
+        ' ' . $keyw->a_first_name . ' ' . $keyw->a_second_name.' '), $url);
+        $author = $author.'<li>'.$internal_link.'</li>';
+        /*$author = $author . '<li>'.
+        l($keyw->a_first_lastname . ' ' . $keyw->a_second_lastname . ' ' .
+        $keyw->a_first_name . ' ' . $keyw->a_second_name . ' ',
+        $base_url . '/reposi/author/' . $keyw->aid) . '</li>';*/
+      }
+    }
+    if (empty($author)) {
+      $display_aut =  'Without authors';
+    } else {
+      $display_aut = $author;
+    }
+    $markup = '';
+    $myAuthor=\Drupal::l('Author ▼',Url::fromRoute('reposi.authoruserdesc'));
+    $markup .= '<p>'.$myAuthor.'</p>';
+    $markup .= '<div>' . '</div>' . '<ul>' . $display_aut . '</ul>';
+    $form['body'] = array('#markup' => $markup);
+    $form['pager'] = ['#type' => 'pager'];
+    return $form;
+  }
+
+  function ListAuthorUserdesc() {
+    global $base_url;
+    $search_aut = db_select('reposi_author', 'a');
+    $search_aut->fields('a')
+    ->condition('a.a_user_id', 'NULL', '!=')
+    ->orderBy('a_first_lastname', 'DESC');
+    $pager = $search_aut->extend('Drupal\Core\Database\Query\PagerSelectExtender')->limit(30);
+    $authors = $pager->execute();
+    $flag_aut=0;
+    foreach ($authors as $keyw) {
+      $flag_aut++;
+      if ($flag_aut == 1) {
+        $url = Url::fromRoute('reposi.author_aid', ['node' => $keyw->aid]);
+        $internal_link = \Drupal::l(t($keyw->a_first_lastname . ' ' . $keyw->a_second_lastname .
+        ' ' . $keyw->a_first_name . ' ' . $keyw->a_second_name.' '), $url);
+        $author = '<li>'.$internal_link.'</li>';
+        /*$author = '<li>'. l($keyw->a_first_lastname . ' ' . $keyw->a_second_lastname .
+        ' ' . $keyw->a_first_name . ' ' . $keyw->a_second_name . ' ',
+        $base_url . '/reposi/author/' . $keyw->aid) . '</li>';*/
+      } else {
+        $url = Url::fromRoute('reposi.author_aid', ['node' => $keyw->aid]);
+        $internal_link = \Drupal::l(t($keyw->a_first_lastname . ' ' . $keyw->a_second_lastname .
+        ' ' . $keyw->a_first_name . ' ' . $keyw->a_second_name.' '), $url);
+        $author = $author.'<li>'.$internal_link.'</li>';
+        /*$author = $author . '<li>'.
+        l($keyw->a_first_lastname . ' ' . $keyw->a_second_lastname . ' ' .
+        $keyw->a_first_name . ' ' . $keyw->a_second_name . ' ',
+        $base_url . '/reposi/author/' . $keyw->aid) . '</li>';*/
+      }
+    }
+    if (empty($author)) {
+      $display_aut =  'Without authors';
+    } else {
+      $display_aut = $author;
+    }
+    $markup = '';
+    $myAuthor=\Drupal::l('Author ▲',Url::fromRoute('reposi.authoruser'));
+    $markup .= '<p>'.$myAuthor.'</p>';
+    $markup .= '<div>' . '</div>' . '<ul>' . $display_aut . '</ul>';
+    $form['body'] = array('#markup' => $markup);
+    $form['pager'] = ['#type' => 'pager'];
+    return $form;
+  }
+
+
 function ListAuthor() {
   global $base_url;
   $search_aut = db_select('reposi_author', 'a');

@@ -46,7 +46,7 @@ public function buildForm(array $form, FormStateInterface $form_state) {
   	$form['reposi_apischolar_size'] = array(
   	    '#title' => t('Size to query'),
   	    '#type' => 'fieldset',
-  	    '#description' => t('This is the number of titles that query by author.'),
+  	    '#description' => t('This is the number of publications most relevants that query by author.'),
         );
   	$form['reposi_apischolar_size']['query_scholar_size'] = array(
 	    '#title' => t('Size to query'),
@@ -76,7 +76,7 @@ public function buildForm(array $form, FormStateInterface $form_state) {
   /**
    * {@inheritdoc}
    */
-   
+
   public function validateForm(array &$form, FormStateInterface $form_state){
 
 	$url=$form_state->getValue('google_scholar_api_url');
