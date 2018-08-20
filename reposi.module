@@ -58,7 +58,13 @@ function reposi_help_content(){
           RIS and BibTeX. If you need to see the a format, you must select the link at the
           list of publications or detailed information.') . '</p>' .
           '<h3>' . t('Configuration') . '</h3>' . '<p align="justify">' .
-          t('Go to Configuration -> Content authoring -> Configurationto API Scopus and
+          '<h5>' . t('API Google Scholar') . '</h5>'.
+          t('Go to Configuration -> Content authoring -> Configuration to API Google Scholar  and
+          complete the form.') . '</p>' . '<p align="justify">' . t('Download API Google Scholar available  on ')
+           . \Drupal::l(t('Github.'), Url::fromUri('http://dev.elsevier.com')) .
+          t(' The API Google Scholar is experimental and use it only for academic purposes') . '</p>' .
+          '<h5>' . t('API Scopus') . '</h5>'.
+          t('Go to Configuration -> Content authoring -> Configuration to API Scopus and
           complete the form.') . '</p>' . '<p align="justify">' . t('The API Key is available on ')
            . \Drupal::l(t('http://dev.elsevier.com'), Url::fromUri('http://dev.elsevier.com')) .
           t(' but you need a web page online and Scopus subscription') . '</p>';

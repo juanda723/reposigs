@@ -16,7 +16,7 @@ reposi.author:
   parent: reposi
 
 reposi.authoruser:
-  title: 'Authors user list'
+  title: 'Institutional Authors list'
   route_name: reposi.authoruser
   menu_name: tools
   parent: reposi

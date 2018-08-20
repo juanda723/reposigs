@@ -60,8 +60,8 @@ Requirements
 Installation
 ============
 
-- Install R.B. Repository, Repository - Bibtex and Repository - Scopus
-  Search API - Google Scholar API.
+- Install R.B. Repository, Repository - Bibtex, Repository - Scopus
+  Search API - Repository - Google Scholar API.
 - To get started go to Configuration -> Content authoring ->
   Configuration to API Scopus.
 - Complete the form to use API.
@@ -96,7 +96,19 @@ The navigation menu have the functions. (administrator)
 
 Here is a description of the provided feature modules:
 
+- Repository - Google Scholar API -
+
+The publication's metadata type article, book, chapter book, thesis,
+patent, conference and software can by import through Google Scholar API. The
+search can by shot manually or automatically. On the
+configuration, the administrator decide the rank time.
+
+The users are the authors that search on Google Scholar Data Base to link
+up the publications. The field Google Scholar ID Author is the central point
+on the search.
+
 - Repository - Bibtex -
+
 
 The publications have with one export format, this allow other
 format, BibTeX on this case.
