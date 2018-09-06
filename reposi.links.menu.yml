@@ -3,12 +3,6 @@ reposi:
   route_name: reposi
   menu_name: tools
 
-reposi.admuser:
-  title: 'Add Author'
-  route_name: reposi.admuser
-  menu_name: tools
-  parent: reposi
-
 reposi.author:
   title: 'Authors list'
   route_name: reposi.author
