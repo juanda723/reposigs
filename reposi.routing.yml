@@ -375,17 +375,17 @@ reposi.Reposi_info_publicationPF:
   path: 'reposi/patent/{node}/free'
   defaults:
     _form: '\Drupal\reposi\Form\Free\reposi_info_conpat_free'
-    _title: 'Article information'
+    _title: 'Patent information'
   requirements:
-    _permission: 'Patent content'
+    _permission: 'access content'
 
 reposi.Reposi_info_publicationSF:
   path: 'reposi/software/{node}/free'
   defaults:
     _form: '\Drupal\reposi\Form\Free\reposi_info_thessoft_free'
-    _title: 'Article information'
+    _title: 'Software information'
   requirements:
-    _permission: 'Software content'
+    _permission: 'access content'
 
 reposi.Reposi_public_list:
   path: 'reposi/listpub'
