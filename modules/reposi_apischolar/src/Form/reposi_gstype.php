@@ -143,7 +143,7 @@ class reposi_gstype extends FormBase {
     ->condition('u.uid', $p_uid, '=');
     $search_use = $serch_u->execute()->fetchAssoc();
     $user_gs=$search_use['u_id_scholar'];
-    reposidoc_scholar::redirect_gs($p_pid_scholar, $user_gs);
+    //reposidoc_scholar::redirect_gs($p_pid_scholar, $user_gs);
     return $form;
   }
 
