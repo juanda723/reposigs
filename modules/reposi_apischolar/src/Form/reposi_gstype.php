@@ -539,6 +539,7 @@ class reposi_gstype extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $uid=\Drupal::routeMatch()->getParameter('node');
     //$uid
+    sleep(15);
     $serch_p = db_select('reposi_publication', 'p');
     $serch_p->fields('p')
     ->condition('p.p_unde', $uid, '=');
