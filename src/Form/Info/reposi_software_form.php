@@ -1,5 +1,7 @@
 <?php
-
+/**
+* @file software create information
+*/
 namespace Drupal\reposi\Form\Info;
 
 use Drupal\Core\Form\FormBase;
@@ -32,9 +34,6 @@ public function buildForm(array $form, FormStateInterface $form_state) {
     '#required' => TRUE,
     '#maxlength' => 511,
   );
-
-  ////Fecha
-
         $form['year'] = array(
           '#title' => t('Publication Year'),
           '#type' => 'textfield',
@@ -42,10 +41,6 @@ public function buildForm(array $form, FormStateInterface $form_state) {
           '#required' => TRUE,
           '#description' => t('Four numbers'),
         );
-
-  ////////////////AUTORES
-
-
       $form['author'] = array(
           '#type' => 'details',
           '#open' => TRUE,
@@ -115,7 +110,6 @@ public function buildForm(array $form, FormStateInterface $form_state) {
             'effect' => 'fade',
           ),
         );
-////////////////software
 $form['version'] = array(
     '#title' => t('Version'),
     '#type' => 'textfield',
@@ -142,17 +136,11 @@ public function addfieldsubmit(array &$form, FormStateInterface &$form_state) {
   $form_state->set('fields_count',$max);
   $form_state->setRebuild(TRUE);
 }
-
-/**
-  * Ajax callback to add new field.
-  */
 public function addfieldCallback(array &$form, FormStateInterface &$form_state) {
   return $form['author'];
 }
 
 public function validateForm(array &$form, FormStateInterface $form_state) {
-
-  //function reposi_software_name_validate($form, &$form_state){
     $name_validate = $form_state->getValue('name');
     $search_sw = db_select('reposi_thesis_sw', 'sw');
     $search_sw->fields('sw')
@@ -166,14 +154,11 @@ public function validateForm(array &$form, FormStateInterface $form_state) {
         $form_state->setErrorByName('name', t('This Software exists on Data Base.'));
       }
     }
-
-////function reposi_publiform_year2_validate($form, &$form_state){
 $year_validate = $form_state->getValue('year');
 if(!is_numeric($year_validate) || $year_validate > '9999' ||
     $year_validate < '1000') {
   $form_state->setErrorByName('year', t('It is not an allowable value for year.'));
 }
-//function reposi_publiform_authorn_validate($form, &$form_state){
 $table = $form_state->getValue('table');
 $first_name_validate=$table[0]['first_name'];
 $first_lastname_validate=$table[0]['f_lastname'];
@@ -181,13 +166,11 @@ if (empty($first_name_validate) || empty($first_lastname_validate)){
   $form_state->setErrorByName('first_name', t('One author is required as minimum
   (first name and last name).'));
 }
-///validate Url
   $url=$form_state->getValue('url');
   if(!empty($url) && !UrlHelper::isValid($url, TRUE))
   {
    $form_state->setErrorByName('uri', t('The URL is not valid.'));
   }
-///end function
 }
 public function submitForm(array &$form, FormStateInterface $form_state) {
   $sw_name = $form_state->getValue('name');
@@ -288,8 +271,5 @@ public function submitForm(array &$form, FormStateInterface $form_state) {
 
           drupal_set_message(t('Software: ') . $sw_name . ' ' . t('was update.'));
           \Drupal::state()->delete('aut');
-
-
-}
-///Close class
-}
+        }
+      }

@@ -1,5 +1,7 @@
 <?php
-
+/**
+* @file thesis create information
+*/
 namespace Drupal\reposi\Form\Info;
 
 use Drupal\Core\Form\FormBase;
@@ -10,7 +12,6 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\reposi\Controller\Reposi_info_publication;
 use Drupal\Component\Utility\UrlHelper;
-
 /**
  * Implements an example form.
  */
@@ -40,10 +41,6 @@ class Reposi_thesis_form extends FormBase {
                         t('PhD thesis')),
     '#required' => TRUE,
   );
-  //*****************************************************************************************
-  //*************************************PUBLICATION DATE************************************
-  //*****************************************************************************************
-
   $form['date'] = array(
     '#title' => t('Date'),
     '#type' => 'details',
@@ -69,13 +66,6 @@ class Reposi_thesis_form extends FormBase {
     '#required' => TRUE,
     '#description' => t('Four numbers'),
   );
-
-
-
-  //*****************************************************************************************
-  //*********************************AUTORES AUTORES AUTORES*********************************
-  //*****************************************************************************************
-
   $form['author'] = array(
       '#type' => 'details',
       '#open' => TRUE,
@@ -145,11 +135,6 @@ class Reposi_thesis_form extends FormBase {
         'effect' => 'fade',
       ),
     );
-
-  //*****************************************************************************************//
-  //*********************************KEYWORD KEYWORD KEYWORD*********************************//
-  //*****************************************************************************************//
-
   $form['keyword'] = array(
       '#type' => 'details',
       '#open' => TRUE,
@@ -176,7 +161,6 @@ class Reposi_thesis_form extends FormBase {
   );
 
   for ($i=0; $i<=$maxkeyword; $i++) {
-
   $keyword = $form_state->getValue('keywordtable');
   $key=$keyword[$i]['key'];
 
@@ -198,12 +182,6 @@ class Reposi_thesis_form extends FormBase {
         'effect' => 'fade',
       ),
     );
-
-
-  //*****************************************************************************************//
-  //********************************JOURNAL/BOOK JOURNAL/BOOK *******************************//
-  //*****************************************************************************************//
-
   $form['institu'] = array(
     '#title' => t('Academic institution'),
     '#type' => 'textfield',
@@ -223,15 +201,7 @@ class Reposi_thesis_form extends FormBase {
     '#type' => 'submit',
     '#value' => t('Save'),
   );
-  /******************************************************************/
-  /******************************************************************/
-  /******************************************************************/
-
-//--------------------------------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------------------------------
    return $form;
-
   }
 
   public function addfieldsubmit(array &$form, FormStateInterface &$form_state) {
@@ -239,27 +209,19 @@ class Reposi_thesis_form extends FormBase {
     $form_state->set('fields_count',$max);
     $form_state->setRebuild(TRUE);
   }
-
   public function addfieldkeywordsubmit(array &$form, FormStateInterface &$form_state) {
 
     $max = $form_state->get('fields_keyword_count') + 1;
     $form_state->set('fields_keyword_count',$max);
     $form_state->setRebuild(TRUE);
   }
-
   public function addfieldCallback(array &$form, FormStateInterface &$form_state) {
     return $form['author'];
   }
-
   public function addfieldkeywordCallback(array &$form, FormStateInterface &$form_state) {
     return $form['keyword'];
   }
-
-
   public function validateForm(array &$form, FormStateInterface $form_state) {
-
-  //------------------------------------------------------------------------------------------------
-
   $name_validate = $form_state->getValue('title');
   $search_sw = db_select('reposi_thesis_sw', 'sw');
   $search_sw->fields('sw')
@@ -273,9 +235,6 @@ class Reposi_thesis_form extends FormBase {
       $form_state->setErrorByName('publi_title', t('This Thesis exists on Data Base.'));
     }
   }
-
-  // DAY, month year ARTICLE VALIDATION
-
   $day_validate = $form_state->getValue('day');
   if(!empty($day_validate) && (!is_numeric($day_validate) ||
       $day_validate > '31' || $day_validate < '1')) {
@@ -307,7 +266,6 @@ class Reposi_thesis_form extends FormBase {
   if (empty($keyword)){
         drupal_set_message(t('One keyword is required as minimum.'), 'warning');
   }
-  ///validate Url
     $url=$form_state->getValue('url');
     if(!empty($url) && !UrlHelper::isValid($url, TRUE))
     {
@@ -319,7 +277,6 @@ class Reposi_thesis_form extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-
   $the_title = $form_state->getValue('title');
   $the_day = $form_state->getValue('day');
   $the_mon = $form_state->getValue('month');
@@ -376,9 +333,6 @@ class Reposi_thesis_form extends FormBase {
       'p_check' => 1,
       'p_tsid'  => $thesis_id,
   ))->execute();
-
-
-//-------------------------------------------------------------------------------------------------------------------------
   $max = $form_state->get('fields_count');
   if(is_null($max)) {
     $max = 0;
@@ -392,7 +346,6 @@ class Reposi_thesis_form extends FormBase {
   $aut_sn=$table[$a]['second_name'];
   $aut_fl=$table[$a]['f_lastname'];
   $aut_sl=$table[$a]['s_lastname'];
-
    !empty($aut_fn)?strtolower($aut_fn):'';
    !empty($aut_sn)?strtolower($aut_sn):'';
    !empty($aut_fl)?strtolower($aut_fl):'';
@@ -485,11 +438,6 @@ class Reposi_thesis_form extends FormBase {
       $cont_keywords++;
     }
   }
-
   drupal_set_message(t('Thesis: ') . $the_title . t(' was update.'));
-
-//-------------------------------------------------------------------------------------------------------------------------
   }
-// Llave que cierra la clase:--->
 }
-?>

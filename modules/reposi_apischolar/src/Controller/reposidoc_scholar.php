@@ -48,7 +48,6 @@ class reposidoc_scholar extends reposi_apischolar_admin{
 				$form = 1;
 				drupal_set_message('Error getting data. please make sure your api is working correctly.',"error");
 			}else{
-
 				$authors = explode(", ",$scholar_publication['authors']);
 				$authors = implode(",",$authors);
 				$authors = explode(",",$authors);
@@ -65,9 +64,7 @@ class reposidoc_scholar extends reposi_apischolar_admin{
 				->orderBy('r.p_abid', 'DESC');
 				$p_max1 = $search_pmax->execute()->fetchAssoc();
 				$new_abid=$p_max1['p_abid']+1;
-				//echo 'ID '.$p_max['pid'].' ab_id '. $p_max1['p_abid'];
 				$date=explode("/",$scholar_publication['Publication date']);
-
 				if ($date[0]==" ") {
 					$date[0]=1000;
 				}
@@ -83,7 +80,6 @@ class reposidoc_scholar extends reposi_apischolar_admin{
 					$new_art_month = NULL;
 				}
 				if ($scholar_publication['Pages']==' ') {
-					# code...
 				}else {
 					$pages=explode("-",$scholar_publication['Pages']);
 					$art_spage=$pages[0];
@@ -92,7 +88,6 @@ class reposidoc_scholar extends reposi_apischolar_admin{
 					}else {
 						$art_fpage=$pages[0];
 					}
-
 				}
 				if (!empty($art_spage)) {
 					$art_start_page = $art_spage;
@@ -136,13 +131,11 @@ class reposidoc_scholar extends reposi_apischolar_admin{
 					'ab_abstract'          => $art_abs,
 					'ab_journal_editorial' => $art_jour,
 				))->execute();
-
 				$search_art = db_select('reposi_article_book', 'ab');
 				$search_art->fields('ab')
 				->condition('ab.ab_type', 'Article', '=')
 				->condition('ab.ab_title', $art_title, '=');
 				$art_id = $search_art->execute()->fetchField();
-
 				db_insert('reposi_date')->fields(array(
 					'd_day'  => $new_art_day,
 					'd_month'=> $new_art_month,
@@ -158,7 +151,6 @@ class reposidoc_scholar extends reposi_apischolar_admin{
 					'p_abid'  => $art_id,
 					'p_pid_scholar'=> $p_pid_scholar,
 				))->execute();
-
 				if (!empty($art_vol) || !empty($art_issue) || !empty($art_spage) ||
 				!empty($art_fpage) || !empty($art_url)) {
 					db_insert('reposi_article_book_detail')->fields(array(
@@ -170,18 +162,15 @@ class reposidoc_scholar extends reposi_apischolar_admin{
 						'abd_abid'       => $art_id,
 					))->execute();
 				}
-
 				$max = count($authorss);
 				if(is_null($max)) {
 					$max = 0;
 				}
 				$table = $authorss;
-
 				$search_user = db_select('reposi_user', 'ru');
 				$search_user->fields('ru')
 				->condition('ru.uid', $pub_state['p_uid'], '=');
 				$userr_id = $search_user->execute()->fetchAssoc();
-
 				$table[$max][0]=$userr_id['u_first_name'];
 				if(empty($userr_id['u_second_name'])){
 					$table[$max][1]=' ';
@@ -873,9 +862,6 @@ public static function pubscolar_con($uid,$p_uid,$user_gs,$p_pid_scholar){
 			}else {
 				$con_con= $scholar_publication['Conference'];
 			}
-
-
-			/////////////////////////////////////////////////////////////////
 			$con_title=$pub_state['p_title'];
 
 			$serch_rp = db_select('reposi_confer_patent', 'rp');
@@ -1300,15 +1286,11 @@ public static function pubscolar_the($uid,$p_uid,$user_gs,$p_pid_scholar){
 			->orderBy('r.p_abid', 'DESC');
 			$p_max1 = $search_pmax->execute()->fetchAssoc();
 			$new_abid=$p_max1['p_abid']+1;
-			//echo 'ID '.$p_max['pid'].' ab_id '. $p_max1['p_abid'];
 			$date=explode("/",$scholar_publication['Publication date']);
-
 			if ($date[0]==" ") {
 				$date[0]=1000;
 			}
-
 			$new_the_year = (int)$date[0];
-
 			if (isset($date[2])) {
 				$new_the_day = (int)$date[2];
 			} else {
@@ -1362,8 +1344,6 @@ public static function pubscolar_the($uid,$p_uid,$user_gs,$p_pid_scholar){
 				drupal_set_message('Error, the Thesis already exists. To import you must delete the existing Conferen','error');
 			}
 			else {
-
-
 				db_insert('reposi_thesis_sw')->fields(array(
 					'ts_type'        => 'Thesis',
 					'ts_title'       => $the_title,
@@ -2029,5 +2009,4 @@ function reposi_author_scholar(){
 
 }
 
-///////////////////////
 }

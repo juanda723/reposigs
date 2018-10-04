@@ -86,8 +86,6 @@ reposi.googlelistdesc:
   requirements:
     _permission: 'administrator'
 
-
-
 reposi.deletegs:
   path: 'reposi/delete/undefined/{node}'
   defaults:

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @file associated users
+ */
 namespace Drupal\reposi_apiscopus\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
@@ -78,25 +80,6 @@ public function buildForm(array $form, FormStateInterface $form_state) {
 
   }
 
-
-
-
-  /**
-   * {@inheritdoc}
-   */
-   /*
-  public function validateForm(array &$form, FormStateInterface $form_state){
-    $start_validate = $form_state->getValue('query_start');
-    if(!is_numeric($start_validate) || $start_validate < '0' || $start_validate > '199'){
-      $form_state->setErrorByName('query_start', t('Start is a positive numerical field.'));
-    }
-
-    $final_validate = $form_state->getValue('query_final');
-    if(!is_numeric($final_validate) || $final_validate < '0' || $final_validate > '200'){
-      $form_state->setErrorByName('query_final', t('Final is a positive numerical field.'));
-    }
-  }
-*/
   /**
    * {@inheritdoc}
    */

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @file article create information
+ */
 namespace Drupal\reposi\Form\Info;
 
 use Drupal\Core\Form\FormBase;
@@ -21,13 +23,6 @@ class Reposi_article_form extends FormBase {
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
-
-/*ISSET: Determina si una variable está definida y no es NULL.
-$form_state['storage']: Los datos colocados en el contenedor de almacenamiento de la colección $ form_state se almacenarán automáticamente en caché y se volverán a cargar cuando se envíe el formulario, permitiendo que su código acumule datos de paso a paso y lo procese en la etapa final sin ningún código adicional
-ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABLE ESTÁ DEBIDAMENTE DECLARADA CON ANTERIORIDAD
-      $form_state['storage']['author'] = isset($form_state['storage']['author'])?
-                                         $form_state['storage']['author']:1;*/
-
   $markup = '<p>' . '<i>' . t('You must complete the required fields before the
             add producers.') . '</i>' . '</p>';
   $form['body'] = array('#markup' => $markup);
@@ -41,11 +36,6 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
     '#title' => t('Abstract'),
     '#type' => 'textarea',
   );
-
-  //*****************************************************************************************
-  //*************************************PUBLICATION DATE************************************
-  //*****************************************************************************************
-
   $form['date'] = array(
     '#title' => t('Publication date'),
     '#type' => 'details',
@@ -71,13 +61,6 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
     '#required' => TRUE,
     '#description' => t('Four numbers'),
   );
-
-
-
-  //*****************************************************************************************
-  //*********************************AUTORES AUTORES AUTORES*********************************
-  //*****************************************************************************************
-
   $form['author'] = array(
       '#type' => 'details',
       '#open' => TRUE,
@@ -147,11 +130,6 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
         'effect' => 'fade',
       ),
     );
-
-  //*****************************************************************************************
-  //*********************************KEYWORD KEYWORD KEYWORD*********************************
-  //*****************************************************************************************
-
   $form['keyword'] = array(
       '#type' => 'details',
       '#open' => TRUE,
@@ -200,12 +178,6 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
         'effect' => 'fade',
       ),
     );
-
-
-  //*****************************************************************************************
-  //********************************JOURNAL/BOOK JOURNAL/BOOK *******************************
-  //*****************************************************************************************
-
   $form['journal'] = array(
     '#title' => t('Journal/Book'),
       '#type' => 'details',
@@ -251,13 +223,6 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
     '#type' => 'submit',
     '#value' => t('Save'),
   );
-  /******************************************************************/
-  /******************************************************************/
-  /******************************************************************/
-
-//--------------------------------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------------------------------
    return $form;
 
   }
@@ -285,9 +250,6 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
 
 
   public function validateForm(array &$form, FormStateInterface $form_state) {
-
-  //------------------------------------------------------------------------------------------------
-
   $title_validate = $form_state->getValue('title');
   $search_art = db_select('reposi_article_book', 'ab');
   $search_art->fields('ab')
@@ -301,9 +263,6 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
       $form_state->setErrorByName('publi_title', t('This Article exists on Data Base.'));
     }
   }
-
-  // DAY, month year ARTICLE VALIDATION
-
   $day_validate = $form_state->getValue('day');
   if(!empty($day_validate) && (!is_numeric($day_validate) ||
       $day_validate > '31' || $day_validate < '1')) {
@@ -359,8 +318,6 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-
-
   $adm_aca_type = $form_state->getValue('name');
   $author1_validate = $form_state->getValue('table');
   $art_title = $form_state->getValue('title');
@@ -435,7 +392,6 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
       'abd_abid'       => $art_id,
     ))->execute();
   }
-//-------------------------------------------------------------------------------------------------------------------------
   $max = $form_state->get('fields_count');
   if(is_null($max)) {
     $max = 0;
@@ -449,7 +405,6 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
   $aut_sn=$table[$a]['second_name'];
   $aut_fl=$table[$a]['f_lastname'];
   $aut_sl=$table[$a]['s_lastname'];
-
    !empty($aut_fn)?$aut_fn:'';
    !empty($aut_sn)?$aut_sn:'';
    !empty($aut_fl)?$aut_fl:'';
@@ -544,11 +499,6 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
   }
 
   drupal_set_message(t('Article: ') . $art_title . t(' was save.'));
-
-
-
-//-------------------------------------------------------------------------------------------------------------------------
   }
-// Llave que cierra la clase:--->
 }
 ?>

@@ -1,5 +1,7 @@
 <?php
-
+/**
+* @file conference-patent information, for administer
+*/
 namespace Drupal\reposi\Form\Info;
 
 use Drupal\Core\Form\FormBase;
@@ -56,9 +58,7 @@ class reposi_info_conpat extends FormBase {
 
       return $form;
 }
-//end buildForm
 public function editForm(array &$form, FormStateInterface $form_state) {
-    //Edicion Formulario
       $arg=\Drupal::routeMatch()->getParameter('node');
       $serch_p = db_select('reposi_publication', 'p');
       $serch_p->fields('p')
@@ -99,7 +99,6 @@ public function validateForm(array &$form, FormStateInterface $form_state){
 }
 
 public function Delete(array &$form, FormStateInterface $form_state) {
-    //Edicion Formulario
     $arg=\Drupal::routeMatch()->getParameter('node');
     $search_pat = db_select('reposi_publication','p');
     $search_pat->fields('p')
@@ -115,6 +114,4 @@ public function Delete(array &$form, FormStateInterface $form_state) {
 public function submitForm(array &$form, FormStateInterface $form_state) {
 
 }
-
-
-}//end class
+}

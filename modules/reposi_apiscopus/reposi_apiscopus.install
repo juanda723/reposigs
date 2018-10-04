@@ -1,5 +1,11 @@
 <?php
+/**
+ * Install database of apiscopus
+ */
 
+ /**
+ * Implements reposi_apiscopus().
+ */
 function reposi_apiscopus_install() {}
 
   function reposi_apiscopus_uninstall() {

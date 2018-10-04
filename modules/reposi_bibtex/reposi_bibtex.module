@@ -1,9 +1,14 @@
 <?php
+/**
+ * @file
+ */
 use Drupal\Core\Database;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\reposi\Controller\Reposi_info_publication;
-
+/**
+ * Implements reposi_form_alter().
+ */
 function reposi_bibtex_form_alter(&$form, \Drupal\Core\Form\FormStateInterface &$form_state, $form_id){
 	global $base_url;
 	$publication_id = \Drupal::state()->get('publication_id');

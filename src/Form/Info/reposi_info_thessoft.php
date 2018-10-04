@@ -1,5 +1,7 @@
 <?php
-
+/**
+* @file thesis-software information, for administer
+*/
 namespace Drupal\reposi\Form\Info;
 
 use Drupal\Core\Form\FormBase;
@@ -22,7 +24,6 @@ class reposi_info_thessoft extends FormBase {
 
   public function buildForm(array $form, FormStateInterface $form_state) {
       $arg=\Drupal::routeMatch()->getParameter('node');
-
       $serch_p = db_select('reposi_publication', 'p');
       $serch_p->fields('p')
         ->condition('p.p_tsid', $arg, '=');
@@ -56,9 +57,8 @@ class reposi_info_thessoft extends FormBase {
 
       return $form;
 }
-//end buildForm
+
 public function editForm(array &$form, FormStateInterface $form_state) {
-    //Edicion Formulario
     $arg=\Drupal::routeMatch()->getParameter('node');
       $serch_p = db_select('reposi_publication', 'p');
       $serch_p->fields('p')
@@ -114,6 +114,4 @@ public function Delete(array &$form, FormStateInterface $form_state) {
 public function submitForm(array &$form, FormStateInterface $form_state) {
 
 }
-
-
-}//end class
+}

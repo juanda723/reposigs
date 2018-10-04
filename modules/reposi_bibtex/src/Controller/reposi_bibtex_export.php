@@ -4,13 +4,13 @@
  *
  */
 namespace Drupal\reposi_bibtex\Controller;
+
  use Drupal\Core\Database;
  use Drupal\Core\Url;
  use Drupal\Core\Link;
  use Drupal\reposi\Controller\Reposi_info_publication;
 
  class reposi_bibtex_export{
-
    function reposi_bibtex_format(){
      $id_publi = \Drupal::routeMatch()->getParameter('node');
      if (((int)$id_publi)==0) {
@@ -663,4 +663,4 @@ namespace Drupal\reposi_bibtex\Controller;
     return $text;
     }
 
-}//end class
+}

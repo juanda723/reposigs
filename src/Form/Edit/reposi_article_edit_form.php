@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @file Article Edit
+ */
 namespace Drupal\reposi\Form\Edit;
 
 use Drupal\Core\Form\FormBase;
@@ -21,7 +23,7 @@ class reposi_article_edit_form extends FormBase {
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
-  
+
     $abid = \Drupal::routeMatch()->getParameter('node');
     $search_art = db_select('reposi_article_book', 'ab');
     $search_art->fields('ab')
@@ -84,7 +86,7 @@ class reposi_article_edit_form extends FormBase {
       '#type' => 'item',
       '#title' => $this_art['ab_title'],
     );
-   
+
    $form['two'] = array(
     '#title' => t('Abstract'),
     '#type' => 'details',
@@ -93,7 +95,6 @@ class reposi_article_edit_form extends FormBase {
   );
 
    $form['two']['abstract'] = array(
-      //'#title' => t('Abstract'),
       '#default_value' => $this_art['ab_abstract'],
       '#type' => 'textarea',
 
@@ -307,13 +308,6 @@ class reposi_article_edit_form extends FormBase {
     '#type' => 'submit',
     '#value' => t('Update'),
   );
-  /******************************************************************/
-  /******************************************************************/
-  /******************************************************************/
-
-//--------------------------------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------------------------------
    return $form;
 
   }
@@ -339,11 +333,6 @@ class reposi_article_edit_form extends FormBase {
   }
 
   public function validateForm(array &$form, FormStateInterface $form_state) {
-
-  //------------------------------------------------------------------------------------------------
-
-  // DAY, month year ARTICLE VALIDATION
-
   $day_validate = $form_state->getValue('day');
   if(!empty($day_validate) && (!is_numeric($day_validate) ||
       $day_validate > '31' || $day_validate < '1')) {
@@ -387,17 +376,17 @@ class reposi_article_edit_form extends FormBase {
   if (!empty($table[$a]['first_name']) && empty($table[$a]['f_lastname'])){
     $form_state->setErrorByName('last_name', t('The author requires a last name.'));
   }
- 
+
   if (empty($table[$a]['first_name']) && !empty($table[$a]['f_lastname'])){
     $form_state->setErrorByName('first_name', t('The author requires a first name.'));
   }
 
-  if (!empty($table[$a]['first_name']) && !empty($table[$a]['f_lastname'])){      
+  if (!empty($table[$a]['first_name']) && !empty($table[$a]['f_lastname'])){
           $contname++;
   }
   }
   if ($contname<1){
-    $form_state->setErrorByName('name', t('One author is required as minimum 
+    $form_state->setErrorByName('name', t('One author is required as minimum
     (first name and last name).'));
   }
 
@@ -407,7 +396,7 @@ class reposi_article_edit_form extends FormBase {
         drupal_set_message(t('You must include at least one keyword.'), 'warning');
   }
 
-  $url=$form_state->getValue('url'); 
+  $url=$form_state->getValue('url');
   if(!empty($url) && !UrlHelper::isValid($url, TRUE))
   {
    $form_state->setErrorByName('uri', t('The URL is not valid.'));
@@ -436,9 +425,6 @@ class reposi_article_edit_form extends FormBase {
   $art_doi = $form_state->getValue('doi');
   $art_author = $form_state->getValue('table');
   $art_keyword = $form_state->getValue('keywordtable');
-
-//-------------------------------------------------------------------------------------------------------------------------
-
      $params['send'] = [
       'abid'                 => $art_abid,
       'abstract'             => $art_abstract,
@@ -461,9 +447,5 @@ class reposi_article_edit_form extends FormBase {
     foreach ($params as $param) {
     $form_state->setRedirect('reposi.confirm_article', $param);
     }
-
-//-------------------------------------------------------------------------------------------------------------------------
   }
-// Llave que cierra la clase:--->
 }
-?>

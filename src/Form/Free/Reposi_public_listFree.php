@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @file publications list  information
+ */
 namespace Drupal\reposi\Form\Free;
 
 use Drupal\Core\Form\FormBase;
@@ -42,7 +44,6 @@ class Reposi_public_listFree extends FormBase {
     $pager=$search_publi->extend('Drupal\Core\Database\Query\PagerSelectExtender')->limit(10);
     $list_pub = $pager->execute();
     $publications = '';
-    //$form['body'] = array();
     foreach ($list_pub as $list_p) {
       $pub_type = $list_p->p_type;
       $pub_title = $list_p->p_title;
@@ -178,9 +179,7 @@ class Reposi_public_listFree extends FormBase {
       '#value' => t('Search'),
     );
     return $form;
-
   }
-
 
   public function validateForm(array &$form, FormStateInterface $form_state) {
 
@@ -200,8 +199,5 @@ class Reposi_public_listFree extends FormBase {
   {
     $form_state->setRedirect('reposi.PubliListReposiSearch', ['node' => $searching]);
   }
-
   }
-// Llave que cierra la clase:--->
 }
-?>

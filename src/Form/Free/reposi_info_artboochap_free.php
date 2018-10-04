@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @file article book and chapter_book information
+ */
 namespace Drupal\reposi\Form\Free;
 
 use Drupal\Core\Form\FormBase;
@@ -43,8 +45,6 @@ class reposi_info_artboochap_free extends FormBase {
 
       return $form;
 }
-//end buildForm
-
 
 public function validateForm(array &$form, FormStateInterface $form_state){
 
@@ -57,6 +57,4 @@ public function validateForm(array &$form, FormStateInterface $form_state){
 public function submitForm(array &$form, FormStateInterface $form_state) {
 
 }
-
-
-}//end class
+}

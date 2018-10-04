@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @file Chapter Book Edit
+ */
 namespace Drupal\reposi\Form\Edit;
 
 use Drupal\Core\Form\FormBase;
@@ -21,7 +23,7 @@ class reposi_chap_book_edit_form extends FormBase {
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
- 
+
     $abid = \Drupal::routeMatch()->getParameter('node');
     $search_chap = db_select('reposi_article_book', 'ab');
     $search_chap->fields('ab')
@@ -90,20 +92,6 @@ class reposi_chap_book_edit_form extends FormBase {
       '#open' => TRUE,
       '#size' => 10,
     );
- /*   $form['date']['day'] = array(
-      '#title' => t('Day'),
-      '#type' => 'textfield',
-      '#size' => 5,
-      '#default_value' => $book_date['d_day'],
-      '#description' => t('1-31'),
-    );
-    $form['date']['month'] = array(
-      '#title' => t('Month'),
-      '#type' => 'textfield',
-      '#size' => 5,
-      '#default_value' => $book_date['d_month'],
-      '#description' => t('1-12'),
-    );*/
     $form['date']['year'] = array(
       '#title' => t('Year'),
       '#type' => 'textfield',
@@ -176,10 +164,6 @@ class reposi_chap_book_edit_form extends FormBase {
         'effect' => 'fade',
       ),
    );
-
-  //*****************************************************************************************
-  //********************************JOURNAL/BOOK JOURNAL/BOOK *******************************
-  //*****************************************************************************************
    $form['detail'] = array(
       '#type' => 'details',
       '#open' => TRUE,
@@ -248,13 +232,6 @@ class reposi_chap_book_edit_form extends FormBase {
     '#type' => 'submit',
     '#value' => t('Update'),
   );
-  /******************************************************************/
-  /******************************************************************/
-  /******************************************************************/
-
-//--------------------------------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------------------------------
    return $form;
 
   }
@@ -306,20 +283,20 @@ class reposi_chap_book_edit_form extends FormBase {
   if (!empty($table[$a]['first_name']) && empty($table[$a]['f_lastname'])){
     $form_state->setErrorByName('last_name', t('The author requires a last name.'));
   }
- 
+
   if (empty($table[$a]['first_name']) && !empty($table[$a]['f_lastname'])){
     $form_state->setErrorByName('first_name', t('The author requires a first name.'));
   }
 
-  if (!empty($table[$a]['first_name']) && !empty($table[$a]['f_lastname'])){      
+  if (!empty($table[$a]['first_name']) && !empty($table[$a]['f_lastname'])){
           $contname++;
   }
   }
   if ($contname<1){
-    $form_state->setErrorByName('name', t('One author is required as minimum 
+    $form_state->setErrorByName('name', t('One author is required as minimum
     (first name and last name).'));
   }
-  $url=$form_state->getValue('url'); 
+  $url=$form_state->getValue('url');
   if(!empty($url) && !UrlHelper::isValid($url, TRUE))
   {
    $form_state->setErrorByName('uri', t('The URL is not valid.'));
@@ -367,11 +344,6 @@ class reposi_chap_book_edit_form extends FormBase {
 
     foreach ($params as $param) {
     $form_state->setRedirect('reposi.confirm_chap_book', $param);
-    //drupal_set_message('Se envia esto '.print_r($param,true));
     }
-
-//-------------------------------------------------------------------------------------------------------------------------
   }
-// Llave que cierra la clase:--->
 }
-?>

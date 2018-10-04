@@ -5,6 +5,7 @@
 */
 
 namespace Drupal\reposi_apischolar\Controller;
+
 use Drupal\Core\Database;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
@@ -54,8 +55,6 @@ class reposi_pubgs extends reposi_apischolar_admin {
             ->condition('a.aid', $art_aut->ap_author_id, '=');
             $each_aut = $search_aut->execute()->fetchAssoc();
             $f_name = Reposi_info_publication::reposi_string($each_aut['a_first_name']);
-
-
             if (!empty($each_aut['a_second_name'])) {
               $s_name =  Reposi_info_publication::reposi_string($each_aut['a_second_name']);
               $list_aut_abc = $list_aut_abc . $each_aut['a_first_lastname'] . ' ' .
@@ -63,7 +62,6 @@ class reposi_pubgs extends reposi_apischolar_admin {
             } else {
               $list_aut_abc = $list_aut_abc . $each_aut['a_first_lastname'] . ' ' .
               $each_aut['a_second_lastname'] . ' ' . $f_name[0] . '.'.'  ';
-
             }
           }
           if (isset($pub_unde)) {
@@ -130,8 +128,6 @@ class reposi_pubgs extends reposi_apischolar_admin {
             ->condition('a.aid', $art_aut->ap_author_id, '=');
             $each_aut = $search_aut->execute()->fetchAssoc();
             $f_name = Reposi_info_publication::reposi_string($each_aut['a_first_name']);
-
-
             if (!empty($each_aut['a_second_name'])) {
               $s_name =  Reposi_info_publication::reposi_string($each_aut['a_second_name']);
               $list_aut_abc = $list_aut_abc . $each_aut['a_first_lastname'] . ' ' .
@@ -139,7 +135,6 @@ class reposi_pubgs extends reposi_apischolar_admin {
             } else {
               $list_aut_abc = $list_aut_abc . $each_aut['a_first_lastname'] . ' ' .
               $each_aut['a_second_lastname'] . ' ' . $f_name[0] . '.'.'  ';
-
             }
           }
           if (isset($pub_unde)) {
@@ -215,7 +210,6 @@ class reposi_pubgs extends reposi_apischolar_admin {
             } else {
               $list_aut_abc = $list_aut_abc . $each_aut['a_first_lastname'] . ' ' .
               $each_aut['a_second_lastname'] . ' ' . $f_name[0] . '.'.'  ';
-
             }
           }
           if (isset($pub_unde)) {
@@ -268,22 +262,18 @@ class reposi_pubgs extends reposi_apischolar_admin {
         $pub_title = $list_p->p_title;
         $pub_year = $list_p->p_year;
         $pub_unde = $list_p->p_unde;
-
         if ($pub_type == 'Undefined') {
           $search_p_a = db_select('reposi_publication_author', 'pa');
           $search_p_a->fields('pa', array('ap_author_id', 'ap_unde'))
           ->condition('pa.ap_unde', $pub_unde, '=');
           $p_a = $search_p_a->execute();
           $list_aut_abc='';
-
           foreach ($p_a as $art_aut) {
             $search_aut = db_select('reposi_author', 'a');
             $search_aut->fields('a')
             ->condition('a.aid', $art_aut->ap_author_id, '=');
             $each_aut = $search_aut->execute()->fetchAssoc();
             $f_name = Reposi_info_publication::reposi_string($each_aut['a_first_name']);
-
-
             if (!empty($each_aut['a_second_name'])) {
               $s_name =  Reposi_info_publication::reposi_string($each_aut['a_second_name']);
               $list_aut_abc = $list_aut_abc . $each_aut['a_first_lastname'] . ' ' .
@@ -291,7 +281,6 @@ class reposi_pubgs extends reposi_apischolar_admin {
             } else {
               $list_aut_abc = $list_aut_abc . $each_aut['a_first_lastname'] . ' ' .
               $each_aut['a_second_lastname'] . ' ' . $f_name[0] . '.'.'  ';
-
             }
           }
           if (isset($pub_unde)) {
@@ -352,8 +341,6 @@ class reposi_pubgs extends reposi_apischolar_admin {
           ->condition('a.aid', $art_aut->ap_author_id, '=');
           $each_aut = $search_aut->execute()->fetchAssoc();
           $f_name = Reposi_info_publication::reposi_string($each_aut['a_first_name']);
-
-
           if (!empty($each_aut['a_second_name'])) {
             $s_name =  Reposi_info_publication::reposi_string($each_aut['a_second_name']);
             $list_aut_abc = $list_aut_abc . \Drupal::l($each_aut['a_first_lastname'] . ' ' .
@@ -363,7 +350,6 @@ class reposi_pubgs extends reposi_apischolar_admin {
             $list_aut_abc = $list_aut_abc . \Drupal::l($each_aut['a_first_lastname'] . ' ' .
             $each_aut['a_second_lastname'] . ' ' . $f_name[0] . '.',
             Url::fromRoute('reposi.author_aid',['node'=>$art_aut->ap_author_id])) . '.';
-
           }
         }
         if (isset($abid)) {
@@ -603,7 +589,6 @@ class reposi_pubgs extends reposi_apischolar_admin {
             $list_aut_abc = $list_aut_abc . \Drupal::l($each_aut['a_first_lastname'] . ' ' .
             $each_aut['a_second_lastname'] . ' ' . $f_name[0] . '.',
             Url::fromRoute('reposi.author_aid',['node'=>$art_aut->ap_author_id])) . '.';
-
           }
         }
         if (isset($abid)) {
@@ -795,5 +780,4 @@ class reposi_pubgs extends reposi_apischolar_admin {
     $form['pager']=['#type' => 'pager'];
     return $form;
   }
-
 }

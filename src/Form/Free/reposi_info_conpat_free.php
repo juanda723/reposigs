@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @file conference - patent information
+ */
 namespace Drupal\reposi\Form\Free;
 
 use Drupal\Core\Form\FormBase;
@@ -41,8 +43,6 @@ class reposi_info_conpat_free extends FormBase {
 
       return $form;
 }
-//end buildForm
-
 
 public function validateForm(array &$form, FormStateInterface $form_state){
 

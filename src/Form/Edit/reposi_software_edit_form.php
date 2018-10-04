@@ -1,7 +1,9 @@
 <?php
 
 namespace Drupal\reposi\Form\Edit;
-
+/**
+ * @file Software Edit
+ */
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
@@ -21,7 +23,7 @@ class reposi_software_edit_form extends FormBase {
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
-  
+
     $tsid = \Drupal::routeMatch()->getParameter('node');
     $search_sw = db_select('reposi_thesis_sw', 'ts');
     $search_sw->fields('ts')
@@ -45,7 +47,7 @@ class reposi_software_edit_form extends FormBase {
       $this_aut[] = $info_aut;
     }
 
-    $markup = '<p>' . '<i>' . t('You must complete the required fields before the 
+    $markup = '<p>' . '<i>' . t('You must complete the required fields before the
               add authors or keywords.') . '</i>' . '</p>';
     $form['body'] = array('#markup' => $markup);
     $form['tsid'] = array(
@@ -106,13 +108,11 @@ class reposi_software_edit_form extends FormBase {
     }
 
   for ($i=0; $i<$num_aut+$cont; $i++) {
-
   $table = $form_state->getValue('table');
   $fn=$table[$i]['first_name'];
   $sn=$table[$i]['second_name'];
   $fln=$table[$i]['f_lastname'];
   $sln=$table[$i]['s_lastname'];
-
     $form['author']['table'][$i]['first_name'] = array(
       '#type' => 'textfield',
       '#value' => isset($fn)?$fn:$this_aut[$i]['a_first_name'],
@@ -189,11 +189,6 @@ class reposi_software_edit_form extends FormBase {
   }
 
   public function validateForm(array &$form, FormStateInterface $form_state) {
-
-  //------------------------------------------------------------------------------------------------
-
-  // DAY, month year ARTICLE VALIDATION
-
   $year_validate = $form_state->getValue('year');
   if(!is_numeric($year_validate) || $year_validate > '9999' ||
       $year_validate < '1000') {
@@ -213,21 +208,21 @@ class reposi_software_edit_form extends FormBase {
   if (!empty($table[$a]['first_name']) && empty($table[$a]['f_lastname'])){
     $form_state->setErrorByName('last_name', t('The author requires a last name.'));
   }
- 
+
   if (empty($table[$a]['first_name']) && !empty($table[$a]['f_lastname'])){
     $form_state->setErrorByName('first_name', t('The author requires a first name.'));
   }
 
-  if (!empty($table[$a]['first_name']) && !empty($table[$a]['f_lastname'])){      
+  if (!empty($table[$a]['first_name']) && !empty($table[$a]['f_lastname'])){
           $contname++;
   }
   }
   if ($contname<1){
-    $form_state->setErrorByName('name', t('One author is required as minimum 
+    $form_state->setErrorByName('name', t('One author is required as minimum
     (first name and last name).'));
   }
 
-  $url=$form_state->getValue('url'); 
+  $url=$form_state->getValue('url');
   if(!empty($url) && !UrlHelper::isValid($url, TRUE))
   {
    $form_state->setErrorByName('uri', t('The URL is not valid.'));
@@ -248,7 +243,7 @@ class reposi_software_edit_form extends FormBase {
 
      $params['send'] = [
       'tsid'                 => $sw_tsid,
-      'year'                 => $sw_year,  
+      'year'                 => $sw_year,
       'info_author'          => $sw_author,
       'url'                  => $sw_url,
       'version'	             => $sw_version,
@@ -256,11 +251,6 @@ class reposi_software_edit_form extends FormBase {
        ];
     foreach ($params as $param) {
           $form_state->setRedirect('reposi.confirm_software', $param);
-         // drupal_set_message(t('se envia esto:  ').print_r($param,true));
     }
-
-//-------------------------------------------------------------------------------------------------------------------------
-  }
-// Llave que cierra la clase:--->
 }
-?>
+}

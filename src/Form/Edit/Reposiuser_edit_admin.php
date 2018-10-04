@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @file Users Edit
+ */
 namespace Drupal\reposi\Form\Edit;
 
 use Drupal\Core\Form\FormBase;
@@ -11,9 +13,7 @@ class Reposiuser_edit_admin extends FormBase {
   public function getFormId() {
     return 'reposi_user_admin_form';
   }
-
   public function buildForm(array $form, FormStateInterface $form_state) {
-
   $id = \Drupal::routeMatch()->getParameter('node');
   $search_this_user = db_select('reposi_user', 'u');
   $search_this_user->condition('u.uid', $id, '=')
@@ -30,7 +30,6 @@ class Reposiuser_edit_admin extends FormBase {
     } else {
       $id_academic = 2;
     }
-
     $form['uid'] = array(
       '#type' => 'value',
       '#value' => $id,
@@ -113,7 +112,6 @@ class Reposiuser_edit_admin extends FormBase {
       '#default_value' => $this_user['u_id_scholar'],
       '#required' => FALSE,
     );
-
   $result = db_query('SELECT academic_type FROM {reposi_academic} LIMIT 3');
   foreach ($result as $res) {
     $academic_r[]=$res->academic_type;
@@ -141,7 +139,6 @@ class Reposiuser_edit_admin extends FormBase {
   $adm_sname = $form_state->getValue('adm_user_sname');
   $adm_flastname = $form_state->getValue('adm_user_flastname');
   $adm_slastname = $form_state->getValue('adm_user_slastname');
-  //$adm_affilia = $form_state->getValue('adm_user_affiliation');
   $adm_email1 = $form_state->getValue('adm_user_email1');
   $adm_email2 = $form_state->getValue('adm_user_email2');
   $adm_email3 = $form_state->getValue('adm_user_email3');
@@ -151,7 +148,6 @@ class Reposiuser_edit_admin extends FormBase {
   $adm_academic = $form_state->getValue('adm_user_acarol');
   $adm_aca_type = $form_state->getValue(['adm_acad_options', $adm_academic]);
   $uid = $form_state->getValue('uid');
-  //$adm_aca_type = $form_state['values']['adm_acad_options'][$adm_academic];------------->CAMBIO:ASÍ ERA EN DRUPAL 7
   $query = db_select('reposi_user', 'n');
   $query->condition('n.u_first_name', $adm_fname, '=')
         ->condition('n.u_first_lastname', $adm_flastname, '=')
@@ -186,9 +182,7 @@ class Reposiuser_edit_admin extends FormBase {
       }
     }
   }
-  }
-
-
+}
   /**
    * {@inheritdoc}
    */
@@ -207,7 +201,6 @@ class Reposiuser_edit_admin extends FormBase {
   $adm_academic = $form_state->getValue('adm_user_acarol');
   $adm_aca_type = $form_state->getValue(['adm_acad_options', $adm_academic]);
   $adm_uid = $form_state->getValue('uid');
-
   if (!empty($adm_email2)){
         $new_email2 = $adm_email2;
       } else {
@@ -218,7 +211,6 @@ class Reposiuser_edit_admin extends FormBase {
       } else {
         $new_email3 = NULL;
       }
-
      $params['send'] = [
       'u_uid'             => $adm_uid,
       'u_first_name'      => $adm_fname,
@@ -237,7 +229,5 @@ class Reposiuser_edit_admin extends FormBase {
     foreach ($params as $param) {
     $form_state->setRedirect('reposi.useredit', $param);
     }
-
    }
-
 }

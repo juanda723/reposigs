@@ -1,5 +1,7 @@
 <?php
-
+/**
+* @file patent create information
+*/
 namespace Drupal\reposi\Form\Info;
 
 use Drupal\Core\Form\FormBase;
@@ -19,8 +21,6 @@ class reposi_patent_form extends FormBase {
 public function getFormId() {
     return 'patent_form';
   }
-
-
 public function buildForm(array $form, FormStateInterface $form_state) {
   global $_reposi_start_form;
   $markup = '<p>' . '<i>' . t('You must complete the required fields before the
@@ -32,12 +32,6 @@ public function buildForm(array $form, FormStateInterface $form_state) {
     '#required' => TRUE,
     '#maxlength' => 511,
   );
-
-  //*****************************************************************************************
-  //*************************************PUBLICATION DATE************************************
-  //*****************************************************************************************
-
-
   $form['date'] = array(
     '#title' => t('Publication date'),
     '#type' => 'fieldset',
@@ -62,10 +56,6 @@ public function buildForm(array $form, FormStateInterface $form_state) {
     '#required' => TRUE,
     '#description' => t('Four numbers'),
   );
-
-///////////////author
-
-
       $form['author'] = array(
           '#type' => 'details',
           '#open' => TRUE,
@@ -135,8 +125,6 @@ public function buildForm(array $form, FormStateInterface $form_state) {
             'effect' => 'fade',
           ),
         );
-
-////////Patent
 $form['abstract'] = array(
   '#title' => t('Abstract'),
   '#type' => 'textarea',
@@ -174,16 +162,11 @@ public function addfieldsubmit(array &$form, FormStateInterface &$form_state) {
   $form_state->set('fields_count',$max);
   $form_state->setRebuild(TRUE);
 }
-
-/**
-  * Ajax callback to add new field.
-  */
 public function addfieldCallback(array &$form, FormStateInterface &$form_state) {
   return $form['author'];
 }
 
 public function validateForm(array &$form, FormStateInterface $form_state) {
-//  function reposi_patent_title_validate($form, &$form_state){
     $title_validate = $form_state->getValue('invention');
     $search_pat = db_select('reposi_confer_patent', 'cp');
     $search_pat->fields('cp')
@@ -197,14 +180,9 @@ public function validateForm(array &$form, FormStateInterface $form_state) {
         $form_state->setErrorByName('name', t('This Patent exists on Data Base.'));
       }
     }
-
-    // DAY, month year
-
-
     $day_validate = $form_state->getValue('day');
     if(!empty($day_validate) && (!is_numeric($day_validate) ||
         $day_validate > '31' || $day_validate < '1')) {
-     // form_set_error('day', t('It is not an allowable value for day.'));
       $form_state->setErrorByName('day', t('It is not an allowable value for day.'));
     }
 
@@ -219,9 +197,6 @@ public function validateForm(array &$form, FormStateInterface $form_state) {
         $year_validate < '1000') {
       $form_state->setErrorByName('year', t('It is not an allowable value for year.'));
     }
-    /////////
-
-    //function reposi_publiform_authorn_validate($form, &$form_state){
     $table = $form_state->getValue('table');
     $first_name_validate=$table[0]['first_name'];
     $first_lastname_validate=$table[0]['f_lastname'];
@@ -229,7 +204,6 @@ public function validateForm(array &$form, FormStateInterface $form_state) {
       $form_state->setErrorByName('first_name', t('One author is required as minimum
       (first name and last name).'));
     }
-    ///validate Url
       $url=$form_state->getValue('url');
       if(!empty($url) && !UrlHelper::isValid($url, TRUE))
       {
@@ -287,7 +261,6 @@ public function submitForm(array &$form, FormStateInterface $form_state) {
         'p_check' => 1,
         'p_cpid'  => $patent_id,
     ))->execute();
-    //forrrrrrrrrrrrrrrrrrrrrrrrrr
           $max = $form_state->get('fields_count');
           if(is_null($max)) {
           $max = 0;
@@ -353,7 +326,5 @@ public function submitForm(array &$form, FormStateInterface $form_state) {
 
           drupal_set_message(t('Patent: ') . $pat_name . ' ' . t('was save.'));
           \Drupal::state()->delete('aut');
-
-}//end function
-///end class
+}
 }

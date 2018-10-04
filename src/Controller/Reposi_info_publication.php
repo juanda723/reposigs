@@ -10,8 +10,9 @@ use Drupal\Core\Url;
 use Drupal\Core\Link;
 
 class Reposi_info_publication {
-  /////////////////////////////Start FUNTIONS RAMDON//////////////////////////////////////////////////////
-
+  /**
+  * Implements reposi_string
+  */
   public static function reposi_string($string) {
     $string = trim($string);
     $string = str_replace(
@@ -47,8 +48,9 @@ class Reposi_info_publication {
     return $string;
   }
 
-
-
+  /**
+  * Implements reposi_formt_date.
+  */
   public static function reposi_formt_date($day, $month, $year){
     if (empty($month)) {
       $month_letter = '';
@@ -88,8 +90,9 @@ class Reposi_info_publication {
     }
     return $format_dates;
   }
-  /////////////////////////////END fUNTIONS RAMDON//////////////////////////////////////////////////////
-  /////////////////////////////START PUBLICATION free//////////////////////////////////////////////////////
+  /**
+  * Implements reposi_publications_free().
+  */
   public static function reposi_info_article_free(){
 
     $art_id = \Drupal::routeMatch()->getParameter('node');
@@ -252,8 +255,6 @@ class Reposi_info_publication {
     );
     return $form;
   }
-
-  ////////////////////////////////////////////////
 
   public static function reposi_info_book_free(){
     $book_id = \Drupal::routeMatch()->getParameter('node');
@@ -531,7 +532,6 @@ class Reposi_info_publication {
 
     return $form;
   }
-  //////////reposi_info_conference_free
 
   public static function reposi_info_conference_free(){
 
@@ -687,7 +687,6 @@ class Reposi_info_publication {
     return $form;
   }
 
-  ///////////reposi_info_thesis_free
   public static function reposi_info_thesis_free(){
     $the_id = \Drupal::routeMatch()->getParameter('node');
     global $base_url;
@@ -819,7 +818,6 @@ class Reposi_info_publication {
     return $form;
   }
 
-  /////////////////////////////////
   public static function reposi_info_patent_free(){
     $pat_id = \Drupal::routeMatch()->getParameter('node');
     global $base_url;
@@ -934,8 +932,6 @@ class Reposi_info_publication {
     return $form;
   }
 
-  /////////////////////////////
-
   public static function reposi_info_sw_free(){
 
     $sw_id = \Drupal::routeMatch()->getParameter('node');
@@ -1042,12 +1038,5 @@ class Reposi_info_publication {
     );
     return $form;
   }
-
-  /////////////////////////////END PUBLICATION free//////////////////////////////////////////////////////
-  //////////////////////////////Star PUBLICATION/////////////////////////////////////////////////////////
-
-
-  //////////////////////////////END PUBLICATION//////////////////////////////////////////////////////////
-  /////////////////////////////ENd class/////////////////////////////////////////////////////////////////
 
 }

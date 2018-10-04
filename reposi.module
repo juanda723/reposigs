@@ -1,10 +1,20 @@
 <?php
+
+/**
+ * @file
+ */
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Url;
+/**
+ * Implements reposi_form_alter().
+ */
 
 function reposi_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id)
 {
 }
+/**
+ * Implements reposi_has_role().
+ */
 
 function reposi_has_role() {
   global $user;
@@ -16,6 +26,9 @@ function reposi_has_role() {
   }
   return FALSE;
 }
+/**
+ * Implements _reposi_user_role_administrator().
+ */
 
 function _reposi_user_role_administrator() {
   global $user;
@@ -27,12 +40,17 @@ function _reposi_user_role_administrator() {
   }
   return FALSE;
 }
+
 function reposi_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.reposi':
   return reposi_help_content();
   }
 }
+
+/**
+ * Implements reposi_help_content().
+ */
 function reposi_help_content(){
   $text = '<h3>' . t('Bibliography Reference Repository') . '</h3>' .
           '<p align="justify">' . t('This module aims to simplify the capture bibliographic
@@ -70,7 +88,3 @@ function reposi_help_content(){
           t(' but you need a web page online and Scopus subscription') . '</p>';
   return ($text);
 }
-
-
-
-?>

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @file import publications for type
+ */
 namespace Drupal\reposi_apischolar\Form;
 
 use Drupal\Core\Form\FormBase;
@@ -41,7 +43,6 @@ class reposi_gstype extends FormBase {
     $serch_ap->fields('a', array('ap_author_id', 'ap_unde'))
     ->condition('a.ap_unde', $p_unde);
     $p_a = $serch_ap->execute();
-
     $p_a -> allowRowCount = TRUE;
     $num_aut = $p_a->rowCount();
     $list_aut_abc='';
@@ -129,9 +130,7 @@ class reposi_gstype extends FormBase {
       '#value' => t('Delete'),
       '#submit' => array([$this, 'delete']),
     );
-
     $uid=\Drupal::routeMatch()->getParameter('node');
-    //$uid
     $serch_p = db_select('reposi_publication', 'p');
     $serch_p->fields('p')
     ->condition('p.p_unde', $uid, '=');
@@ -143,7 +142,6 @@ class reposi_gstype extends FormBase {
     ->condition('u.uid', $p_uid, '=');
     $search_use = $serch_u->execute()->fetchAssoc();
     $user_gs=$search_use['u_id_scholar'];
-    //reposidoc_scholar::redirect_gs($p_pid_scholar, $user_gs);
     return $form;
   }
 
@@ -165,7 +163,6 @@ class reposi_gstype extends FormBase {
     $p_title=$search_pub['p_title'];
     $p_year=$search_pub['p_year'];
     $selection=$form_state->getValue('type_publication');
-
     if ($selection=='0') {
       $serch_rp = db_select('reposi_publication', 'rp');
       $serch_rp->fields('rp')
@@ -181,13 +178,11 @@ class reposi_gstype extends FormBase {
           'ab_type'              => 'Article',
           'ab_title'             => $p_title,
         ))->execute();
-
         $search_art = db_select('reposi_article_book', 'ab');
         $search_art->fields('ab')
         ->condition('ab.ab_type', 'Article', '=')
         ->condition('ab.ab_title', $p_title, '=');
         $art_id = $search_art->execute()->fetchField();
-
         db_insert('reposi_date')->fields(array(
           'd_year' => $p_year,
           'd_abid' => $art_id,
@@ -222,7 +217,6 @@ class reposi_gstype extends FormBase {
         drupal_set_message('Error, the book already exists. To import you must delete the existing article','error');
       }
       else {
-
         db_insert('reposi_article_book')->fields(array(
           'ab_type'              => 'Book',
           'ab_title'             => $p_title,
@@ -320,7 +314,6 @@ class reposi_gstype extends FormBase {
       ->condition('rp.cp_title', 'without a conference', '=')
       ->condition('rp.cp_publication', $p_title, '=');
       $search_pubc = $serch_rp->execute()->fetchAssoc();
-
       if (!empty($search_pubc)) {
         drupal_set_message('Error, the conference already exists. To import you must delete the existing article','error');
       }
@@ -338,7 +331,6 @@ class reposi_gstype extends FormBase {
         ->condition('cp.cp_publication', $p_title, '=');
         $con_id = $search_con->execute()->fetchField();
         $conference_id = (int)$con_id;
-
         db_insert('reposi_date')->fields(array(
           'd_year'  => $p_year,
           'd_cpid'  => $conference_id,
@@ -447,8 +439,6 @@ class reposi_gstype extends FormBase {
           'd_year'  => $p_year,
           'd_tsid'  => $thesis_id,
         ))->execute();
-
-
         db_insert('reposi_publication')->fields(array(
           'p_type'  => 'Thesis',
           'p_source'=> 'Google Scholar',
@@ -491,13 +481,10 @@ class reposi_gstype extends FormBase {
         ->condition('sw.ts_title', $p_title, '=');
         $softw_id = $search_sw->execute()->fetchField();
         $sw_id = (int)$softw_id;
-
         db_insert('reposi_date')->fields(array(
           'd_year'  => $p_year,
           'd_tsid'  => $sw_id,
         ))->execute();
-
-
         db_insert('reposi_publication')->fields(array(
           'p_type'  => 'Software',
           'p_source'=> 'Google Scholar',
@@ -531,7 +518,6 @@ class reposi_gstype extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state){
 
   }
-
 
   /**
   * {@inheritdoc}
@@ -705,5 +691,5 @@ class reposi_gstype extends FormBase {
         }
       }
     }
-  }//end function
-}//end class
+  }
+}

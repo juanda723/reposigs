@@ -1,5 +1,11 @@
 <?php
+/**
+ * Install database of Bibtex.
+ */
 
+ /**
+ * Implements reposi_Bibtex().
+ */
 function reposi_bibtex_install() {}
 
 function reposi_bibtex_uninstall() {}

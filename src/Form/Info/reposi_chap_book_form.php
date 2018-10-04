@@ -1,5 +1,7 @@
 <?php
-
+/**
+* @file chapter book create information
+*/
 namespace Drupal\reposi\Form\Info;
 
 use Drupal\Core\Form\FormBase;
@@ -15,8 +17,6 @@ class reposi_chap_book_form extends FormBase {
 public function getFormId() {
     return 'chap_book_form';
   }
-
-
 public function buildForm(array $form, FormStateInterface $form_state) {
   global $_reposi_start_form;
     $markup = '<p>' . '<i>' . t('You must complete the required fields before the
@@ -37,20 +37,13 @@ public function buildForm(array $form, FormStateInterface $form_state) {
       '#title' => t('Chapter number'),
       '#type' => 'textfield',
     );
-
-////Fecha
-
-      $form['year'] = array(
-        '#title' => t('Publication Year'),
-        '#type' => 'textfield',
-        '#size' => 5,
-        '#required' => TRUE,
-        '#description' => t('Four numbers'),
-      );
-
-////////////////AUTORES
-
-
+    $form['year'] = array(
+      '#title' => t('Publication Year'),
+      '#type' => 'textfield',
+      '#size' => 5,
+      '#required' => TRUE,
+      '#description' => t('Four numbers'),
+    );
     $form['author'] = array(
         '#type' => 'details',
         '#open' => TRUE,
@@ -120,11 +113,6 @@ public function buildForm(array $form, FormStateInterface $form_state) {
           'effect' => 'fade',
         ),
       );
-
-
-
-
-/////////chapter book
 $form['vol'] = array(
     '#title' => t('Volume/Series'),
     '#type' => 'textfield',
@@ -178,27 +166,18 @@ $form['vol'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
   );
-
-//////////////////final
   return $form;
 }
-////Add autor
 public function addfieldsubmit(array &$form, FormStateInterface &$form_state) {
   $max = $form_state->get('fields_count') + 1;
   $form_state->set('fields_count',$max);
   $form_state->setRebuild(TRUE);
 }
-
-/**
-  * Ajax callback to add new field.
-  */
 public function addfieldCallback(array &$form, FormStateInterface &$form_state) {
   return $form['author'];
 }
 
 public function validateForm(array &$form, FormStateInterface $form_state) {
-
-  //function reposi_chap_title_validate($form, &$form_state){
     $title_validate = $form_state->getValue('chapter');
     $title_book = $form_state->getValue('title');
     $search_chap = db_select('reposi_article_book', 'ab');
@@ -215,15 +194,6 @@ public function validateForm(array &$form, FormStateInterface $form_state) {
         $form_state->setErrorByName('chapter', t('This Book Chapter publication exists on Data Base.'));
       }
     }
-
-
-
-///////////////////////////77
-
-
-
-
-//function reposi_chap_title_validate($form, &$form_state){
   $title_validate = $form_state->getValue('chapter');
   $title_book = $form_state->getValue('title');
   $search_chap = db_select('reposi_article_book', 'ab');
@@ -240,17 +210,14 @@ public function validateForm(array &$form, FormStateInterface $form_state) {
       $form_state->setErrorByName('chapter', t('This Book Chapter publication exists on Data Base.'));
     }
   }
-  //function reposi_publiform_num_validate($form, &$form_state){
     $num_validate = $form_state->getValue('chapter_num');
     if(!empty($num_validate) && (!is_numeric($num_validate) || $num_validate < '0')){
       $form_state->setErrorByName('chapter_num', t('Chapter number is a numerical field.'));
     }
-    //function reposi_publiform_year2_validate($form, &$form_state){
       $year_validate = $form_state->getValue('year');
       if(!is_numeric($year_validate) || $year_validate > '9999' || $year_validate < '1000') {
         $form_state->setErrorByName('publi_year', t('It is not an allowable value for year.'));
       }
-      //function reposi_publiform_authorn_validate($form, &$form_state){
       $table = $form_state->getValue('table');
       $first_name_validate=$table[0]['first_name'];
       $first_lastname_validate=$table[0]['f_lastname'];
@@ -258,33 +225,22 @@ public function validateForm(array &$form, FormStateInterface $form_state) {
         $form_state->setErrorByName('first_name', t('One author is required as minimum
         (first name and last name).'));
       }
-
-    //function reposi_chap_start_page_validate($form, &$form_state){
       $startp_validate = $form_state->getValue('start_page');
       if(!empty($startp_validate) && (!is_numeric($startp_validate) || $startp_validate < '0')){
         $form_state->setErrorByName('start_page', t('Start page is a numerical field.'));
       }
-    //  function reposi_chap_final_page_validate($form, &$form_state){
         $finalp_validate = $form_state->getValue('final_page');
         if(!empty($finalp_validate) && (!is_numeric($finalp_validate) || $finalp_validate < '0')){
           $form_state->setErrorByName('final_page', t('Final page is a numerical field.'));
         }
-
-
-        ///validate Url
           $url=$form_state->getValue('url');
           if(!empty($url) && !UrlHelper::isValid($url, TRUE))
           {
            $form_state->setErrorByName('uri', t('The URL is not valid.'));
           }
-
-///////////////////////////////
-
-
   }
 public function submitForm(array &$form, FormStateInterface $form_state) {
-
-  $chap_title = $form_state->getValue('title');
+    $chap_title = $form_state->getValue('title');
     $chap_chap = $form_state->getValue('chapter');
     $chap_num = $form_state->getValue('chapter_num');
     $chap_year = $form_state->getValue('year');
@@ -365,7 +321,6 @@ public function submitForm(array &$form, FormStateInterface $form_state) {
         }
         $table = $form_state->getValue('table');
         for ($a = 0; $a <= $max ; $a++) {
-
           $first_name_validate=$table[$a]['first_name'];
         $first_lastname_validate=$table[$a]['f_lastname'];
         $aut_fn=$table[$a]['first_name'];
@@ -377,13 +332,11 @@ public function submitForm(array &$form, FormStateInterface $form_state) {
          !empty($aut_sn)?$aut_sn:'';
          !empty($aut_fl)?$aut_fl:'';
          !empty($aut_sl)?$aut_sl:'';
-
           $info_author = array('a_first_name'      => ucfirst($aut_fn),
                                'a_second_name'     => ucfirst($aut_sn),
                                'a_first_lastname'  => ucfirst($aut_fl),
                                'a_second_lastname' => ucfirst($aut_sl),
                               );
-
           if(!empty($table[$a]['first_name']) && !empty($table[$a]['f_lastname'])){
             $serch_a = db_select('reposi_author', 'a');
             $serch_a->fields('a')
@@ -420,10 +373,7 @@ public function submitForm(array &$form, FormStateInterface $form_state) {
             }
           }
       }
-
         drupal_set_message(t('Book Chapter: ') . $chap_chap . t(' was save.'));
         \Drupal::state()->delete('aut');
-
-
 }
 }

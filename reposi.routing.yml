@@ -6,27 +6,11 @@ reposi:
   requirements:
     _permission: 'access content'
 
-#reposi.PubliListReposiSearch:
-#  path: 'reposi/results/{node}'
-#  defaults:
-#    _controller: '\Drupal\reposi\Controller\Reposi_publi_list::reposi_search'
-#    _title: 'Search results'
-#  requirements:
-#    _permission: 'administer content'
-
 reposi.PubliListReposiSearch:
   path: 'reposi/results/{node}'
   defaults:
     _form: '\Drupal\reposi\Form\reposi_search_form'
     _title: 'Search results'
-  requirements:
-    _permission: 'access content'
-
-reposi.scholar:
-  path: 'reposi/scholar'
-  defaults:
-    _controller: '\Drupal\reposi\Controller\ReposiController::query_google_scholar'
-    _title: 'Scholar Query'
   requirements:
     _permission: 'access content'
 
@@ -62,7 +46,6 @@ reposi.authoruserdesc:
     _title: 'Authors list'
   requirements:
     _permission: 'access content'
-##################3andrea##########################################
 
 node.add_reposi:
   path: 'node/add/reposi'
@@ -216,7 +199,6 @@ reposi.admuser:
   requirements:
     _permission: 'administer content'
 
-
 reposi.author_aid:
   path: 'reposi/author/{node}'
   defaults:
@@ -288,8 +270,6 @@ reposi.keywords:
     _title: 'Keywords list'
   requirements:
     _permission: 'administer content'
-
-####################Juan###########################################
 
 reposi.add_book:
   path: 'reposi/book'

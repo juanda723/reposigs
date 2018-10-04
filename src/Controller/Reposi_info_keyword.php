@@ -10,7 +10,9 @@ use Drupal\Core\Url;
 use Drupal\Core\Link;
 
 class Reposi_info_keyword{
-
+  /**
+  * Implements reposi_info_key.
+  */
 function reposi_info_key() {
   $id_keyw = \Drupal::routeMatch()->getParameter('node');
   global $base_url;

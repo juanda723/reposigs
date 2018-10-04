@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @file select users inactive
+ */
 namespace Drupal\reposi\Form;
 
 use Drupal\Core\Form\FormBase;
@@ -69,20 +71,16 @@ class Reposi_user_inact_list_form extends FormBase {
       '#type' => 'submit',
       '#value' => t('Activate select items'),
     );
-    
+
     $form['pager'] = array(
       '#type' => 'pager'
     );
-
     return $form;
-
-
   }
 
   public function userDelete(array &$form, FormStateInterface $form_state) {
-
         $results = array_filter($form_state->getValue('table'));
-	foreach ($results as $result) 
+	foreach ($results as $result)
         {
 		if (isset($result))
 		{
@@ -91,8 +89,8 @@ class Reposi_user_inact_list_form extends FormBase {
         		->execute();
         		drupal_set_message('Deleted user.');
 		}
-		else	
-		{	
+		else
+		{
 		drupal_set_message('You must select one option.');
 		}
 	}
@@ -103,12 +101,6 @@ class Reposi_user_inact_list_form extends FormBase {
   public function validateForm(array &$form, FormStateInterface $form_state)
   {
 
-/*  $check_del = $form_state->getValue('table');
-    foreach ($check_del as $user_check_del){
-    $results=$form_state->getValue(['complete form','table', '#options', $user_check_del, 3]);
-    }
-drupal_set_message(print_r($results,1));*/
-
   }
 
   /**
@@ -117,7 +109,7 @@ drupal_set_message(print_r($results,1));*/
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
         $results = array_filter($form_state->getValue('table'));
-	foreach ($results as $result) 
+	foreach ($results as $result)
         {
 	db_update('reposi_state')->fields(array(
         's_type'   => 'Active',
@@ -125,5 +117,4 @@ drupal_set_message(print_r($results,1));*/
         ->execute();
         }
   }
-
 }

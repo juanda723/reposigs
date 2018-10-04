@@ -88,7 +88,6 @@ public static function docs_scopus(){
 	    		$number_eids = count($eid_doc_scopus);
 	    		for ($i=0; $i < $number_eids; $i++) {
 	    			if ($type_doc_scopus[$i][0] == 'Article' || $type_doc_scopus[$i][0] == 'Review'){
-	    				//|| $type_doc_scopus[$i][0] == 'Article in Press') {
 			    		$pre_journal = explode('prism:publicationName":"', $title_doc_scopus[$i][1]);
 			    		$journal_name = explode('","', $pre_journal[1]);
 			    		$pre_issn = explode('prism:issn":"', $pre_journal[1]);
@@ -134,8 +133,6 @@ public static function docs_scopus(){
 			    		} else {
 			    			$final_page = NULL;
 			    		}
-
-
 	    				$search_art = db_select('reposi_article_book', 'ab');
 					    $search_art->fields('ab')
 					          ->condition('ab.ab_type', 'Article', '=')
@@ -224,28 +221,20 @@ public static function docs_scopus(){
 					    $num_articles++;
 	    			}
 	    			elseif ($type_doc_scopus[$i][0] == 'Book') {
-	    			 	//dpm('Libro**********: ' . $title_doc_scopus[$i][1]);
-	    			 	//dpm($date_scopus[$i][0]);
-	    			 	//dpm($title_doc_scopus[$i][0]);
-	    			 	//dpm($eid_doc_scopus[$i][0]);
 	    			 	$pre_name = explode('prism:publicationName":"', $title_doc_scopus[$i][1]);
 			    		$book_name = explode('","', $pre_name[1]);
-			    		//dpm($book_name[0]);
-
 			    		$pre_isbn_book = explode('prism:isbn":"', $pre_name[1]);
 			    		if (isset($pre_isbn_book[1])) {
 			    			$isbn_book = explode('","', $pre_isbn_book[1]);
 			    		} else {
 			    			$isbn_book = array('');
 			    		}
-			    		//dpm('ISBN: ' . $isbn_book[0]);
 			    		$pre_volume_book = explode('prism:volume":"', $pre_name[1]);
 			    		if (isset($pre_volume_book[1])) {
 			    			$volume_book = explode('","', $pre_volume_book[1]);
 			    		} else {
 			    			$volume_book = array('');
 			    		}
-			    		//dpm('Vol: ' . $volume_book[0]);
 			    		$pre_pages_book = explode('prism:pageRange":"', $pre_name[1]);
 			    		if (isset($pre_pages_book[1])) {
 			    			$pages_book = explode('","', $pre_pages_book[1]);
@@ -253,20 +242,12 @@ public static function docs_scopus(){
 			    		} else {
 			    			$per_pages_book = array('','');
 			    		}
-			    		//dpm('Pages: ' . $per_pages_book[0]);
 			    		$start_page_book = (int)$per_pages_book[0];
-			    		//dpm('SPag: ' . $start_page_book);
 			    		if (isset($per_pages_book[1])) {
 			    			$final_page_book = (int)$per_pages_book[1];
 			    		} else {
 			    			$final_page_book = NULL;
 			    		}
-			    		//dpm('FPag : ' . $final_page_book);
-
-
-
-
-
 			    		$search_book = db_select('reposi_article_book', 'ab');
 					    $search_book->fields('ab')
 					          ->condition('ab.ab_type', 'Book', '=')
@@ -342,36 +323,23 @@ public static function docs_scopus(){
 						    	}
 						    }
 					    }
-
-
-
-
-
 			    		$num_books++;
 	    			}
 	    			elseif ($type_doc_scopus[$i][0] == 'Chapter') {
-	    			 	//dpm('Chap**********: ' . $title_doc_scopus[$i][1]);
-	    			 	//dpm($date_scopus[$i][0]);
-	    			 	//dpm($title_doc_scopus[$i][0]); //Nombre del capítulo
-	    			 	//dpm($eid_doc_scopus[$i][0]);
 	    			 	$pre_book_name = explode('prism:publicationName":"', $title_doc_scopus[$i][1]);
 			    		$book_chap_name = explode('","', $pre_book_name[1]);
-			    		//dpm($book_chap_name[0]); //Nombre del libro
-
 			    		$pre_isbn_chap = explode('prism:isbn":"', $pre_book_name[1]);
 			    		if (isset($pre_isbn_chap[1])) {
 			    			$isbn_chap = explode('","', $pre_isbn_chap[1]);
 			    		} else {
 			    			$isbn_chap = array('');
 			    		}
-			    		//dpm('ISBN: ' . $isbn_chap[0]);
 			    		$pre_volume_chap = explode('prism:volume":"', $pre_book_name[1]);
 			    		if (isset($pre_volume_chap[1])) {
 			    			$volume_chap = explode('","', $pre_volume_chap[1]);
 			    		} else {
 			    			$volume_chap = array('');
 			    		}
-			    		//dpm('Vol: ' . $volume_chap[0]);
 			    		$pre_pages_chap = explode('prism:pageRange":"', $pre_book_name[1]);
 			    		if (isset($pre_pages_chap[1])) {
 			    			$pages_chap = explode('","', $pre_pages_chap[1]);
@@ -379,27 +347,18 @@ public static function docs_scopus(){
 			    		} else {
 			    			$per_pages_chap = array('','');
 			    		}
-			    		//dpm('Pages: ' . $per_pages_chap[0]);
 			    		$start_page_chap = (int)$per_pages_chap[0];
-			    		//dpm('SPag: ' . $start_page_chap);
 			    		if (isset($per_pages_chap[1])) {
 			    			$final_page_chap = (int)$per_pages_chap[1];
 			    		} else {
 			    			$final_page_chap = NULL;
 			    		}
-			    		//dpm('FPAg: ' . $final_page_chap);
 			    		$pre_doi_chap = explode('prism:doi":"', $pre_book_name[1]);
 			    		if (isset($pre_doi_chap[1])) {
 			    			$doi_chap = explode('","', $pre_doi_chap[1]);
 			    		} else {
 			    			$doi_chap = array('');
 			    		}
-			    		//dpm($doi_chap[0]);
-
-
-
-
-
 			    		$search_chap = db_select('reposi_article_book', 'ab');
 					    $search_chap->fields('ab')
 					          ->condition('ab.ab_type', 'Book Chapter', '=')
@@ -482,12 +441,6 @@ public static function docs_scopus(){
 						    	}
 						    }
 					    }
-
-
-
-
-
-
 			    		$num_book_chaps++;
 	    			}
 	    		}
@@ -617,9 +570,6 @@ function reposi_author_scopus(){
 		$form['message'] = array('#markup' => $message);
 	    return $form;
 	} else {
-	/*****************************************
-	Info dinámica de un autor por nombre
-	*****************************************/
 		$search_author_state = db_select('reposi_state', 's');
 		$search_author_state->fields('s', array('s_uid'))
 		                    ->condition('s.s_type', 'Active', '=');
@@ -822,18 +772,7 @@ function reposi_author_scopus(){
 			}
 	    }
 		$number_authors = count($dates_authors);
-
-	/*****************************************
-	*****************************************/
     $form['pager']=['#type' => 'pager'];
-
-
-
-
-
-
-
-
 	    $form['aut_sdin_id'] = array(
 		    '#title' => t('User(s) without Scopus ID Author'),
 		    '#type' => 'fieldset',
@@ -897,6 +836,4 @@ public static function reposi_string($string) {
   		$form['message'] = array('#markup' => $message);
       return $form;
 }
-
-//End class
 }

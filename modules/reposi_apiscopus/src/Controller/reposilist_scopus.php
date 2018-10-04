@@ -48,8 +48,6 @@ namespace Drupal\reposi_apiscopus\Controller;
            ->condition('a.aid', $art_aut->ap_author_id, '=');
            $each_aut = $search_aut->execute()->fetchAssoc();
            $f_name = Reposi_info_publication::reposi_string($each_aut['a_first_name']);
-
-
            if (!empty($each_aut['a_second_name'])) {
              $s_name =  Reposi_info_publication::reposi_string($each_aut['a_second_name']);
              $list_aut_abc = $list_aut_abc . \Drupal::l($each_aut['a_first_lastname'] . ' ' .
@@ -59,7 +57,6 @@ namespace Drupal\reposi_apiscopus\Controller;
              $list_aut_abc = $list_aut_abc . \Drupal::l($each_aut['a_first_lastname'] . ' ' .
              $each_aut['a_second_lastname'] . ' ' . $f_name[0] . '.',
              Url::fromRoute('reposi.author_aid',['node'=>$art_aut->ap_author_id])) . '.';
-
            }
          }
          if (isset($abid)) {
@@ -126,7 +123,6 @@ namespace Drupal\reposi_apiscopus\Controller;
                $list_aut_cp = $list_aut_cp . \Drupal::l($each_aut['a_first_lastname'] . ' ' .
                $each_aut['a_second_lastname'] . ' ' . $f_name[0] . '.',
                Url::fromRoute('reposi.author_aid',['node'=>$con_aut->ap_author_id])) . '.';
-
              }
            }
            if ($pub_type == 'Conference') {
@@ -251,7 +247,6 @@ namespace Drupal\reposi_apiscopus\Controller;
      $form['pager']=['#type' => 'pager'];
      return $form;
    }
-
    public function reposi_list_sourceSpdesc(){
        $or_year='DESC';
        $or_title='DESC';
@@ -280,15 +275,12 @@ namespace Drupal\reposi_apiscopus\Controller;
            ->condition('pa.ap_abid', $abid, '=');
            $p_a = $search_p_a->execute();
            $list_aut_abc='';
-
            foreach ($p_a as $art_aut) {
              $search_aut = db_select('reposi_author', 'a');
              $search_aut->fields('a')
              ->condition('a.aid', $art_aut->ap_author_id, '=');
              $each_aut = $search_aut->execute()->fetchAssoc();
              $f_name = Reposi_info_publication::reposi_string($each_aut['a_first_name']);
-
-
              if (!empty($each_aut['a_second_name'])) {
                $s_name =  Reposi_info_publication::reposi_string($each_aut['a_second_name']);
                $list_aut_abc = $list_aut_abc . \Drupal::l($each_aut['a_first_lastname'] . ' ' .
@@ -298,7 +290,6 @@ namespace Drupal\reposi_apiscopus\Controller;
                $list_aut_abc = $list_aut_abc . \Drupal::l($each_aut['a_first_lastname'] . ' ' .
                $each_aut['a_second_lastname'] . ' ' . $f_name[0] . '.',
                Url::fromRoute('reposi.author_aid',['node'=>$art_aut->ap_author_id])) . '.';
-
              }
            }
            if (isset($abid)) {
@@ -365,7 +356,6 @@ namespace Drupal\reposi_apiscopus\Controller;
                  $list_aut_cp = $list_aut_cp . \Drupal::l($each_aut['a_first_lastname'] . ' ' .
                  $each_aut['a_second_lastname'] . ' ' . $f_name[0] . '.',
                  Url::fromRoute('reposi.author_aid',['node'=>$con_aut->ap_author_id])) . '.';
-
                }
              }
              if ($pub_type == 'Conference') {
@@ -490,6 +480,4 @@ namespace Drupal\reposi_apiscopus\Controller;
        $form['pager']=['#type' => 'pager'];
        return $form;
      }
-
-//End class
 }

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @file select users active
+ */
 namespace Drupal\reposi\Form;
 
 use Drupal\Core\Form\FormBase;
@@ -24,7 +26,6 @@ class Reposi_user_act_list_form extends FormBase {
    */
 
   public function buildForm(array $form, FormStateInterface $form_state) {
-
     $header = array('ID', t('Name'), t('Last name'), t('Email'));
     $search_act_state = db_select('reposi_state', 's');
     $search_act_state->fields('s', array('s_uid'))
@@ -50,7 +51,6 @@ class Reposi_user_act_list_form extends FormBase {
         );
       }
     }
-
    $form['table'] = array ('#type'     => 'tableselect',
 			    '#title' => $this->t('Users'),
                             '#header'   => $header,
@@ -58,16 +58,12 @@ class Reposi_user_act_list_form extends FormBase {
                             '#multiple' => TRUE,
                             '#empty'    => t('No records.')
                             );
-
     $form['pager'] = ['#type' => 'pager'];
-
     $form['deactivate'] = array(
       '#type' => 'submit',
       '#value' => t('Deactivate select items'),
     );
     return $form;
-
-
   }
 
   /**
@@ -75,13 +71,6 @@ class Reposi_user_act_list_form extends FormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state)
   {
-
-/*  $check_del = $form_state->getValue('table');
-    foreach ($check_del as $user_check_del){
-    $results=$form_state->getValue(['complete form','table', '#options', $user_check_del, 3]);
-    }
-drupal_set_message(print_r($results,1));*/
-
   }
 
   /**
@@ -90,7 +79,7 @@ drupal_set_message(print_r($results,1));*/
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
         $results = array_filter($form_state->getValue('table'));
-	foreach ($results as $result) 
+	foreach ($results as $result)
         {
 	db_update('reposi_state')->fields(array(
         's_type'   => 'Inactive',

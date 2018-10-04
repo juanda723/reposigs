@@ -4,7 +4,7 @@ namespace Drupal\reposi\Form\Info;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
-//use Drupal\Core\Entity\EntityConfirmFormBase;
+//use Drupal\Core\Entity\EntityConfirmFormBase;//only necesary
 use Drupal\reposi\Form\Url;
 
 class Reposi_info_user extends FormBase {
@@ -21,7 +21,6 @@ class Reposi_info_user extends FormBase {
     $serch_user = $serch_u->execute()->fetchField();
     $info_user = $serch_u->execute()->fetchAssoc();
     \Drupal::state()->set('info_user2', $info_user);
-    //variable_set('info_user2',$info_user);
     $search_stat = db_select('reposi_state', 's');
   	$search_stat->fields('s', array('s_type'))
                   	 ->condition('s.s_uid', $serch_user, '=');
@@ -101,6 +100,4 @@ class Reposi_info_user extends FormBase {
         $node=$form_state->getValue('uid');
         $form_state->setRedirect('reposi.userdelete', ['node' => $node]);
   }
-
 }
-?>

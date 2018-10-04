@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Install database of R.B. Repository.
+ */
+
+ /**
+ * Implements reposi_install().
+ */
 function reposi_install() {
   $arol[] = array(100, t('Teacher'), NULL);
   $arol[] = array(101, t('Student'), NULL);
@@ -24,7 +31,9 @@ function reposi_install() {
   }
 }
 
-
+/**
+* Implements reposi_schema().
+*/
 function reposi_schema() {
     $schema['reposi_user'] = array(
       'description' => 'Repository user data',
@@ -737,8 +746,11 @@ function reposi_schema() {
 /**
  * It store the possible academic rols for a user.
  */
-function reposi_academic_rol() {
 
+ /**
+ * Implements reposi_academic_rol().
+ */
+function reposi_academic_rol() {
 
   $arol[] = array(100, t('Teacher'), NULL);
   $arol[] = array(101, t('Student'), NULL);
@@ -758,6 +770,9 @@ function reposi_academic_rol() {
 
 /**
  * It store the possible states for a user.
+ */
+ /**
+ * Implements _reposi_state().
  */
 function _reposi_state() {
   $stat[] = array(1, 'Active', NULL);

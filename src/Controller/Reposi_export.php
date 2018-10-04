@@ -1,6 +1,6 @@
 <?php
 /**
- * @file
+ * @file export format Ris
  */
 namespace Drupal\reposi\Controller;
 
@@ -9,6 +9,10 @@ use Drupal\Core\Url;
 
 
 class Reposi_export {
+
+  /**
+  * Implements reposi_format_ris().
+  */
 
 function reposi_format_ris(){
   $id_publi = \Drupal::routeMatch()->getParameter('node');
@@ -170,10 +174,7 @@ function reposi_format_ris(){
     $content .= 'ER';
     $form['body'] = array('#markup' => $content);
     return $form;
-////////////YA
-
   } elseif ($info_publication['p_type'] == 'Book Chapter'){
-//////YA
     $search_chap = db_select('reposi_article_book', 'ab');
     $search_chap->fields('ab')
             ->condition('ab.abid', $info_publication['p_abid'], '=');
@@ -305,12 +306,7 @@ function reposi_format_ris(){
     $form['body'] = array('#markup' => $content);
     return $form;
 
-
-
-    ///VECTOR POS 0 NODEFINE
   } elseif ($info_publication['p_type'] == 'Thesis'){
-
-
     $search_the = db_select('reposi_thesis_sw', 'sw');
     $search_the->fields('sw')
             ->condition('sw.tsid', $info_publication['p_tsid'], '=');
@@ -450,11 +446,9 @@ function reposi_format_ris(){
     $content .= 'ER';
     $form['body'] = array('#markup' => $content);
     return $form;
-///YAAAAAAAA
 
   }
 else{
-
 return $form;
 }
 }
@@ -471,6 +465,11 @@ return $form;
  * @param int $year
  *   Year with four numbers.
  */
+
+ /**
+ * Implements reposi_formt_date_ris().
+ */
+
 public static function reposi_formt_date_ris($day, $month, $year){
   if (empty($month)) {
     $month_2 = '';

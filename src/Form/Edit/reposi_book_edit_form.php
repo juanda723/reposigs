@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @file Book Edit
+ */
 namespace Drupal\reposi\Form\Edit;
 
 use Drupal\Core\Form\FormBase;
@@ -21,7 +23,7 @@ class reposi_book_edit_form extends FormBase {
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
- 
+
     $abid = \Drupal::routeMatch()->getParameter('node');
     $search_book = db_select('reposi_article_book', 'ab');
     $search_book->fields('ab')
@@ -35,7 +37,7 @@ class reposi_book_edit_form extends FormBase {
     $search_date->fields('d')
                 ->condition('d.d_abid', $abid, '=');
     $book_date = $search_date->execute()->fetchAssoc();
-    
+
     $search_p_a = db_select('reposi_publication_author', 'pa');
     $search_p_a->fields('pa')
                ->condition('pa.ap_abid', $abid, '=');
@@ -49,50 +51,6 @@ class reposi_book_edit_form extends FormBase {
       $info_aut = $search_aut->execute()->fetchAssoc();
       $this_aut[] = $info_aut;
     }
-
-
-
-//---------------------------------------------------------------------------------------------------------
-/*
-    $search_art = db_select('reposi_article_book', 'ab');
-    $search_art->fields('ab')
-            ->condition('ab.abid', $abid, '=');
-    $this_art = $search_art->execute()->fetchAssoc();
-    $search_art_detail = db_select('reposi_article_book_detail', 'abd');
-    $search_art_detail->fields('abd')
-            ->condition('abd.abd_abid', $abid, '=');
-    $this_art_2 = $search_art_detail->execute()->fetchAssoc();
-    $search_date = db_select('reposi_date', 'd');
-    $search_date->fields('d')
-                ->condition('d.d_abid', $abid, '=');
-    $art_date = $search_date->execute()->fetchAssoc();
-    $search_publi_key = db_select('reposi_publication_keyword', 'pk');
-    $search_publi_key->fields('pk')
-                     ->condition('pk.pk_abid', $abid, '=');
-    $id_keyword = $search_publi_key->execute();
-    $id_keyword -> allowRowCount = TRUE;
-    $num_keyw = $id_keyword->rowCount();
-    foreach ($id_keyword as $key_id) {
-      $search_keyw = db_select('reposi_keyword', 'k');
-      $search_keyw->fields('k')
-                  ->condition('k.kid', $key_id->pk_keyword_id, '=');
-      $keywords = $search_keyw->execute()->fetchAssoc();
-      $this_keyw[] = $keywords['k_word'];
-    }
-    $search_p_a = db_select('reposi_publication_author', 'pa');
-    $search_p_a->fields('pa')
-               ->condition('pa.ap_abid', $abid, '=');
-    $p_a = $search_p_a->execute();
-    $p_a -> allowRowCount = TRUE;
-    $num_aut = $p_a->rowCount();
-    foreach ($p_a as $id_author){
-      $search_aut = db_select('reposi_author', 'a');
-      $search_aut->fields('a')
-                 ->condition('a.aid', $id_author->ap_author_id, '=');
-      $info_aut = $search_aut->execute()->fetchAssoc();
-      $this_aut[] = $info_aut;
-    }
-*/
     $form['abid'] = array(
       '#type' => 'value',
       '#value' => $abid,
@@ -138,20 +96,6 @@ class reposi_book_edit_form extends FormBase {
       '#open' => TRUE,
       '#size' => 10,
     );
- /*   $form['date']['day'] = array(
-      '#title' => t('Day'),
-      '#type' => 'textfield',
-      '#size' => 5,
-      '#default_value' => $book_date['d_day'],
-      '#description' => t('1-31'),
-    );
-    $form['date']['month'] = array(
-      '#title' => t('Month'),
-      '#type' => 'textfield',
-      '#size' => 5,
-      '#default_value' => $book_date['d_month'],
-      '#description' => t('1-12'),
-    );*/
     $form['date']['year'] = array(
       '#title' => t('Year'),
       '#type' => 'textfield',
@@ -224,10 +168,6 @@ class reposi_book_edit_form extends FormBase {
         'effect' => 'fade',
       ),
    );
-
-  //*****************************************************************************************
-  //********************************JOURNAL/BOOK JOURNAL/BOOK *******************************
-  //*****************************************************************************************
    $form['detail'] = array(
       '#type' => 'details',
       '#open' => TRUE,
@@ -290,13 +230,6 @@ class reposi_book_edit_form extends FormBase {
     '#type' => 'submit',
     '#value' => t('Update'),
   );
-  /******************************************************************/
-  /******************************************************************/
-  /******************************************************************/
-
-//--------------------------------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------------------------------
    return $form;
 
   }
@@ -312,11 +245,6 @@ class reposi_book_edit_form extends FormBase {
   }
 
   public function validateForm(array &$form, FormStateInterface $form_state) {
-
-  //------------------------------------------------------------------------------------------------
-
-  // DAY, month year ARTICLE VALIDATION
-
   $day_validate = $form_state->getValue('day');
   if(!empty($day_validate) && (!is_numeric($day_validate) ||
       $day_validate > '31' || $day_validate < '1')) {
@@ -359,20 +287,20 @@ class reposi_book_edit_form extends FormBase {
   if (!empty($table[$a]['first_name']) && empty($table[$a]['f_lastname'])){
     $form_state->setErrorByName('last_name', t('The author requires a last name.'));
   }
- 
+
   if (empty($table[$a]['first_name']) && !empty($table[$a]['f_lastname'])){
     $form_state->setErrorByName('first_name', t('The author requires a first name.'));
   }
 
-  if (!empty($table[$a]['first_name']) && !empty($table[$a]['f_lastname'])){      
+  if (!empty($table[$a]['first_name']) && !empty($table[$a]['f_lastname'])){
           $contname++;
   }
   }
   if ($contname<1){
-    $form_state->setErrorByName('name', t('One author is required as minimum 
+    $form_state->setErrorByName('name', t('One author is required as minimum
     (first name and last name).'));
   }
-  $url=$form_state->getValue('url'); 
+  $url=$form_state->getValue('url');
   if(!empty($url) && !UrlHelper::isValid($url, TRUE))
   {
    $form_state->setErrorByName('uri', t('The URL is not valid.'));
@@ -419,11 +347,7 @@ class reposi_book_edit_form extends FormBase {
 
     foreach ($params as $param) {
     $form_state->setRedirect('reposi.confirm_book', $param);
-    //drupal_set_message('Se envia esto '.print_r($param,true));
     }
-
-//-------------------------------------------------------------------------------------------------------------------------
   }
-// Llave que cierra la clase:--->
 }
 ?>

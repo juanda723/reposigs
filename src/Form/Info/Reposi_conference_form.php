@@ -1,5 +1,7 @@
 <?php
-
+/**
+* @file conference create information
+*/
 namespace Drupal\reposi\Form\Info;
 
 use Drupal\Core\Form\FormBase;
@@ -21,13 +23,6 @@ class Reposi_conference_form extends FormBase {
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
-
-/*ISSET: Determina si una variable está definida y no es NULL.
-$form_state['storage']: Los datos colocados en el contenedor de almacenamiento de la colección $ form_state se almacenarán automáticamente en caché y se volverán a cargar cuando se envíe el formulario, permitiendo que su código acumule datos de paso a paso y lo procese en la etapa final sin ningún código adicional
-ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABLE ESTÁ DEBIDAMENTE DECLARADA CON ANTERIORIDAD
-      $form_state['storage']['author'] = isset($form_state['storage']['author'])?
-                                         $form_state['storage']['author']:1;*/
-
   $_reposi_start_form=TRUE;
   $markup = '<p>' . '<i>' . t('You must complete the required fields before the add authors or keywords.') . '</i>' . '</p>';
   $form['body'] = array('#markup' => $markup);
@@ -47,12 +42,6 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
     '#title' => t('Abstract'),
     '#type' => 'textarea',
   );
-
-
-  //*****************************************************************************************
-  //*************************************PUBLICATION DATE************************************
-  //*****************************************************************************************
-
   $form['date'] = array(
     '#title' => t('Publication date'),
     '#type' => 'details',
@@ -78,13 +67,6 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
     '#required' => TRUE,
     '#description' => t('Four numbers'),
   );
-
-
-
-  //*****************************************************************************************
-  //*********************************AUTORES AUTORES AUTORES*********************************
-  //*****************************************************************************************
-
   $form['author'] = array(
       '#type' => 'details',
       '#open' => TRUE,
@@ -154,11 +136,6 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
         'effect' => 'fade',
       ),
     );
-
-  //*****************************************************************************************
-  //*********************************KEYWORD KEYWORD KEYWORD*********************************
-  //*****************************************************************************************
-
   $form['keyword'] = array(
       '#type' => 'details',
       '#open' => TRUE,
@@ -207,12 +184,6 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
         'effect' => 'fade',
       ),
     );
-
-
-  //*****************************************************************************************
-  //********************************JOURNAL/BOOK JOURNAL/BOOK *******************************
-  //*****************************************************************************************
-
   $form['start_date'] = array(
     '#title' => t('Start date'),
     '#type' => 'details',
@@ -299,15 +270,7 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
     '#type' => 'submit',
     '#value' => t('Save'),
   );
-  /******************************************************************/
-  /******************************************************************/
-  /******************************************************************/
-
-//--------------------------------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------------------------------
    return $form;
-
   }
 
   public function addfieldsubmit(array &$form, FormStateInterface &$form_state) {
@@ -317,7 +280,6 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
   }
 
   public function addfieldkeywordsubmit(array &$form, FormStateInterface &$form_state) {
-
     $max = $form_state->get('fields_keyword_count') + 1;
     $form_state->set('fields_keyword_count',$max);
     $form_state->setRebuild(TRUE);
@@ -333,9 +295,6 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
 
 
   public function validateForm(array &$form, FormStateInterface $form_state) {
-
-  //------------------------------------------------------------------------------------------------
-
   $title_validate = $form_state->getValue('title');
   $search_pat = db_select('reposi_confer_patent', 'cp');
   $search_pat->fields('cp')
@@ -349,9 +308,6 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
       $form_state->setErrorByName('name_conference', t('This Conference Proceeding exists on Data Base.'));
     }
   }
-
-  // DAY, month year ARTICLE VALIDATION
-
   $day_validate = $form_state->getValue('day');
   $start_day_validate = $form_state->getValue('start_day');
   $end_day_validate = $form_state->getValue('end_day');
@@ -420,7 +376,6 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
     $form_state->setErrorByName('first_name', t('One author is required as minimum
     (first name and last name).'));
   }
-  //Url validate re use Drupal\Component\Utility\UrlHelper;
     $url=$form_state->getValue('url');
     if(!empty($url) && !UrlHelper::isValid($url, TRUE))
     {
@@ -552,15 +507,6 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
       'd_cpid'  => $conference_id,
     ))->execute();
   }
-
-
-
-
-
-
-//***************************************************************************************************************//
-
-//-------------------------------------------------------------------------------------------------------------------------
   $max = $form_state->get('fields_count');
   if(is_null($max)) {
     $max = 0;
@@ -669,11 +615,6 @@ ESTÁ RETORNANDO EL VALOR DE 1 EN $form_state['storage']['author'] SI LA VARIABL
   }
 
   drupal_set_message(t('Conference: ') . $title . t(' was save.'));
-
-
-
-//-------------------------------------------------------------------------------------------------------------------------
   }
-// Llave que cierra la clase:--->
 }
 ?>

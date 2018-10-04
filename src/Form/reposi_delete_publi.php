@@ -1,6 +1,9 @@
 <?php
-
+/**
+ * @file  delete_publication
+ */
 namespace Drupal\reposi\Form;
+
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -10,7 +13,9 @@ use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\reposi\Controller\Reposi_info_publication;
 use Drupal\Component\Utility\UrlHelper;
-
+/**
+ * Implements class delete content
+ */
 class reposi_delete_publi extends ConfirmFormBase{
 
     protected $id;

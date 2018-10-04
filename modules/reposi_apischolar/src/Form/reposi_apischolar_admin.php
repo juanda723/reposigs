@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @file admin apischolar
+ */
 namespace Drupal\reposi_apischolar\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
@@ -40,7 +42,6 @@ public function buildForm(array $form, FormStateInterface $form_state) {
   	    '#default_value' => $config->get('google_scholar_api_url', ""),
   	    '#size' => 60,
   	    '#maxlength' => 500,
-  	//    '#required' => TRUE,
   	    '#description' => t('Configure the URL for the API.'),
   	);
   	$form['reposi_apischolar_size'] = array(
@@ -69,10 +70,6 @@ public function buildForm(array $form, FormStateInterface $form_state) {
     return parent::buildForm($form, $form_state);
 
   }
-
-
-
-
   /**
    * {@inheritdoc}
    */

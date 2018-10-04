@@ -3,7 +3,6 @@ description: Google Scholar Search
 type: module
 core: 8.x
 package: Repository
-
 dependencies:
   - reposi
 version: '8.x-1.5'

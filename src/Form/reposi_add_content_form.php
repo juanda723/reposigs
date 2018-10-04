@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @file add Content menu
+ */
 namespace Drupal\reposi\Form;
 
 use Drupal\Core\Form\FormBase;
@@ -7,11 +9,10 @@ use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Implements an example form.
+ * Implements class add content
  */
 
 class reposi_add_content_form extends FormBase {
-
 
   /**
    * {@inheritdoc}
@@ -23,16 +24,13 @@ class reposi_add_content_form extends FormBase {
   /**
    * {@inheritdoc}
    */
-public function buildForm(array $form, FormStateInterface $form_state) {  
-
+public function buildForm(array $form, FormStateInterface $form_state) {
     $header = array( t('OPTIONS'), );
-
     $form['add'] = array(
       '#type' => 'details',
       '#open' => TRUE,
       '#title' => t('R. B. REPOSITORY'),
     );
-
     $rows[1] = [['options' => 'USER'],];
     $rows[2] = [['options' => 'ARTICLE'],];
     $rows[3] = [['options' => 'BOOK'],];
@@ -41,7 +39,6 @@ public function buildForm(array $form, FormStateInterface $form_state) {
     $rows[6] = [['options' => 'THESIS'],];
     $rows[7] = [['options' => 'PATENT'],];
     $rows[8] = [['options' => 'SOFTWARE'],];
-
     $form['add']['table'] = array('#type'     => 'tableselect',
 			    '#title' => $this->t('Add content'),
                             '#header'   => $header,
@@ -52,7 +49,7 @@ public function buildForm(array $form, FormStateInterface $form_state) {
     $form['add']['content'] = array(
       '#type' => 'submit',
       '#value' => t('Add'),
-    );      
+    );
     $form['pager'] = ['#type' => 'pager'];
 
     return $form;
@@ -61,9 +58,9 @@ public function buildForm(array $form, FormStateInterface $form_state) {
   /**
    * {@inheritdoc}
    */
-  public function validateForm(array &$form, FormStateInterface $form_state) 
+  public function validateForm(array &$form, FormStateInterface $form_state)
   {
-  
+
   }
 
   /**
@@ -99,7 +96,5 @@ public function buildForm(array $form, FormStateInterface $form_state) {
 		$form_state->setRedirect('reposi.add_software');
 	}
   }
- 
+
 }
-
-

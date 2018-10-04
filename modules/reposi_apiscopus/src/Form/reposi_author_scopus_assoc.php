@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @file associated users
+ */
 namespace Drupal\reposi_apiscopus\Form;
 
 use Drupal\Core\Form\FormBase;
@@ -93,7 +95,6 @@ public function buildForm(array $form, FormStateInterface $form_state) {
    	    ->execute();
    		drupal_set_message('The user was update');
         $form_state->setRedirect('reposi.admuser_info', ['node' => $arg]);
-       	//$form_state['redirect'] = $base_url . '/reposi/adm_user/' . $form_state['build_info']['args'][0];
   }
 
 }

@@ -1,5 +1,9 @@
 <?php
+/**
+ * @file Users Edit
+ */
 namespace Drupal\reposi\Form\Edit;
+
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -50,7 +54,6 @@ class Reposi_useredit_form extends ConfirmFormBase{
 	$u_id_scopus = \Drupal::request()->query->get('u_id_scopus');
   $u_id_scholar = \Drupal::request()->query->get('u_id_scholar');
         $u_adm_aca_type = \Drupal::request()->query->get('u_adm_aca_type');
-
        return $description =t('Do you want update this information?') .
                       '<div>'. t('New user information: ') . '</div>' . '<ul>' .
                       '<li>'. t('Name(s):   ') . $u_first_name . ' ' . $u_second_name .'</li>' .
@@ -62,7 +65,6 @@ class Reposi_useredit_form extends ConfirmFormBase{
                       '<li>'. t('Scopus ID Author: ') . $u_id_scopus .'</li>' .
                       '<li>'. t('Google Sholar ID Author') . $u_id_scholar .'</li>' .
                       '<li>'. t('Academic rol: ') . $u_adm_aca_type .'</li>' . '</ul>';
-       // $u_first_name = \Drupal::request()->query->get('u_first_name');
         $id=$this->id;
         $serch_u = db_select('reposi_user', 'u');
         $serch_u->fields('u')
@@ -116,8 +118,7 @@ class Reposi_useredit_form extends ConfirmFormBase{
 	$adm_homo = \Drupal::request()->query->get('u_id_homonymous');
 	$adm_scopus = \Drupal::request()->query->get('u_id_scopus');
   $adm_scholar = \Drupal::request()->query->get('u_id_scholar');
-        $adm_aca_type = \Drupal::request()->query->get('u_adm_aca_type');
-
+  $adm_aca_type = \Drupal::request()->query->get('u_adm_aca_type');
     db_update('reposi_user')->fields(array(
       'u_first_name'      => $adm_fname,
       'u_second_name'     => $adm_sname,

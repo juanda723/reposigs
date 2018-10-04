@@ -11,8 +11,10 @@ use Drupal\Core\Link;
 
 class reposi_keyword_list{
 
+  /**
+  * Implements reposi_list_key().
+  */
 function reposi_list_key() {
-
   global $base_url;
   $search_keyw = db_select('reposi_keyword', 'k');
   $search_keyw->fields('k')

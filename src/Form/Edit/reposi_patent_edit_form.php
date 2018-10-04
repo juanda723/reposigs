@@ -1,7 +1,9 @@
 <?php
 
 namespace Drupal\reposi\Form\Edit;
-
+/**
+ * @file Patent Edit
+ */
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
@@ -21,7 +23,7 @@ class reposi_patent_edit_form extends FormBase {
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
-  
+
     $cpid = \Drupal::routeMatch()->getParameter('node');
     $search_pat = db_select('reposi_confer_patent', 'cp');
     $search_pat->fields('cp')
@@ -36,47 +38,6 @@ class reposi_patent_edit_form extends FormBase {
                ->condition('pa.ap_cpid', $cpid, '=');
     $p_a = $search_p_a->execute();
     $p_a -> allowRowCount = TRUE;
-    $num_aut = $p_a->rowCount();  
-    foreach ($p_a as $id_author){
-      $search_aut = db_select('reposi_author', 'a');
-      $search_aut->fields('a')
-                 ->condition('a.aid', $id_author->ap_author_id, '=');
-      $info_aut = $search_aut->execute()->fetchAssoc();
-      $this_aut[] = $info_aut;
-    }
-
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/*    $search_the = db_select('reposi_thesis_sw', 'ts');
-    $search_the->fields('ts')
-            ->condition('ts.tsid', $tsid, '=');
-    $this_the = $search_the->execute()->fetchAssoc();
-    $search_date = db_select('reposi_date', 'd');
-    $search_date->fields('d')
-                ->condition('d.d_tsid', $tsid, '=');
-    $the_date = $search_date->execute()->fetchAssoc();
-    $search_publi_key = db_select('reposi_publication_keyword', 'pk');
-    $search_publi_key->fields('pk')
-                     ->condition('pk.pk_tsid', $tsid, '=');
-    $id_keyword = $search_publi_key->execute();
-    $id_keyword -> allowRowCount = TRUE;
-    $num_keyw=$id_keyword->rowCount();
-    foreach ($id_keyword as $key_id) {
-      $search_keyw = db_select('reposi_keyword', 'k');
-      $search_keyw->fields('k')
-                  ->condition('k.kid', $key_id->pk_keyword_id, '=');
-      $keywords = $search_keyw->execute()->fetchAssoc();
-      $this_keyw[] = $keywords['k_word'];
-    }
-    $search_p_a = db_select('reposi_publication_author', 'pa');
-    $search_p_a->fields('pa')
-               ->condition('pa.ap_tsid', $tsid, '=');
-    $p_a = $search_p_a->execute();
-    $p_a -> allowRowCount = TRUE;
     $num_aut = $p_a->rowCount();
     foreach ($p_a as $id_author){
       $search_aut = db_select('reposi_author', 'a');
@@ -85,9 +46,7 @@ class reposi_patent_edit_form extends FormBase {
       $info_aut = $search_aut->execute()->fetchAssoc();
       $this_aut[] = $info_aut;
     }
-*/
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-    $markup = '<p>' . '<i>' . t('You must complete the required fields before the 
+    $markup = '<p>' . '<i>' . t('You must complete the required fields before the
               add authors or keywords.') . '</i>' . '</p>';
     $form['body'] = array('#markup' => $markup);
     $form['cpid'] = array(
@@ -212,17 +171,6 @@ class reposi_patent_edit_form extends FormBase {
         'effect' => 'fade',
       ),
    );
-
-  //*****************************************************************************************
-  //*********************************KEYWORD KEYWORD KEYWORD*********************************
-  //*****************************************************************************************/
-
-
-
-  //*****************************************************************************************
-  //********************************JOURNAL/BOOK JOURNAL/BOOK *******************************
-  //*****************************************************************************************/
-
     $form['deta'] = array(
        '#title' => t('Details'),
        '#type' => 'details',
@@ -254,13 +202,6 @@ class reposi_patent_edit_form extends FormBase {
     '#type' => 'submit',
     '#value' => t('Update'),
   );
-  /******************************************************************/
-  /******************************************************************/
-  /******************************************************************/
-
-//--------------------------------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------------------------------
    return $form;
 
   }
@@ -276,11 +217,6 @@ class reposi_patent_edit_form extends FormBase {
   }
 
   public function validateForm(array &$form, FormStateInterface $form_state) {
-
-  //------------------------------------------------------------------------------------------------
-
-  // DAY, month year ARTICLE VALIDATION
-
   $day_validate = $form_state->getValue('day');
   if(!empty($day_validate) && (!is_numeric($day_validate) ||
       $day_validate > '31' || $day_validate < '1')) {
@@ -311,21 +247,21 @@ class reposi_patent_edit_form extends FormBase {
   if (!empty($table[$a]['first_name']) && empty($table[$a]['f_lastname'])){
     $form_state->setErrorByName('last_name', t('The author requires a last name.'));
   }
- 
+
   if (empty($table[$a]['first_name']) && !empty($table[$a]['f_lastname'])){
     $form_state->setErrorByName('first_name', t('The author requires a first name.'));
   }
 
-  if (!empty($table[$a]['first_name']) && !empty($table[$a]['f_lastname'])){      
+  if (!empty($table[$a]['first_name']) && !empty($table[$a]['f_lastname'])){
           $contname++;
   }
   }
   if ($contname<1){
-    $form_state->setErrorByName('name', t('One author is required as minimum 
+    $form_state->setErrorByName('name', t('One author is required as minimum
     (first name and last name).'));
   }
 
-  $url=$form_state->getValue('url'); 
+  $url=$form_state->getValue('url');
   if(!empty($url) && !UrlHelper::isValid($url, TRUE))
   {
    $form_state->setErrorByName('uri', t('The URL is not valid.'));
@@ -348,14 +284,12 @@ class reposi_patent_edit_form extends FormBase {
     $pat_type = $form_state->getValue('type');
     $pat_num = $form_state->getValue('num');
     $pat_author = $form_state->getValue('table');
-
-
      $params['send'] = [
       'cpid'                 => $pat_cpid,
       'day'                  => $pat_day,
       'month'                => $pat_month,
       'year'                 => $pat_year,
-      'owner'                => $pat_owner,  
+      'owner'                => $pat_owner,
       'info_author'          => $pat_author,
       'url'                  => $pat_url,
       'abstract'	     => $pat_abstract,
@@ -364,11 +298,6 @@ class reposi_patent_edit_form extends FormBase {
        ];
     foreach ($params as $param) {
           $form_state->setRedirect('reposi.confirm_patent', $param);
-         // drupal_set_message(t('se envia esto:  ').print_r($param,true));
     }
-
-//-------------------------------------------------------------------------------------------------------------------------
   }
-// Llave que cierra la clase:--->
 }
-?>

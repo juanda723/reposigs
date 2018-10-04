@@ -1,7 +1,9 @@
 <?php
 
 namespace Drupal\reposi\Form\Edit;
-
+/**
+ * @file Thesis Edit
+ */
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormState;
 use Drupal\Core\Form\FormStateInterface;
@@ -21,7 +23,7 @@ class reposi_thesis_edit_form extends FormBase {
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
-  
+
     $tsid = \Drupal::routeMatch()->getParameter('node');
     $search_the = db_select('reposi_thesis_sw', 'ts');
     $search_the->fields('ts')
@@ -57,16 +59,13 @@ class reposi_thesis_edit_form extends FormBase {
       $info_aut = $search_aut->execute()->fetchAssoc();
       $this_aut[] = $info_aut;
     }
-    $markup = '<p>' . '<i>' . t('You must complete the required fields before the 
+    $markup = '<p>' . '<i>' . t('You must complete the required fields before the
               add authors or keywords.') . '</i>' . '</p>';
     $form['body'] = array('#markup' => $markup);
     $form['tsid'] = array(
       '#type' => 'value',
       '#value' => $tsid,
     );
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     $form['num_keyw'] = array(
       '#type' => 'value',
       '#value' => $num_keyw,
@@ -183,11 +182,6 @@ class reposi_thesis_edit_form extends FormBase {
         'effect' => 'fade',
       ),
    );
-
-  //*****************************************************************************************
-  //*********************************KEYWORD KEYWORD KEYWORD*********************************
-  //*****************************************************************************************/
-
   $form['keyword'] = array(
       '#type' => 'details',
       '#open' => TRUE,
@@ -212,8 +206,6 @@ class reposi_thesis_edit_form extends FormBase {
     '#header' => $headerkeyword,
     '#empty' => t('No lines found'),
   );
-
-
   for ($i=0; $i<$num_keyw+$contkeyword; $i++) {
   $keyword = $form_state->getValue('keywordtable');
   $key=$keyword[$i]['key'];
@@ -236,11 +228,6 @@ class reposi_thesis_edit_form extends FormBase {
         'effect' => 'fade',
       ),
     );
-
-
-  //*****************************************************************************************
-  //********************************JOURNAL/BOOK JOURNAL/BOOK *******************************
-  //*****************************************************************************************/
 
     $form['deta'] = array(
        '#title' => t('Details'),
@@ -268,15 +255,7 @@ class reposi_thesis_edit_form extends FormBase {
     '#type' => 'submit',
     '#value' => t('Update'),
   );
-  /******************************************************************/
-  /******************************************************************/
-  /******************************************************************/
-
-//--------------------------------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------------------------------
    return $form;
-
   }
 
   public function addfieldsubmit(array &$form, FormStateInterface &$form_state) {
@@ -300,11 +279,6 @@ class reposi_thesis_edit_form extends FormBase {
   }
 
   public function validateForm(array &$form, FormStateInterface $form_state) {
-
-  //------------------------------------------------------------------------------------------------
-
-  // DAY, month year ARTICLE VALIDATION
-
   $day_validate = $form_state->getValue('day');
   if(!empty($day_validate) && (!is_numeric($day_validate) ||
       $day_validate > '31' || $day_validate < '1')) {
@@ -335,17 +309,17 @@ class reposi_thesis_edit_form extends FormBase {
   if (!empty($table[$a]['first_name']) && empty($table[$a]['f_lastname'])){
     $form_state->setErrorByName('last_name', t('The author requires a last name.'));
   }
- 
+
   if (empty($table[$a]['first_name']) && !empty($table[$a]['f_lastname'])){
     $form_state->setErrorByName('first_name', t('The author requires a first name.'));
   }
 
-  if (!empty($table[$a]['first_name']) && !empty($table[$a]['f_lastname'])){      
+  if (!empty($table[$a]['first_name']) && !empty($table[$a]['f_lastname'])){
           $contname++;
   }
   }
   if ($contname<1){
-    $form_state->setErrorByName('name', t('One author is required as minimum 
+    $form_state->setErrorByName('name', t('One author is required as minimum
     (first name and last name).'));
   }
 
@@ -355,7 +329,7 @@ class reposi_thesis_edit_form extends FormBase {
         drupal_set_message(t('You must include at least one keyword.'), 'warning');
   }
 
-  $url=$form_state->getValue('url'); 
+  $url=$form_state->getValue('url');
   if(!empty($url) && !UrlHelper::isValid($url, TRUE))
   {
    $form_state->setErrorByName('uri', t('The URL is not valid.'));
@@ -382,7 +356,7 @@ class reposi_thesis_edit_form extends FormBase {
       'day'                  => $the_day,
       'month'                => $the_month,
       'year'                 => $the_year,
-      'discipline'           => $the_discipline,  
+      'discipline'           => $the_discipline,
       'institute'            => $the_institute,
       'info_author'          => $the_author,
       'url'                  => $the_url,
@@ -390,11 +364,7 @@ class reposi_thesis_edit_form extends FormBase {
        ];
     foreach ($params as $param) {
           $form_state->setRedirect('reposi.confirm_thesis', $param);
-        //  drupal_set_message(t('se envia esto:  ').print_r($param,true));
     }
-
-//-------------------------------------------------------------------------------------------------------------------------
-  }
-// Llave que cierra la clase:--->
+}
 }
 ?>

@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @file form, admin users
+ */
 namespace Drupal\reposi\Form;
 
 use Drupal\Core\Form\FormBase;
@@ -13,7 +15,6 @@ class Reposi_user_admin_form extends FormBase {
   }
 
   public function buildForm(array $form, FormStateInterface $form_state) {
-
   $form['adm_user'] = array(
     '#title' => t('User'),
     '#type' => 'fieldset',
@@ -126,7 +127,6 @@ class Reposi_user_admin_form extends FormBase {
   $adm_scholar = $form_state->getValue('adm_user_idscholar');
   $adm_academic = $form_state->getValue('adm_user_acarol');
   $adm_aca_type = $form_state->getValue(['adm_acad_options', $adm_academic]);
-  //$adm_aca_type = $form_state['values']['adm_acad_options'][$adm_academic];------------->CAMBIO:ASÍ ERA EN DRUPAL 7
   $query = db_select('reposi_user', 'n');
   $query->condition('n.u_first_name', $adm_fname, '=')
         ->condition('n.u_first_lastname', $adm_flastname, '=')
@@ -249,8 +249,6 @@ class Reposi_user_admin_form extends FormBase {
   }
   }}
 
-
-
   function reposi_user_admin_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $form['#validate'][] = '_reposi_user_admin_form_validate';
   return $form;
@@ -270,11 +268,6 @@ class Reposi_user_admin_form extends FormBase {
    * {@inheritdoc}
    */
    public function submitForm(array &$form, FormStateInterface $form_state) {
-
-  /*  $email1=$this->email1;
-    $email2=$this->email2;
-    $email3=$this->email3;
-*/
     $adm_email1 = $form_state->getValue('adm_user_email1');
     $adm_email2 = $form_state->getValue('adm_user_email2');
     $adm_email3 = $form_state->getValue('adm_user_email3');

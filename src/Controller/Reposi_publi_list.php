@@ -11,8 +11,10 @@ use Drupal\Core\Link;
 use Drupal\reposi\Controller\Reposi_info_publication;
 
 class Reposi_publi_list {
-
-  function reposi_list_publication_free(){
+  /**
+  * Implements reposi_list_publication_free.
+  */
+function reposi_list_publication_free(){
     global $base_url;
     $form['search'] = array(
       '#title' => t('Search'),
@@ -159,10 +161,10 @@ class Reposi_publi_list {
     );
     return $form;
   }
-
-
-
-  function reposi_publi_list_complete(){
+  /**
+  * Implements reposi_publi_list_complete.
+  */
+function reposi_publi_list_complete(){
     global $base_url;
     $orden='ASC';
     $search_art = db_select('reposi_article_book', 'ab');

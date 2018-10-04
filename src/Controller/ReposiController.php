@@ -12,13 +12,13 @@ use Drupal\Component\Utility\Html;
 
 
 class ReposiController {
-  public function PubliListReposiSearch() {
-
+  /**
+  * Implements PubliListReposiSearch.
+  */
+public function PubliListReposiSearch() {
     global $base_url;
     $words = \Drupal::routeMatch()->getParameter('node');
-
     $inventory=' ';
-
     $each_word = explode('-', $words);
     $num_words = count($each_word);
     $complete = implode(' ', $each_word);
@@ -188,34 +188,11 @@ class ReposiController {
       '#markup' => t($publications)
     );
 
-    /* $pids = array();
-    if ($somethig_cpl <> 0) {
-    foreach ($search_cpl as $ids_cpl) {
-    $pids[] = $ids_cpl->pid;
-  }
 }
+/**
+* Implements ListAuthorUser.
 */
-
-}
-
-/*public function ListAuthor() {
-return array(
-'#type' => 'markup',
-'#markup' => t('Hello, World!'),
-
-$query = db_select('reposi_user', 'p');
-$query->fields('p', array('uid', 'u_first_name', 'u_first_lastname',
-'u_second_lastname', 'u_email'))
-->orderBy('u_first_name', 'ASC');//->limit(60)
-$pager = $query->extend('Drupal\Core\Database\Query\PagerSelectExtender')->limit(20);
-$results =$pager->execute()->fetchAll();
-
-
-);
-}*/
-//La siguiente muestra la lista de autores almacenados en el repositorio y los redirecciona para mostrar su información.
-
-  function ListAuthorUser() {
+function ListAuthorUser() {
     global $base_url;
     $search_aut = db_select('reposi_author', 'a');
     $search_aut->fields('a')
@@ -258,8 +235,10 @@ $results =$pager->execute()->fetchAll();
     $form['pager'] = ['#type' => 'pager'];
     return $form;
   }
-
-  function ListAuthorUserdesc() {
+  /**
+  * Implements ListAuthorUserdesc diference order
+  */
+function ListAuthorUserdesc() {
     global $base_url;
     $search_aut = db_select('reposi_author', 'a');
     $search_aut->fields('a')
@@ -302,8 +281,9 @@ $results =$pager->execute()->fetchAll();
     $form['pager'] = ['#type' => 'pager'];
     return $form;
   }
-
-
+  /**
+  * Implements ListAuthor.
+  */
 function ListAuthor() {
   global $base_url;
   $search_aut = db_select('reposi_author', 'a');
@@ -346,7 +326,9 @@ function ListAuthor() {
   $form['pager'] = ['#type' => 'pager'];
   return $form;
 }
-
+/**
+* Implements ListAuthor diference order.
+*/
 function ListAuthordesc() {
   global $base_url;
   $search_aut = db_select('reposi_author', 'a');
@@ -390,7 +372,9 @@ function ListAuthordesc() {
   return $form;
 }
 
-//La siguiente función muestra los metadatos de los autores almacenados en el repositorio.
+/**
+* Implements info_author() information of author
+*/
 function reposi_info_author() {
   global $base_url;
   $id=\Drupal::routeMatch()->getParameter('node');
@@ -518,10 +502,9 @@ function reposi_info_author() {
   $form['body'] = array('#markup' => $markup);
   return $form;
 }
-
-
-///___________________________________________________________________________________________________
-
+/**
+* Implements user List
+*/
 function reposi_user_list(){
   $header = array('ID', t('Name'), t('Last name'), t('Email'),
   t('State'));
@@ -545,28 +528,21 @@ function reposi_user_list(){
     $row->u_email,
     $state,
   );
-  /*$rows[] = array(l($row->uid, $base_url . '/reposi/adm_user/' . $row->uid),
-  $row->u_first_name,
-  $row->u_first_lastname  . ' ' . $row->u_second_lastname,
-  $row->u_email,
-  $state,
-);*/
-}
-$build['table'] = array(
+  }
+  $build['table'] = array(
   '#type'   => 'table',
   '#header' => $header,
   '#rows'   => $rows,
   '#empty'  => t('No records.'),
 );
-
-$build['pager'] = array(
-  '#type' => 'pager'
-);
-
-return $build;
+  $build['pager'] = array(
+    '#type' => 'pager'
+  );
+  return $build;
 }
-//_____________________________________________________________________________________________________________________________________________________________________
-
+/**
+* Implements user active List
+*/
 function reposi_user_act_list(){
   global $base_url;
   $header = array('ID', t('Name'), t('Last name'), t('Email'));
@@ -586,51 +562,22 @@ function reposi_user_act_list(){
   $rows = array();
   foreach ($results as $row) {
     if (!empty($row)) {
-      //  $link  = \Drupal::l(t($title_cp['p_title']), $url);               $url = Url::fromRoute('reposi.author_aid', ['node' => $keyw->aid]);
       $url = Url::fromRoute('reposi.admuser_info', ['node' => $row['uid']]);
-      //  $link  = \Drupal::l(t($list_act->s_uid), $url);
       $rows[] = array(\Drupal::l(t($row['uid']), $url),
       $row['u_first_name'],
       $row['u_first_lastname'] . ' ' . $row['u_second_lastname'],
       $row['u_email'],
     );
-    /*$rows[] = array(\Drupal::l(t('hola: '.$row->uid), $url),
-    $row->u_first_name,
-    $row->u_first_lastname . ' ' . $row->u_second_lastname,
-    $row->u_email,
-  ); */
-
-  /*$rows[] = array(l($row['uid'], $base_url . '/reposi/adm_user/' . $row['uid']),
-  $row['u_first_name'],
-  $row['u_first_lastname'] . ' ' . $row['u_second_lastname'],
-  $row['u_email'],
-);*/
+  }
 }
-}
-
-
-
 $form['table'] = array ('#type'     => 'table',
 '#header'   => $header,
 '#rows'  => $rows,
 '#multiple' => TRUE,
 '#empty'    => t('No records.')
 );
-/* $form['table'] = array ('#type'     => 'tableselect',
-'#header'   => $header,
-'#options'  => $rows,
-'#multiple' => TRUE,
-'#empty'    => t('No records.')
-);
-/*$form['pager'] = array(
-'#theme' => 'pager',
-);*/
-//$form = [];
-
 $form['pager'] = ['#type' => 'pager'];
 $form['render'] = drupal_render($form);
-//   return $markup;
-
 $form['deactivate'] = array(
   '#type' => 'submit',
   '#value' => t('Deactivate select items'),
@@ -638,8 +585,9 @@ $form['deactivate'] = array(
 );
 return $form;
 }
-
-//--------------------------------------------------------------------------------------------------------------
+/**
+* Implements list keyword
+*/
 function reposi_list_keyword() {
   $search_keyw = db_select('reposi_keyword', 'k');
   $search_keyw->fields('k')
@@ -666,55 +614,7 @@ function reposi_list_keyword() {
   $form['pager'] = ['#type' => 'pager'];
   return $form;
 }
-//-----------------------------------------------------------------------------------------------------------------
-/*protected $reposi_client;
-public function __construct(
-Client $reposi_client
-) {
-parent::__construct();
-$this->reposi_client = $reposi_client;
-}
-
-public static function create(ContainerInterface $container) {
-return new static(
-$container->get('reposi.client')
-);
-}
-
+/**
+* Implements list keyword
 */
-function query_google_scholar() {
-
-  //$this->reposi_client;
-  $client = \Drupal::httpClient();
-  $request = $client->get('https://scholar.google.com');
-  // $response = $request->getBody();
-  //drupal_set_message(t('The publication was updated.'.print_r($response,true)));
-  ///////
-  try {
-    $response = $client->get('http://cse.bth.se/~fer/googlescholar.php?user=Z9vU8awAAAAJ');
-    $data = $response->getBody();
-    $hola=Json::decode($data);
-    $gg=Html::decodeEntities($data);
-    $num_docs = explode('[', $gg);
-    $llave = explode('},', $data);
-    echo print_r($num_docs,true);
-    $decoded = Json::decode($data);
-    $form['body'] = array('#markup' => $data);
-    $request = $client->post('http://cse.bth.se/~fer/googlescholar.php?user=Z9vU8awAAAAJ', [
-      'json' => [
-        'publications'=> 'title'
-      ]
-    ]);
-    $response = Json::decode($request->getBody());
-    drupal_set_message(t('Scholar está mostrando lo siguiente: ').$llave);
-  }
-  catch (RequestException $e) {
-    watchdog_exception('reposi', $e->getMessage());
-  }
-  return $form;
-}
-
-//--------------------------------------------------------------------------------------------------------------
-
-// CIERRA LA CLASE
 }
