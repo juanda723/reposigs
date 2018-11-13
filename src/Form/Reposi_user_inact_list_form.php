@@ -88,6 +88,14 @@ class Reposi_user_inact_list_form extends FormBase {
         		->condition('uid', $result)
         		->execute();
         		drupal_set_message('Deleted user.');
+
+            db_update('reposi_author')->fields(array(
+                      'a_user_id' => NULL,
+                      'a_id_scholar' => NULL,
+                      'a_id_scopus' => NULL,
+                    ))->condition('a_user_id', $result)
+                    ->execute();
+
 		}
 		else
 		{

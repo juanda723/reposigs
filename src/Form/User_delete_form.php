@@ -86,6 +86,13 @@ class User_delete_form extends ConfirmFormBase{
         $del_user = db_delete('reposi_user')
               	->condition('uid', $uid)
               	->execute();
+
+        $reposi_autor_upda = db_update('reposi_author')->fields(array(
+                  'a_user_id' => NULL,
+                  'a_id_scholar' => NULL,
+                  'a_id_scopus' => NULL,
+                ))->condition('a_user_id', $uid)
+                ->execute();
         $form_state->setRedirect('reposi.listus');
     	drupal_set_message('The user ' . $this->fullname . ' was delete.');
     }
